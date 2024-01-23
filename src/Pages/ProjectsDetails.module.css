@@ -1,0 +1,33 @@
+.btn_project_details{
+    border: none;
+    outline:none;
+    background-color: #008ADD;
+    font-size: 1rem;
+    font-family: 'Ubuntu',sans-serif;
+    color: white;
+    padding: 0.5rem;
+    margin: 0 0 1rem 0;
+    border-radius: 0.2rem;
+}
+.btn_edit{
+    border: none;
+    outline:none;
+    background-color: #008ADD;
+    font-size: 1rem;
+    font-family: 'Ubuntu',sans-serif;
+    color: white;
+    padding: 0.3rem 0.7rem 0.3rem 0.7rem;
+    margin: 0 0.2rem 0 0.2rem;
+    border-radius: 0.2rem;
+}
+.btn_delete{
+    border: none;
+    outline:none;
+    background-color: #f53900;
+    font-size: 1rem;
+    font-family: 'Ubuntu',sans-serif;
+    color: white;
+    padding: 0.3rem 0.7rem 0.3rem 0.7rem;
+    margin: 0 0.2rem 0 0.2rem;
+    border-radius: 0.2rem;
+}
