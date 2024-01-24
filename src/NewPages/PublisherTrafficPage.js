@@ -6,12 +6,15 @@ import Sidebar from "../Components/Sidebar";
 import Loader from "../Components/Loader";
 import axios from "axios";
 import { publisherTrafficApi, publisherTrafficServicesApi } from "../Data/Api";
-import classes from "./PublisherTraffic.module.css";
+import classes from "./PublisherTrafficPage.module.css";
 import moment from "moment";
 import { useNavigate } from "react-router-dom";
+import { DataGrid } from "@mui/x-data-grid";
+import NewSidebar from "../NewComponents/NewSidebar";
+import NewHeader from "../NewComponents/NewHeader";
 
-const PublisherTraffic = () => {
-  const navigate=useNavigate();
+const PublisherTrafficPage = () => {
+  const navigate = useNavigate();
   const [loading, setLoading] = useState("block");
   const [publisherData, setPublisherData] = useState([]);
   const [startDate, setStartDate] = useState(
@@ -26,11 +29,11 @@ const PublisherTraffic = () => {
   const [service, setService] = useState("");
   const [publisher, setPublisher] = useState("");
 
-  useEffect(()=>{
-    if(localStorage.getItem("userName") == "etho_1234"){
-      navigate("/dailyRevenue")
+  useEffect(() => {
+    if (localStorage.getItem("userName") == "etho_1234") {
+      navigate("/dailyRevenue");
     }
-  },[])
+  }, []);
 
   const fetchPublisherTrafficServices = async () => {
     const data = {
@@ -71,10 +74,16 @@ const PublisherTraffic = () => {
       );
     }
   };
-  const fetchDataFromBackend = async (showLoading,dateStart,dateEnd,serviceName,publisherName) => {
+  const fetchDataFromBackend = async (
+    showLoading,
+    dateStart,
+    dateEnd,
+    serviceName,
+    publisherName
+  ) => {
     let data = {};
     // if (service == "All" || service == "") {
-      if (serviceName == "All" || serviceName == "") {
+    if (serviceName == "All" || serviceName == "") {
       data = {
         client: localStorage.getItem("userName"),
         startDate: dateStart,
@@ -102,7 +111,6 @@ const PublisherTraffic = () => {
       const res = await axios.post(publisherTrafficApi, data, {
         headers: headers,
       });
-      console.log(res,'res')
       setPublisherData(res.data.data);
       setLoading("none");
     } catch (error) {
@@ -113,25 +121,23 @@ const PublisherTraffic = () => {
     }
   };
 
- 
   useEffect(() => {
     fetchPublisherTrafficServices();
-    fetchDataFromBackend(true,startDate,endDate,service,publisher);
+    fetchDataFromBackend(true, startDate, endDate, service, publisher);
   }, []);
 
   useEffect(() => {
     const intervalId = setInterval(() => {
       fetchDataFromBackend(null, startDate, endDate, service, publisher);
     }, 10000);
-  
+
     // Cleanup function to clear the interval when the component is unmounted
     return () => clearInterval(intervalId);
-  
-  }, [startDate, endDate, service, publisher]); 
+  }, [startDate, endDate, service, publisher]);
 
   const submitHandler = async (e) => {
     e.preventDefault();
-    fetchDataFromBackend(true,startDate,endDate,service,publisher);
+    fetchDataFromBackend(true, startDate, endDate, service, publisher);
   };
 
   const handleServiceChange = (service) => {
@@ -142,36 +148,30 @@ const PublisherTraffic = () => {
     setPublisher(publisher);
   };
 
-
   return (
     <>
       <Loader value={loading} />
       <ToastContainer />
-      <Header service="Publisher Traffic" />
-      <MobileNavbar service="Publisher Traffic" />
-      <Sidebar highlight={5} />
-      <div id="firstTab" className="tabcontent">
-        <div className="subscribers-sec">
-          <div className="subscribers-home-l">
-            <span className="navigation-links">Home</span>
-            <span>/</span>
-            <span className="navigation-links">Revenue</span>
+      <div className={classes.main}>
+        <div className={classes.sidebar}>
+          <div className={classes.sidebar_header}>
+            <img
+              src="/assets/images/logo.png"
+              alt="Revenue portal"
+              className={classes.sidebar_logo}
+            />
+            <h3 className={classes.dashboard_text}>Dashboard</h3>
           </div>
+          <NewSidebar highlight={1} />
         </div>
-        <div className="date-form">
-          <form
-            className="main-date-form ss"
-            style={{ zIndex: "99" }}
-            onSubmit={submitHandler}
-          >
-            {/* <!-- date --> */}
-
-            <div className={`date-inner date-1-sec ${classes.date_flex}`}>
-              <div className="end-date">
+        <div className={classes.container}>
+          <NewHeader service="Publisher Traffic" />
+          <div className={classes.sub_container}>
+            <form className={classes.form} onSubmit={submitHandler}>
+              <div className={classes.service}>
                 <label htmlFor="service">Service:</label>
                 <select
                   id="service"
-                  // onChange={(e) => setService(e.target.value)}
                   onChange={(e) => handleServiceChange(e.target.value)}
                 >
                   {services.length > 0 &&
@@ -185,7 +185,7 @@ const PublisherTraffic = () => {
                 </select>
               </div>
 
-              <div className="end-date">
+              <div className={classes.partner}>
                 <label htmlFor="publisher">Partner:</label>
                 <select
                   id="publisher"
@@ -202,7 +202,7 @@ const PublisherTraffic = () => {
                 </select>
               </div>
 
-              <div className="end-date">
+              <div className={classes.start_date}>
                 <label htmlFor="start">Start date:</label>
                 <input
                   type="date"
@@ -213,7 +213,7 @@ const PublisherTraffic = () => {
                   onChange={(e) => setStartDate(e.target.value)}
                 />
               </div>
-              <div className="end-date">
+              <div className={classes.end_date}>
                 <label htmlFor="end">End date:</label>
                 <input
                   type="date"
@@ -224,35 +224,20 @@ const PublisherTraffic = () => {
                   onChange={(e) => setEndDate(e.target.value)}
                 />
               </div>
+              <button type="submit" className={classes.search_btn}>
+                Search
+              </button>
+            </form>
 
-              <div className="date-search-btn">
-                <button type="submit">Search</button>
+            <div className={classes.title_container}>
+              <div className={classes.title_sub_container}>
+                <i className="fa-solid fa-bolt" aria-hidden="true"></i>
+                <h3>Publisher Traffic</h3>
               </div>
             </div>
-          </form>
-          <div className="title-ic">
-            <p>
-              <span>
-                <i className="fa fa-user" aria-hidden="true"></i>
-              </span>{" "}
-              <span>Publisher Traffic</span>
-            </p>
-          </div>
 
-          <div className="main-box">
-            {publisherData.length <= 0 && loading == "none" ? (
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                <h5>No Data Available</h5>
-              </div>
-            ) : (
+            {/* <div className="main-box">
               <div style={{ margin: "0rem 0rem" }}>
-                {/* <!-- table --> */}
                 <div
                   className="table-sec"
                   style={{
@@ -286,8 +271,53 @@ const PublisherTraffic = () => {
                     </tbody>
                   </table>
                 </div>
+              </div> */}
+
+            {publisherData ? (
+              <div className={classes.table_container}>
+                <div className={classes.table_sub_container}>
+                  <DataGrid
+                    rows={publisherData?.map((row, index) => ({
+                      ...row,
+                      id: index,
+                    }))}
+                    getRowId={(row) => row.id}
+                    columns={[
+                      {
+                        field: "partnerid",
+                        sortable: false,
+                        minWidth: 150,
+                        headerName: "Partner Id",
+                      },
+                      {
+                        field: "service",
+                        sortable: false,
+                        minWidth: 150,
+                        headerName: "Service",
+                      },
+                      {
+                        field: "country",
+                        sortable: false,
+                        minWidth: 150,
+                        headerName: "Country",
+                      },
+                      {
+                        field: "operator",
+                        sortable: false,
+                        minWidth: 150,
+                        headerName: "Operator",
+                      },
+                      {
+                        field: "count",
+                        sortable: false,
+                        minWidth: 150,
+                        headerName: "Count",
+                      },
+                    ]}
+                  />
+                </div>
               </div>
-            )}
+            ) : null}
           </div>
         </div>
       </div>
@@ -295,4 +325,4 @@ const PublisherTraffic = () => {
   );
 };
 
-export default PublisherTraffic;
+export default PublisherTrafficPage;

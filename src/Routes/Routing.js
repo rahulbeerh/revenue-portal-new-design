@@ -18,6 +18,10 @@ import ProjectsDetails from "../Pages/ProjectsDetails";
 import LoginPage from "../NewPages/LoginPage";
 import DailyRevenuePage from "../NewPages/DailyRevenuePage";
 import MonthlyRevenuePage from "../NewPages/MonthlyRevenuePage";
+import AddCountryAndOperatorPage from "../NewPages/AddCountryAndOperatorPage";
+import PublisherTrafficPage from "../NewPages/PublisherTrafficPage";
+import PublisherSubscriptionPage from "../NewPages/PublisherSubscriptionPage";
+import DashboardPage from "../NewPages/DashboardPage";
 
 const Routing=()=>{
     return(
@@ -29,11 +33,15 @@ const Routing=()=>{
                     <Route element={<DailyRevenuePage />} path="/dailyRevenue" exact={true}></Route>
                     {/* <Route element={<MonthlyRevenue/>} path="/monthlyRevenue" exact={true}></Route> */}
                     <Route element={<MonthlyRevenuePage />} path="/monthlyRevenue" exact={true}></Route>
-                    <Route element={<Dashboard />} path="/dashboard" exact={true}></Route>
+                    {/* <Route element={<Dashboard />} path="/dashboard" exact={true}></Route> */}
+                    <Route element={<DashboardPage />} path="/dashboard" exact={true}></Route>
                     <Route element={<Service />} path="/dashboard/:serviceName/:id" exact={true}></Route>
-                    <Route element={<AddCountryAddOperator />} path="/add-country-and-add-operator" exact={true}></Route>
-                    <Route element={<PublisherTraffic />} path="/publisher-traffic" exact={true}></Route>
-                    <Route element={<PublisherSubscription />} path="/publisher-subscription" exact={true}></Route>
+                    {/* <Route element={<AddCountryAddOperator />} path="/add-country-and-add-operator" exact={true}></Route> */}
+                    <Route element={<AddCountryAndOperatorPage />} path="/add-country-and-add-operator" exact={true}></Route>
+                    {/* <Route element={<PublisherTraffic />} path="/publisher-traffic" exact={true}></Route> */}
+                    <Route element={<PublisherTrafficPage />} path="/publisher-traffic" exact={true}></Route>
+                    {/* <Route element={<PublisherSubscription />} path="/publisher-subscription" exact={true}></Route> */}
+                    <Route element={<PublisherSubscriptionPage />} path="/publisher-subscription" exact={true}></Route>
                     <Route element={<DailyRevenueAdmin />} path="/dailyRevenueAdmin" exact={true} />
                     <Route element={<MonthlyRevenueAdmin />} path="/monthlyRevenueAdmin" exact={true} />
                     <Route element={<DashboardAdmin />} path="/dashboardAdmin" exact={true} />

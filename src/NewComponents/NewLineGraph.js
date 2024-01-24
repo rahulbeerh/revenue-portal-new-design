@@ -14,7 +14,7 @@ import classes from "./NewLineGraph.module.css";
 const NewLineGraph = (props) => {
   return (
     <div className={classes.graph_container}>
-        {/* <ResponsiveContainer width="100%" height="100%"> */}
+        <ResponsiveContainer width="100%" height="100%">
           <LineChart
             width={props.width}
             height={300}
@@ -56,7 +56,7 @@ const NewLineGraph = (props) => {
             />
             <Line type="monotone" dataKey="totalRevenue" stroke="#c91054" />
           </LineChart>
-        {/* </ResponsiveContainer> */}
+        </ResponsiveContainer>
     </div>
   );
 };
