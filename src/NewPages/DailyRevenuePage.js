@@ -1,11 +1,8 @@
 import React, { useEffect, useState } from "react";
 import moment from "moment/moment";
-import Header from "../Components/Header";
-import Sidebar from "../Components/Sidebar";
 import { sendDataApi } from "../Data/Api";
 import PostSecure from "../Request/PostSecure";
 import { toast, ToastContainer } from "react-toastify";
-import LineGraph from "../Components/LineGraph";
 import Loader from "../Components/Loader";
 import MobileNavbar from "../Components/MobileNavbar";
 import {
@@ -13,13 +10,15 @@ import {
   GridToolbarContainer,
   GridToolbarExport,
 } from "@mui/x-data-grid";
-import ExportDailyRevenueToExcel from "../Components/ExportDailyRevenueToExcel";
 import { useNavigate } from "react-router-dom";
 import NewHeader from "../NewComponents/NewHeader";
 import NewSidebar from "../NewComponents/NewSidebar";
 import classes from "./DailyRevenuePage.module.css";
-import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 import NewLineGraph from "../NewComponents/NewLineGraph";
+import ThemeComponent from "../NewComponents/ThemeComponent";
+import { Dropdown } from "primereact/dropdown";
+import { Calendar } from "primereact/calendar";
+import TitleHeader from "../NewComponents/TitleHeader";
 
 const DailyRevenuePage = () => {
   const navigate = useNavigate();
@@ -216,7 +215,6 @@ const DailyRevenuePage = () => {
 
   return (
     <>
-      {/* <!-- subscribers-sec --> */}
       <Loader value={loader} />
       <ToastContainer />
       <div className={classes.main}>
@@ -236,43 +234,35 @@ const DailyRevenuePage = () => {
           <div className={classes.sub_container}>
             <form className={classes.form} onSubmit={handleFormSubmit}>
               <div className={classes.service}>
-                <label htmlFor="service">Service:</label>
-                <select
-                  id="service"
-                  // onChange={(e) => setService(e.target.value)}
-                  onChange={(e) => handleServiceChange(e.target.value)}
-                >
-                  {services.length > 0 &&
-                    services.map((item, index) => {
-                      return (
-                        <option key={index} value={item}>
-                          {item}
-                        </option>
-                      );
-                    })}
-                </select>
+                <Dropdown
+                  value={service}
+                  onChange={(e) => handleServiceChange(e.value)}
+                  options={services?.map((service) => ({
+                    label: service,
+                    value: service,
+                  }))}
+                  placeholder="Select a Service"
+                />
               </div>
 
               <div className={classes.start_date}>
-                <label htmlFor="start">Start date:</label>
-                <input
-                  type="date"
-                  id="start"
-                  name="start"
+                <Calendar
                   value={dates.from}
-                  required
-                  onChange={(e) => setDates({ ...dates, from: e.target.value })}
+                  onChange={(e) => setDates({ ...dates, from: e.value })}
+                  showIcon
+                  touchUI
+                  showButtonBar
+                  placeholder="Start Date"
                 />
               </div>
               <div className={classes.end_date}>
-                <label htmlFor="end">End date:</label>
-                <input
-                  type="date"
-                  id="end"
-                  name="end"
-                  required
+                <Calendar
                   value={dates.to}
-                  onChange={(e) => setDates({ ...dates, to: e.target.value })}
+                  onChange={(e) => setDates({ ...dates, to: e.value })}
+                  showIcon
+                  touchUI
+                  showButtonBar
+                  placeholder="End Date"
                 />
               </div>
               <button type="submit" className={classes.search_btn}>
@@ -280,78 +270,85 @@ const DailyRevenuePage = () => {
               </button>
             </form>
 
-            <div className={classes.title_container}>
+            {/* <div className={classes.title_container}>
               <div className={classes.title_sub_container}>
                 <i className="fa-solid fa-chart-simple"></i>
                 <h3>Daily Revenue</h3>
               </div>
-            </div>
+            </div> */}
+
+            <TitleHeader
+              title="Daily Revenue"
+              icon={<i className="fa-solid fa-chart-simple"></i>}
+            />
 
             <NewLineGraph data={data} width={width} biggest={biggest} />
 
             {/* <div style={{ height: 600, width: "100%"}}> */}
             <div className={classes.table_container}>
               <div className={classes.table_sub_container}>
-                <DataGrid
-                  rows={[...data, totals]}
-                  columns={[
-                    {
-                      field: "misDate",
-                      sortable: false,
-                      minWidth: 150,
-                      headerName: "Date",
-                    },
-                    {
-                      field: "totalBase",
-                      sortable: false,
-                      minWidth: 150,
-                      headerName: "Total Subscription",
-                    },
-                    {
-                      field: "totalActiveBase",
-                      sortable: false,
-                      minWidth: 150,
-                      headerName: "Active Subscription",
-                    },
-                    {
-                      field: "subscriptions",
-                      sortable: false,
-                      minWidth: 150,
-                      headerName: "Paid Subscriptions",
-                    },
-                    {
-                      field: "unsubscriptions",
-                      sortable: false,
-                      minWidth: 150,
-                      headerName: "Unsubscriptions",
-                    },
-                    {
-                      field: "renewalsRevenue",
-                      sortable: false,
-                      minWidth: 150,
-                      headerName: "Renewal Revenue",
-                    },
-                    {
-                      field: "subscriptionRevenue",
-                      sortable: false,
-                      minWidth: 150,
-                      headerName: "Subscription Revenue",
-                    },
-                    {
-                      field: "totalRevenue",
-                      minWidth: 150,
-                      headerName: "Revenue",
-                    },
-                    {
-                      field: "dailyIncreaseAccumulated",
-                      minWidth: 150,
-                      headerName: "Total Revenue",
-                    },
-                  ]}
-                  slots={{
-                    toolbar: CustomToolbar,
-                  }}
-                />
+                <ThemeComponent>
+                  <DataGrid
+                    rows={[...data, totals]}
+                    columns={[
+                      {
+                        field: "misDate",
+                        sortable: false,
+                        minWidth: 150,
+                        headerName: "Date",
+                      },
+                      {
+                        field: "totalBase",
+                        sortable: false,
+                        minWidth: 150,
+                        headerName: "Total Subscription",
+                      },
+                      {
+                        field: "totalActiveBase",
+                        sortable: false,
+                        minWidth: 150,
+                        headerName: "Active Subscription",
+                      },
+                      {
+                        field: "subscriptions",
+                        sortable: false,
+                        minWidth: 150,
+                        headerName: "Paid Subscriptions",
+                      },
+                      {
+                        field: "unsubscriptions",
+                        sortable: false,
+                        minWidth: 150,
+                        headerName: "Unsubscriptions",
+                      },
+                      {
+                        field: "renewalsRevenue",
+                        sortable: false,
+                        minWidth: 150,
+                        headerName: "Renewal Revenue",
+                      },
+                      {
+                        field: "subscriptionRevenue",
+                        sortable: false,
+                        minWidth: 150,
+                        headerName: "Subscription Revenue",
+                      },
+                      {
+                        field: "totalRevenue",
+                        minWidth: 150,
+                        headerName: "Revenue",
+                      },
+                      {
+                        field: "dailyIncreaseAccumulated",
+                        minWidth: 150,
+                        headerName: "Total Revenue",
+                      },
+                    ]}
+                    slots={{
+                      toolbar: CustomToolbar,
+                    }}
+                  />
+                </ThemeComponent>
               </div>
             </div>
           </div>

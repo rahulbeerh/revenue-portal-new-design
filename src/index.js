@@ -14,32 +14,37 @@ import EditAdvertiserProvider from "./EditAdvertiserContext";
 import AdvertiserDummyHitProvider from "./AdvertiserDummyHitContext";
 import ProjectDetailsModalProvider from "./ProjectDetailsContext";
 import EditProjectDetailsProvider from "./EditProjectDetailsContext";
+import { PrimeReactProvider } from "primereact/api";
+import "primereact/resources/primereact.css";
+import 'primereact/resources/themes/lara-light-indigo/theme.css';
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
-    <BrowserRouter>
-      <ThemeChangeProvider>
-        <EditProjectDetailsProvider>
-          <ProjectDetailsModalProvider>
-            <AdvertiserDummyHitProvider>
-              <InputModalProvider>
-                <EditModalProvider>
-                  <ModalProvider>
-                    <MobileNavbarProvider>
-                      <AdvertiserModalProvider>
-                        <EditAdvertiserProvider>
+  <BrowserRouter>
+    <ThemeChangeProvider>
+      <EditProjectDetailsProvider>
+        <ProjectDetailsModalProvider>
+          <AdvertiserDummyHitProvider>
+            <InputModalProvider>
+              <EditModalProvider>
+                <ModalProvider>
+                  <MobileNavbarProvider>
+                    <AdvertiserModalProvider>
+                      <EditAdvertiserProvider>
+                        <PrimeReactProvider>
                           <App />
-                        </EditAdvertiserProvider>
-                      </AdvertiserModalProvider>
-                    </MobileNavbarProvider>
-                  </ModalProvider>
-                </EditModalProvider>
-              </InputModalProvider>
-            </AdvertiserDummyHitProvider>
-          </ProjectDetailsModalProvider>
-        </EditProjectDetailsProvider>
-      </ThemeChangeProvider>
-    </BrowserRouter>
+                        </PrimeReactProvider>
+                      </EditAdvertiserProvider>
+                    </AdvertiserModalProvider>
+                  </MobileNavbarProvider>
+                </ModalProvider>
+              </EditModalProvider>
+            </InputModalProvider>
+          </AdvertiserDummyHitProvider>
+        </ProjectDetailsModalProvider>
+      </EditProjectDetailsProvider>
+    </ThemeChangeProvider>
+  </BrowserRouter>
 );
 
 reportWebVitals();

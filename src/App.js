@@ -1,9 +1,9 @@
 import "./App.css";
 import { useNavigate } from "react-router-dom";
 import Routing from "./Routes/Routing";
-import "bootstrap/dist/css/bootstrap.min.css";
+// import "bootstrap/dist/css/bootstrap.min.css";
 import "react-toastify/dist/ReactToastify.css";
-import "./CSS/style.css";
+// import "./CSS/style.css";
 import { useEffect, useContext } from "react";
 import { ThemeChangeContext } from "./ThemeChangeContext";
 

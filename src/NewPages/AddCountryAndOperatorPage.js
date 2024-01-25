@@ -12,6 +12,9 @@ import { useNavigate } from "react-router-dom";
 import NewSidebar from "../NewComponents/NewSidebar";
 import NewHeader from "../NewComponents/NewHeader";
 import { DataGrid } from "@mui/x-data-grid";
+import ThemeComponent from "../NewComponents/ThemeComponent";
+import { InputText } from "primereact/inputtext";
+import TitleHeader from "../NewComponents/TitleHeader";
 
 const AddCountryAndOperatorPage = () => {
   const [country, setCountry] = useState("");
@@ -19,6 +22,8 @@ const AddCountryAndOperatorPage = () => {
   const [loader, setLoader] = useState("none");
   const [data, setData] = useState([]);
   const navigate = useNavigate();
+
+  console.log({country,operator});
 
   useEffect(() => {
     if (localStorage.getItem("userName") == "etho_1234") {
@@ -108,20 +113,19 @@ const AddCountryAndOperatorPage = () => {
             <div className={classes.form_container}>
               <form onSubmit={handleSubmit}>
                 <Box my={2}>
-                  <TextField
-                    label="Enter Country"
+                  <InputText
+                    type="text"
+                    placeholder="Enter Country"
                     value={country}
                     onChange={(e) => setCountry(e.target.value)}
-                    fullWidth
                   />
                 </Box>
                 <Box my={2}>
-                  <TextField
-                    label="Enter Operator"
-                    variant="outlined"
+                  <InputText
+                    type="text"
+                    placeholder="Enter Operator"
                     value={operator}
                     onChange={(e) => setOperator(e.target.value)}
-                    fullWidth
                   />
                 </Box>
 
@@ -133,68 +137,31 @@ const AddCountryAndOperatorPage = () => {
               </form>
             </div>
 
-            <div className={classes.title_container}>
-              <div className={classes.title_sub_container}>
-                <i className="fa-solid fa-globe" aria-hidden="true"></i>
-                <h3>Country and Operator</h3>
-              </div>
-            </div>
-
-            {/* {data ? (
-              <div className="main-box">
-                <div style={{ margin: "0 2rem" }}>
-                  <div
-                    className="table-sec"
-                    style={{
-                      maxHeight: "500px",
-                      overflowY: "scroll",
-                      overflowX: "auto",
-                      marginBottom: "50px",
-                      width: "100%",
-                    }}
-                  >
-                    <table className="main-table">
-                      <tbody>
-                        <tr>
-                          <th>Country</th>
-                          <th>Operator</th>
-                        </tr>
-                        {data.map((dataItems) => {
-                          return (
-                            <tr key={dataItems.id}>
-                              <td>{dataItems.country_name}</td>
-                              <td>{dataItems.operator_name}</td>
-                            </tr>
-                          );
-                        })}
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              </div>
-            ) : null} */}
+            <TitleHeader title="Country and Operator" icon={ <i className="fa-solid fa-globe" aria-hidden="true"></i>} />
 
             {data ? (
               <div className={classes.table_container}>
                 <div className={classes.table_sub_container}>
-                  <DataGrid
-                    rows={data.map((row, index) => ({ ...row, id: index }))} 
-                    getRowId={(row) => row.id}
-                    columns={[
-                      {
-                        field: "country_name",
-                        sortable: false,
-                        minWidth: 150,
-                        headerName: "Country",
-                      },
-                      {
-                        field: "operator_name",
-                        sortable: false,
-                        minWidth: 150,
-                        headerName: "Operator",
-                      },
-                    ]}
-                  />
+                  <ThemeComponent>
+                    <DataGrid
+                      rows={data.map((row, index) => ({ ...row, id: index }))}
+                      getRowId={(row) => row.id}
+                      columns={[
+                        {
+                          field: "country_name",
+                          sortable: false,
+                          minWidth: 150,
+                          headerName: "Country",
+                        },
+                        {
+                          field: "operator_name",
+                          sortable: false,
+                          minWidth: 150,
+                          headerName: "Operator",
+                        },
+                      ]}
+                    />
+                  </ThemeComponent>
                 </div>
               </div>
             ) : null}

@@ -17,6 +17,9 @@ import classes from "./MonthlyRevenuePage.module.css";
 import NewSidebar from "../NewComponents/NewSidebar";
 import NewHeader from "../NewComponents/NewHeader";
 import NewLineGraph from "../NewComponents/NewLineGraph";
+import ThemeComponent from "../NewComponents/ThemeComponent";
+import { Dropdown } from "primereact/dropdown";
+import TitleHeader from "../NewComponents/TitleHeader";
 
 const MonthlyRevenuePage = () => {
   //to start on load
@@ -166,91 +169,87 @@ const MonthlyRevenuePage = () => {
           <div className={classes.sub_container}>
             <form className={classes.form} onSubmit={handleFormSubmit}>
               <div className={classes.service}>
-                <label htmlFor="service">Service:</label>
-                <select
-                  id="service"
-                  onChange={(e) => handleChooseService(e.target.value)}
-                >
-                  {services.length > 0 &&
-                    services.map((item, index) => {
-                      return (
-                        <option key={index} value={item}>
-                          {item}
-                        </option>
-                      );
-                    })}
-                </select>
+                <Dropdown
+                  value={service}
+                  onChange={(e) => handleChooseService(e.value)}
+                  options={services?.map((service) => ({
+                    label: service,
+                    value: service,
+                  }))}
+                  placeholder="Select a Service"
+                />
               </div>
               <div className={classes.month}>
-                <label htmlFor="interval">Months:</label>
-                <select
+                <Dropdown
                   id="interval"
                   value={interval}
-                  onChange={(e) => setInterval(e.target.value)}
-                >
-                  <option value="1">1</option>
-                  <option value="2">2</option>
-                  <option value="3">3</option>
-                  <option value="4">4</option>
-                  <option value="5">5</option>
-                  <option value="6">6</option>
-                  <option value="7">7</option>
-                  <option value="8">8</option>
-                  <option value="9">9</option>
-                  <option value="10">10</option>
-                  <option value="11">11</option>
-                  <option value="12">12</option>
-                </select>
+                  options={[
+                    { label: "1", value: "1" },
+                    { label: "2", value: "2" },
+                    { label: "3", value: "3" },
+                    { label: "4", value: "4" },
+                    { label: "5", value: "5" },
+                    { label: "6", value: "6" },
+                    { label: "7", value: "7" },
+                    { label: "8", value: "8" },
+                    { label: "9", value: "9" },
+                    { label: "10", value: "10" },
+                    { label: "11", value: "11" },
+                    { label: "12", value: "12" },
+                  ]}
+                  onChange={(e) => setInterval(e.value)}
+                  placeholder="Select an interval"
+                />
               </div>
               <button type="submit" className={classes.search_btn}>
                 Search
               </button>
             </form>
 
-            <div className={classes.title_container}>
-              <div className={classes.title_sub_container}>
-                <i className="fa-solid fa-chart-simple"></i>
-                <h3>Monthly Revenue Report</h3>
-              </div>
-            </div>
+            <TitleHeader
+              title="Monthly Revenue"
+              icon={<i className="fa-regular fa-chart-bar"></i>}
+            />
 
             <NewLineGraph data={data} width={width} biggest={biggest} />
 
             {/* <div style={{ height: 600, width: "100%"}}> */}
             <div className={classes.table_container}>
               <div className={classes.table_sub_container}>
-                <DataGrid
-                  rows={[...data, totals]}
-                  columns={[
-                    {
-                      field: "misDate",
-                      sortable: false,
-                      minWidth: 150,
-                      headerName: "Date",
-                    },
-                    {
-                      field: "renewalsRevenue",
-                      sortable: false,
-                      minWidth: 150,
-                      headerName: "Renewals Revenue",
-                    },
-                    {
-                      field: "subscriptionRevenue",
-                      sortable: false,
-                      minWidth: 150,
-                      headerName: "Subscription Revenue",
-                    },
-                    {
-                      field: "totalRevenue",
-                      sortable: false,
-                      minWidth: 150,
-                      headerName: "Total Revenue",
-                    },
-                  ]}
-                  slots={{
-                    toolbar: CustomToolbar,
-                  }}
-                />
+                <ThemeComponent>
+                  <DataGrid
+                    rows={[...data, totals]}
+                    columns={[
+                      {
+                        field: "misDate",
+                        sortable: false,
+                        minWidth: 150,
+                        headerName: "Date",
+                      },
+                      {
+                        field: "renewalsRevenue",
+                        sortable: false,
+                        minWidth: 150,
+                        headerName: "Renewals Revenue",
+                      },
+                      {
+                        field: "subscriptionRevenue",
+                        sortable: false,
+                        minWidth: 150,
+                        headerName: "Subscription Revenue",
+                      },
+                      {
+                        field: "totalRevenue",
+                        sortable: false,
+                        minWidth: 150,
+                        headerName: "Total Revenue",
+                      },
+                    ]}
+                    slots={{
+                      toolbar: CustomToolbar,
+                    }}
+                  />
+                </ThemeComponent>
               </div>
             </div>
           </div>
