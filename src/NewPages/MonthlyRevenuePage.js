@@ -1,0 +1,257 @@
+import React, { useEffect, useState } from "react";
+import { sendMonthlyDataApi } from "../Data/Api";
+import { toast, ToastContainer } from "react-toastify";
+import GetSecure from "../Request/GetSecure";
+import Loader from "../Components/Loader";
+import {
+  DataGrid,
+  GridToolbarContainer,
+  GridToolbarExport,
+} from "@mui/x-data-grid";
+// import ExportToExcel from "../Components/ExportToExcel";
+import classes from "./DailyRevenuePage.module.css";
+import NewSidebar from "../NewComponents/NewSidebar";
+import NewHeader from "../NewComponents/NewHeader";
+import NewLineGraph from "../NewComponents/NewLineGraph";
+import ThemeComponent from "../NewComponents/ThemeComponent";
+import { Dropdown } from "primereact/dropdown";
+import TitleHeader from "../NewComponents/TitleHeader";
+
+const MonthlyRevenuePage = () => {
+  //to start on load
+  useEffect(() => {
+    gettingServices();
+    // eslint-disable-next-line
+  }, []);
+
+  //Hook to store services
+  const [services, setServices] = useState([]);
+  const [responseService, setResponseService] = useState("");
+  const [service, setService] = useState();
+
+  //Getting Services
+  const gettingServices = () => {
+    let services = JSON.parse(localStorage.getItem("services"));
+    setServices(services);
+    setService(services[0]);
+    getDataFromBackend(services[0]);
+  };
+
+  //Hook to store dates
+  const [interval, setInterval] = useState("6");
+
+  //Method to get data from Backend
+  const getDataFromBackend = (service) => {
+    let promise = GetSecure(
+      `${sendMonthlyDataApi}?interval=${interval}&service=${service}`
+    );
+    promise.then((e) => {
+      handleDataResponse(e);
+    });
+  };
+
+  //Hook to store data
+  const [data, setData] = useState([]);
+  // console.log(data);
+
+  //Hook to store biggest value
+  const [biggest, setBiggest] = useState(0);
+
+  //Method to handle response
+  const handleDataResponse = (e) => {
+    if (e.response === "error") {
+      toast.error(e.error?.response?.data?.message || e.error?.message);
+      setLoader("none");
+    } else {
+      setLoader("none");
+      // console.log(e);
+      const dataDateManupulate = e.data.map((dataItem) => {
+        return {
+          id: `${dataItem.MONTH}-${dataItem.YEAR}`,
+          misDate: `${dataItem.MONTH}-${dataItem.YEAR}`,
+          renewalsRevenue: dataItem.renewalsRevenue,
+          subscriptionRevenue: dataItem.subscriptionRevenue,
+          totalRevenue: dataItem.totalRevenue,
+        };
+      });
+      setData(dataDateManupulate.reverse());
+      setResponseService(e.serviceName);
+      const biggestValue = Math.max.apply(
+        Math,
+        e.data.map(function (dataItem) {
+          return dataItem.totalRevenue;
+        })
+      );
+      setBiggest(biggestValue);
+    }
+  };
+
+  //Method to handle form submit
+  const handleFormSubmit = (e) => {
+    e.preventDefault();
+    setLoader("block");
+    getDataFromBackend(service);
+  };
+
+  //Hook to store loader div state
+  const [loader, setLoader] = useState("block");
+
+  //Method to handle service choose
+  const handleChooseService = (serviceName) => {
+    // console.log("serviceName ",serviceName);
+    setService(serviceName);
+    getDataFromBackend(serviceName);
+  };
+
+  const dataLength = data.length;
+  // console.log(dataLength);
+  let width = 3000;
+  if (dataLength > 10) {
+    width = 1000;
+  }
+  if (dataLength > 0 && dataLength <= 10) {
+    width = 700;
+  }
+
+  function CustomToolbar() {
+    return (
+      <GridToolbarContainer>
+        <GridToolbarExport />
+      </GridToolbarContainer>
+    );
+  }
+
+  const totalRenewalRevenue = data.reduce(
+    (total, dataItem) => total + dataItem.renewalsRevenue,
+    0
+  );
+  const totalSubscriptionRevenue = data.reduce(
+    (total, dataItem) => total + dataItem.subscriptionRevenue,
+    0
+  );
+  const totalRevenue = data.reduce(
+    (total, dataItem) => total + dataItem.totalRevenue,
+    0
+  );
+
+  const totals = {
+    id: totalRevenue,
+    misDate: "Totals",
+    renewalsRevenue: totalRenewalRevenue.toFixed(0),
+    subscriptionRevenue: totalSubscriptionRevenue.toFixed(0),
+    totalRevenue: totalRevenue.toFixed(0),
+  };
+
+  // console.log([...data,totals])
+  return (
+    <>
+      {/* <!-- subscribers-sec --> */}
+      <Loader value={loader} />
+      <ToastContainer />
+      <div className={classes.main}>
+        <div className={classes.sidebar}>
+          <div className={classes.sidebar_header}>
+            <img
+              src="/assets/images/logo.png"
+              alt="Revenue portal"
+              className={classes.sidebar_logo}
+            />
+            <h3 className={classes.dashboard_text}>Dashboard</h3>
+          </div>
+          <NewSidebar highlight={2} />
+        </div>
+        <div className={classes.container}>
+          <NewHeader service={responseService} />
+          <div className={classes.sub_container}>
+            <form className={classes.form} onSubmit={handleFormSubmit}>
+              <div className={classes.service}>
+                <Dropdown
+                  value={service}
+                  onChange={(e) => handleChooseService(e.value)}
+                  options={services?.map((service) => ({
+                    label: service,
+                    value: service,
+                  }))}
+                  placeholder="Select a Service"
+                />
+              </div>
+              <div className={classes.month}>
+                <Dropdown
+                  id="interval"
+                  value={interval}
+                  options={[
+                    { label: "1", value: "1" },
+                    { label: "2", value: "2" },
+                    { label: "3", value: "3" },
+                    { label: "4", value: "4" },
+                    { label: "5", value: "5" },
+                    { label: "6", value: "6" },
+                    { label: "7", value: "7" },
+                    { label: "8", value: "8" },
+                    { label: "9", value: "9" },
+                    { label: "10", value: "10" },
+                    { label: "11", value: "11" },
+                    { label: "12", value: "12" },
+                  ]}
+                  onChange={(e) => setInterval(e.value)}
+                  placeholder="Select an interval"
+                />
+              </div>
+              <button type="submit" className={classes.search_btn}>
+                Search
+              </button>
+            </form>
+
+            <TitleHeader
+              title="Monthly Revenue"
+              icon={<i className="fa-regular fa-chart-bar"></i>}
+            />
+
+            <NewLineGraph data={data} width={width} biggest={biggest} />
+
+            {/* <div style={{ height: 600, width: "100%"}}> */}
+            <div className={classes.table_container}>
+              <div className={classes.table_sub_container}>
+                <ThemeComponent>
+                  <DataGrid
+                    rows={[...data, totals]}
+                    columns={[
+                      {
+                        field: "misDate",
+                        sortable: false,
+                        minWidth: 150,
+                        headerName: "Date",
+                      },
+                      {
+                        field: "renewalsRevenue",
+                        sortable: false,
+                        minWidth: 150,
+                        headerName: "Renewals Revenue",
+                      },
+                      {
+                        field: "subscriptionRevenue",
+                        sortable: false,
+                        minWidth: 150,
+                        headerName: "Subscription Revenue",
+                      },
+                      {
+                        field: "totalRevenue",
+                        sortable: false,
+                        minWidth: 150,
+                        headerName: "Total Revenue",
+                      },
+                    ]}
+                    slots={{
+                      toolbar: CustomToolbar,
+                    }}
+                  />
+                </ThemeComponent>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
+  );
+};
+export default MonthlyRevenuePage;

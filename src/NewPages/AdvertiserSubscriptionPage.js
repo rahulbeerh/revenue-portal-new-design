@@ -1,0 +1,313 @@
+import React, { useEffect, useState } from "react";
+import Loader from "../Components/Loader";
+import { ToastContainer, toast } from "react-toastify";
+import axios from "axios";
+import {
+  advertiserSubscriptionApi,
+  advertiserTrafficClientsApi,
+  advertiserTrafficServicesApi,
+} from "../Data/Api";
+import moment from "moment";
+import { useNavigate } from "react-router-dom";
+import classes from "./DailyRevenuePage.module.css";
+import NewSidebar from "../NewComponents/NewSidebar";
+import NewHeader from "../NewComponents/NewHeader";
+import ThemeComponent from "../NewComponents/ThemeComponent";
+import { DataGrid } from "@mui/x-data-grid";
+import { Calendar } from "primereact/calendar";
+import { Dropdown } from "primereact/dropdown";
+import TitleHeader from "../NewComponents/TitleHeader";
+
+const AdvertiserSubscriptionPage = () => {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (localStorage.getItem("userName") != "panz") {
+      navigate("/dailyRevenue");
+    }
+  }, []);
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState("block");
+  const [startDate, setStartDate] = useState(
+    moment(new Date()).format("yyyy-MM-DD")
+  );
+  const [endDate, setEndDate] = useState(
+    moment(new Date()).format("yyyy-MM-DD")
+  );
+
+  const [clients, setClients] = useState([]);
+  const [client, setClient] = useState("");
+  const [services, setServices] = useState([]);
+  const [service, setService] = useState("");
+
+  console.log(client, "client");
+  const fetchAdvertiserClients = async () => {
+    const data = {
+      client: localStorage.getItem("userName"),
+    };
+    try {
+      setLoading("block");
+      let token = localStorage.getItem("userToken");
+      let headers = { Authorization: "Bearer " + token };
+      const res = await axios.post(advertiserTrafficClientsApi, data, {
+        headers: headers,
+      });
+      setClients(res?.data?.result);
+      let newClient = { client_name: "All" };
+      setClients((prevClients) => {
+        return [newClient, ...prevClients];
+      });
+      setLoading("none");
+    } catch (error) {
+      setLoading("none");
+      toast.error(
+        error?.response?.data?.message || error?.message || error?.data?.message
+      );
+    }
+  };
+
+  const fetchAdvertiserServices = async (clientName) => {
+    const data = {
+      client: clientName,
+    };
+    try {
+      let token = localStorage.getItem("userToken");
+      let headers = { Authorization: "Bearer " + token };
+      const res = await axios.post(advertiserTrafficServicesApi, data, {
+        headers: headers,
+      });
+      setServices(res?.data?.result);
+      setService(res?.data?.result[0]?.serviceName);
+    } catch (error) {
+      toast.error(
+        error?.response?.data?.message || error?.message || error?.data?.message
+      );
+    }
+  };
+
+  const fetchDataFromBackend = async () => {
+    const data = {
+      startDate: startDate,
+      endDate: endDate,
+      service: service !== "" ? service : "All",
+      client: client !== "" ? client : "All",
+    };
+    try {
+      setLoading("block");
+      let token = localStorage.getItem("userToken");
+
+      let headers = { Authorization: "Bearer " + token };
+
+      const res = await axios.post(advertiserSubscriptionApi, data, {
+        headers: headers,
+      });
+      console.log(res, "res");
+      setData(res?.data?.result);
+      setLoading("none");
+    } catch (error) {
+      setLoading("none");
+      toast.error(
+        error?.response?.data?.message || error?.message || error?.data?.message
+      );
+    }
+  };
+
+  useEffect(() => {
+    fetchAdvertiserClients();
+    setServices([{ serviceName: "All" }]);
+    fetchDataFromBackend();
+  }, []);
+
+  const submitHandler = async (e) => {
+    e.preventDefault();
+    fetchDataFromBackend();
+  };
+  const handleServiceChange = (service) => {
+    setService(service);
+  };
+
+  const handleClientChange = (client) => {
+    setClient(client);
+    if (client === "All") {
+      setServices([{ serviceName: "All" }]);
+    } else {
+      fetchAdvertiserServices(client);
+    }
+  };
+
+  const convertStartDate = (utcDate) => {
+    setStartDate(moment(new Date(utcDate)).format("yyyy-MM-DD"));
+  };
+
+  const convertEndDate = (utcDate) => {
+    setEndDate(moment(new Date(utcDate)).format("yyyy-MM-DD"));
+  };
+
+  return (
+    <>
+      <Loader value={loading} />
+      <ToastContainer />
+      <div className={classes.main}>
+        <div className={classes.sidebar}>
+          <div className={classes.sidebar_header}>
+            <img
+              src="/assets/images/logo.png"
+              alt="Revenue portal"
+              className={classes.sidebar_logo}
+            />
+            <h3 className={classes.dashboard_text}>Dashboard</h3>
+          </div>
+          <NewSidebar highlight={9} />
+        </div>
+        <div className={classes.container}>
+          <NewHeader service="Advertiser Subscription" />
+          <div className={classes.sub_container}>
+            <form className={classes.form} onSubmit={submitHandler}>
+              <div className={classes.client}>
+                <Dropdown
+                  value={client}
+                  onChange={(e) => handleClientChange(e.value)}
+                  options={clients?.map((data) => ({
+                    label: data?.client_name,
+                    value: data?.client_name,
+                  }))}
+                  placeholder="Select a Client"
+                />
+              </div>
+              <div className={classes.service}>
+                <Dropdown
+                  value={service}
+                  onChange={(e) => handleServiceChange(e.value)}
+                  options={services?.map((data) => ({
+                    label: data?.serviceName,
+                    value: data?.serviceName,
+                  }))}
+                  placeholder="Select a Service"
+                />
+              </div>
+
+              <div className={classes.start_date}>
+                <Calendar
+                  value={startDate}
+                  onChange={(e) => convertStartDate(e.value)}
+                  showIcon
+                  // touchUI
+                  showButtonBar
+                  placeholder="Start Date"
+                />
+              </div>
+              <div className={classes.end_date}>
+                <Calendar
+                  value={endDate}
+                  onChange={(e) => convertEndDate(e.value)}
+                  showIcon
+                  // touchUI
+                  showButtonBar
+                  placeholder="End Date"
+                />
+              </div>
+              <button type="submit" className={classes.search_btn}>
+                Search
+              </button>
+            </form>
+
+            <TitleHeader
+              title="Advertiser Subscription"
+              icon={
+                <i className="fa-solid fa-snowflake" aria-hidden="true"></i>
+              }
+            />
+
+            {data ? (
+              <div className={classes.table_container}>
+                <div className={classes.table_sub_container}>
+                  <ThemeComponent>
+                    <DataGrid
+                      rows={data?.map((row, index) => ({
+                        ...row,
+                        id: index,
+                      }))}
+                      getRowId={(row) => row.id}
+                      columns={[
+                        {
+                          field: "clientName",
+                          sortable: false,
+                          minWidth: 150,
+                          headerName: "Client",
+                        },
+                        {
+                          field: "serviceName",
+                          sortable: false,
+                          minWidth: 150,
+                          headerName: "Service",
+                        },
+                        {
+                          field: "publisher",
+                          sortable: false,
+                          minWidth: 150,
+                          headerName: "Publisher",
+                        },
+                        {
+                          field: "queue",
+                          sortable: false,
+                          minWidth: 150,
+                          headerName: "Queue",
+                          renderCell: (params) =>
+                            params.value === undefined || params.value === null
+                              ? 0
+                              : params.value,
+                        },
+                        {
+                          field: "sent",
+                          sortable: false,
+                          minWidth: 150,
+                          headerName: "Sent",
+                          renderCell: (params) =>
+                            params.value === undefined || params.value === null
+                              ? 0
+                              : params.value,
+                        },
+                        {
+                          field: "skip",
+                          sortable: false,
+                          minWidth: 150,
+                          headerName: "Skip",
+                          renderCell: (params) =>
+                            params.value === undefined || params.value === null
+                              ? 0
+                              : params.value,
+                        },
+                        {
+                          field: "duplicateRec",
+                          sortable: false,
+                          minWidth: 150,
+                          headerName: "Duplicate Record",
+                          renderCell: (params) =>
+                            params.value === undefined || params.value === null
+                              ? 0
+                              : params.value,
+                        },
+                        {
+                          field: "total",
+                          sortable: false,
+                          minWidth: 150,
+                          headerName: "Total",
+                          renderCell: (params) =>
+                            params.value === undefined || params.value === null
+                              ? 0
+                              : params.value,
+                        },
+                      ]}
+                    />
+                  </ThemeComponent>
+                </div>
+              </div>
+            ) : null}
+          </div>
+        </div>
+      </div>
+    </>
+  );
+};
+
+export default AdvertiserSubscriptionPage;
