@@ -19,22 +19,25 @@ import NewSidebarAdmin from "../NewComponents/NewSidebarAdmin";
 import NewHeader from "../NewComponents/NewHeader";
 import { Dropdown } from "primereact/dropdown";
 import NewHeaderAdmin from "../NewComponents/NewHeaderAdmin";
+import { DataTable } from "primereact/datatable";
+import { Column } from "primereact/column";
+import ExportMonthlyRevenueToExcel from "../NewComponents/ExportMonthlyRevenueToExcel";
 // import ExportToExcel from "../Components/ExportToExcel";
 
 const MonthlyRevenueAdminPage = () => {
   const [clients, setClients] = useState([]);
-  const [clientForDropdown,setClientForDropdown]=useState("");
+  const [clientForDropdown, setClientForDropdown] = useState("");
   const navigate = useNavigate();
 
   const [sidebarHide, setSidebarHide] = useState(() =>
-  localStorage.getItem("sidebar")
-    ? JSON.parse(localStorage.getItem("sidebar"))
-    : false
-);
-const sidebarHandler = () => {
-  localStorage.setItem("sidebar", JSON.stringify(!sidebarHide));
-  setSidebarHide(JSON.parse(localStorage.getItem("sidebar")));
-};
+    localStorage.getItem("sidebar")
+      ? JSON.parse(localStorage.getItem("sidebar"))
+      : false
+  );
+  const sidebarHandler = () => {
+    localStorage.setItem("sidebar", JSON.stringify(!sidebarHide));
+    setSidebarHide(JSON.parse(localStorage.getItem("sidebar")));
+  };
 
   useEffect(() => {
     const admin = localStorage.getItem("userName") == "admin";
@@ -176,14 +179,6 @@ const sidebarHandler = () => {
     width = 700;
   }
 
-  function CustomToolbar() {
-    return (
-      <GridToolbarContainer>
-        <GridToolbarExport />
-      </GridToolbarContainer>
-    );
-  }
-
   const totalRenewalRevenue = data.reduce(
     (total, dataItem) => total + dataItem.renewalsRevenue,
     0
@@ -204,6 +199,10 @@ const sidebarHandler = () => {
     subscriptionRevenue: totalSubscriptionRevenue,
     totalRevenue: totalRevenue,
   };
+
+  const header = (
+    <ExportMonthlyRevenueToExcel data={[...data,totals]}/>
+  );
 
   // console.log([...data,totals])
   return (
@@ -244,7 +243,6 @@ const sidebarHandler = () => {
           <div className={classes.sub_container}>
             <form className={classes.form} onSubmit={handleFormSubmit}>
               <div className={classes.client}>
-              
                 <Dropdown
                   value={clientForDropdown}
                   onChange={(e) => handleClientChange(e.value)}
@@ -258,20 +256,7 @@ const sidebarHandler = () => {
               </div>
 
               <div className={classes.service}>
-                {/* <label htmlFor="service">Service:</label>
-                <select
-                  id="service"
-                  onChange={(e) => handleChooseService(e.target.value)}
-                >
-                  {services.length > 0 &&
-                    services.map((item, index) => {
-                      return (
-                        <option key={index} value={item}>
-                          {item}
-                        </option>
-                      );
-                    })}
-                </select> */}
+              
                 <Dropdown
                   value={service}
                   onChange={(e) => handleChooseService(e.value)}
@@ -285,25 +270,7 @@ const sidebarHandler = () => {
               </div>
 
               <div className={classes.start_date}>
-                {/* <label htmlFor="interval">Months:</label>
-                <select
-                  id="interval"
-                  value={interval}
-                  onChange={(e) => setInterval(e.target.value)}
-                >
-                  <option value="1">1</option>
-                  <option value="2">2</option>
-                  <option value="3">3</option>
-                  <option value="4">4</option>
-                  <option value="5">5</option>
-                  <option value="6">6</option>
-                  <option value="7">7</option>
-                  <option value="8">8</option>
-                  <option value="9">9</option>
-                  <option value="10">10</option>
-                  <option value="11">11</option>
-                  <option value="12">12</option>
-                </select> */}
+               
                 <Dropdown
                   id="interval"
                   value={interval}
@@ -326,7 +293,7 @@ const sidebarHandler = () => {
                   style={{ width: "100%" }}
                 />
               </div>
-              
+
               <button type="submit" className={classes.search_btn}>
                 Search
               </button>
@@ -338,38 +305,25 @@ const sidebarHandler = () => {
             <div className={classes.table_container}>
               <div className={classes.table_sub_container}>
                 <ThemeComponent>
-                  <DataGrid
-                    rows={[...data, totals]}
-                    columns={[
-                      {
-                        field: "misDate",
-                        sortable: false,
-                        minWidth: 150,
-                        headerName: "Date",
-                      },
-                      {
-                        field: "renewalsRevenue",
-                        sortable: false,
-                        minWidth: 150,
-                        headerName: "Renewals Revenue",
-                      },
-                      {
-                        field: "subscriptionRevenue",
-                        sortable: false,
-                        minWidth: 150,
-                        headerName: "Subscription Revenue",
-                      },
-                      {
-                        field: "totalRevenue",
-                        sortable: false,
-                        minWidth: 150,
-                        headerName: "Total Revenue",
-                      },
-                    ]}
-                    slots={{
-                      toolbar: CustomToolbar,
-                    }}
-                  />
+                  <DataTable
+                    value={[...data, totals]}
+                    emptyMessage="No data found"
+                    showGridlines
+                    responsive
+                    scrollable
+                    scrollHeight="500px" 
+                    rows={10} 
+                    paginator
+                    header={header}
+                  >
+                    <Column field="misDate" header="Date" />
+                    <Column field="renewalsRevenue" header="Renewals Revenue" />
+                    <Column
+                      field="subscriptionRevenue"
+                      header="Subscription Revenue"
+                    />
+                    <Column field="totalRevenue" header="Total Revenue" />
+                  </DataTable>
                 </ThemeComponent>
               </div>
             </div>

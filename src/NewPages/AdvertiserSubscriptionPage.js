@@ -17,6 +17,8 @@ import { DataGrid } from "@mui/x-data-grid";
 import { Calendar } from "primereact/calendar";
 import { Dropdown } from "primereact/dropdown";
 import TitleHeader from "../NewComponents/TitleHeader";
+import { DataTable } from "primereact/datatable";
+import { Column } from "primereact/column";
 
 const AdvertiserSubscriptionPage = () => {
   const navigate = useNavigate();
@@ -43,14 +45,14 @@ const AdvertiserSubscriptionPage = () => {
   const [service, setService] = useState("");
 
   const [sidebarHide, setSidebarHide] = useState(() =>
-  localStorage.getItem("sidebar")
-    ? JSON.parse(localStorage.getItem("sidebar"))
-    : false
-);
-const sidebarHandler = () => {
-  localStorage.setItem("sidebar", JSON.stringify(!sidebarHide));
-  setSidebarHide(JSON.parse(localStorage.getItem("sidebar")));
-};
+    localStorage.getItem("sidebar")
+      ? JSON.parse(localStorage.getItem("sidebar"))
+      : false
+  );
+  const sidebarHandler = () => {
+    localStorage.setItem("sidebar", JSON.stringify(!sidebarHide));
+    setSidebarHide(JSON.parse(localStorage.getItem("sidebar")));
+  };
 
   console.log(client, "client");
   const fetchAdvertiserClients = async () => {
@@ -260,7 +262,7 @@ const sidebarHandler = () => {
               <div className={classes.table_container}>
                 <div className={classes.table_sub_container}>
                   <ThemeComponent>
-                    <DataGrid
+                    {/* <DataGrid
                       rows={data?.map((row, index) => ({
                         ...row,
                         id: index,
@@ -336,7 +338,46 @@ const sidebarHandler = () => {
                               : params.value,
                         },
                       ]}
-                    />
+                    /> */}
+                    <DataTable
+                      value={data}
+                      emptyMessage="No data found"
+                      showGridlines
+                      responsive
+                      scrollable
+                      scrollHeight="500px"
+                      rows={10}
+                      paginator
+                    >
+                      <Column field="clientName" header="Client" />
+                      <Column field="serviceName" header="Service" />
+                      <Column field="publisher" header="Publisher" />
+                      <Column
+                        field="queue"
+                        header="Queue"
+                        body={(rowData) => rowData.queue || 0}
+                      />
+                      <Column
+                        field="sent"
+                        header="Sent"
+                        body={(rowData) => rowData.sent || 0}
+                      />
+                      <Column
+                        field="skip"
+                        header="Skip"
+                        body={(rowData) => rowData.skip || 0}
+                      />
+                      <Column
+                        field="duplicateRec"
+                        header="Duplicate Record"
+                        body={(rowData) => rowData.duplicateRec || 0}
+                      />
+                      <Column
+                        field="total"
+                        header="Total"
+                        body={(rowData) => rowData.total || 0}
+                      />
+                    </DataTable>
                   </ThemeComponent>
                 </div>
               </div>

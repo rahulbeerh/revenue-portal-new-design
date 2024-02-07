@@ -145,7 +145,7 @@ const ServicePage = () => {
                 <div className={classes.table_sub_container}>
                   <table className={classes.table}>
                     <tbody>
-                      <tr className={classes.tr}>
+                      <tr className={classes.tr_th}>
                         <th className={classes.th}>Client</th>
                         <th className={classes.th}>Name</th>
                         <th className={classes.th}>Amount Per Subscription</th>

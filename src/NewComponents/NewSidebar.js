@@ -18,7 +18,7 @@ const NewSidebar = (props) => {
         <div
           className={classes.tab}
           style={{
-            color: props.highlight === 1 ? "#fff" : "#6B7281",
+            color: props.highlight === 1 ? "#000" : "#6B7281",
           }}
           onClick={() => {
             handleNavigate("/dailyRevenue");
@@ -33,7 +33,7 @@ const NewSidebar = (props) => {
         <div
           className={classes.tab}
           style={{
-            color: props.highlight === 2 ? "#fff" : "#6B7281",
+            color: props.highlight === 2 ? "#000" : "#6B7281",
           }}
           onClick={() => {
             handleNavigate("/monthlyRevenue");
@@ -49,7 +49,7 @@ const NewSidebar = (props) => {
           <div
             className={classes.tab}
             style={{
-              color: props.highlight === 3 ? "#fff" : "#6B7281",
+              color: props.highlight === 3 ? "#000" : "#6B7281",
             }}
             onClick={() => {
               handleNavigate("/dashboard");
@@ -66,7 +66,7 @@ const NewSidebar = (props) => {
           <div
             className={classes.tab}
             style={{
-              color: props.highlight === 4 ? "#fff" : "#6B7281",
+              color: props.highlight === 4 ? "#000" : "#6B7281",
             }}
             onClick={() => {
               handleNavigate("/add-country-and-add-operator");
@@ -83,7 +83,7 @@ const NewSidebar = (props) => {
           <div
             className={classes.tab}
             style={{
-              color: props.highlight === 5 ? "#fff" : "#6B7281",
+              color: props.highlight === 5 ? "#000" : "#6B7281",
             }}
             onClick={() => {
               handleNavigate("/publisher-traffic");
@@ -101,7 +101,7 @@ const NewSidebar = (props) => {
           <div
             className={classes.tab}
             style={{
-              color: props.highlight === 6 ? "#fff" : "#6B7281",
+              color: props.highlight === 6 ? "#000" : "#6B7281",
             }}
             onClick={() => {
               handleNavigate("/publisher-subscription");
@@ -119,7 +119,7 @@ const NewSidebar = (props) => {
           <div
             className={classes.tab}
             style={{
-              color: props.highlight === 7 ? "#fff" : "#6B7281",
+              color: props.highlight === 7 ? "#000" : "#6B7281",
             }}
             onClick={() => {
               handleNavigate("/advertiser");
@@ -138,7 +138,7 @@ const NewSidebar = (props) => {
           <div
             className={classes.tab}
             style={{
-              color: props.highlight === 8 ? "#fff" : "#6B7281",
+              color: props.highlight === 8 ? "#000" : "#6B7281",
             }}
             onClick={() => {
               handleNavigate("/advertiser-traffic");
@@ -158,7 +158,7 @@ const NewSidebar = (props) => {
           <div
             className={classes.tab}
             style={{
-              color: props.highlight === 9 ? "#fff" : "#6B7281",
+              color: props.highlight === 9 ? "#000" : "#6B7281",
             }}
             onClick={() => {
               handleNavigate("/advertiser-subscription");

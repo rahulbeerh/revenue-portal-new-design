@@ -13,8 +13,8 @@ import classes from "./DailyRevenuePage.module.css";
 import ThemeComponent from "../NewComponents/ThemeComponent";
 import { Calendar } from "primereact/calendar";
 import NewHeaderAdmin from "../NewComponents/NewHeaderAdmin";
-import { DataTable } from 'primereact/datatable';
-import { Column } from 'primereact/column';
+import { DataTable } from "primereact/datatable";
+import { Column } from "primereact/column";
 
 const DashboardAdminPage = () => {
   const [month, setMonth] = useState(new Date().getMonth() + 1);
@@ -147,9 +147,9 @@ const DashboardAdminPage = () => {
 
             <TitleHeader title="All Services Montly Revenue" />
             <div className={classes.table_container}>
-              <div className={classes.table_sub_container}>
-                <ThemeComponent>
-                  <DataGrid
+              {/* <div className={classes.table_sub_container}> */}
+              <ThemeComponent>
+                {/* <DataGrid
                     rows={data.map((dataItem, i) => ({
                       id: i,
                       service: dataItem.service,
@@ -189,39 +189,36 @@ const DashboardAdminPage = () => {
                         headerName: "Total Revenue",
                       },
                     ]}
-                  />
+                  /> */}
 
-                  {/* <DataTable
-                    value={data.map((dataItem, i) => ({
-                      id: i,
-                      service: dataItem.service,
-                      month: `${dataItem.MONTH}-${dataItem.YEAR}`,
-                      renewalsRevenue: dataItem?.renewalsRevenue || 0,
-                      subscriptionRevenue: dataItem?.subscriptionRevenue || 0,
-                      totalRevenue: dataItem?.totalRevenue || 0,
-                    }))}
-                    emptyMessage="No data found"
-                  >
-                    <Column field="service" header="Service" sortable />
-                    <Column field="month" header="Month" sortable />
-                    <Column
-                      field="renewalsRevenue"
-                      header="Renewals Revenue"
-                      sortable
-                    />
-                    <Column
-                      field="subscriptionRevenue"
-                      header="Subscription Revenue"
-                      sortable
-                    />
-                    <Column
-                      field="totalRevenue"
-                      header="Total Revenue"
-                      sortable
-                    />
-                  </DataTable> */}
-                </ThemeComponent>
-              </div>
+                <DataTable
+                  value={data.map((dataItem, i) => ({
+                    id: i,
+                    service: dataItem.service,
+                    month: `${dataItem.MONTH}-${dataItem.YEAR}`,
+                    renewalsRevenue: dataItem?.renewalsRevenue || 0,
+                    subscriptionRevenue: dataItem?.subscriptionRevenue || 0,
+                    totalRevenue: dataItem?.totalRevenue || 0,
+                  }))}
+                  emptyMessage="No data found"
+                  showGridlines
+                  responsive
+                  scrollable
+                  scrollHeight="500px" 
+                  rows={10} 
+                  paginator
+                >
+                  <Column field="service" header="Service" />
+                  <Column field="month" header="Month" />
+                  <Column field="renewalsRevenue" header="Renewals Revenue" />
+                  <Column
+                    field="subscriptionRevenue"
+                    header="Subscription Revenue"
+                  />
+                  <Column field="totalRevenue" header="Total Revenue" />
+                </DataTable>
+              </ThemeComponent>
+              {/* </div> */}
             </div>
           </div>
         </div>

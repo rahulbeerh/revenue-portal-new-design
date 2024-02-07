@@ -12,6 +12,8 @@ import { DataGrid } from "@mui/x-data-grid";
 import ThemeComponent from "../NewComponents/ThemeComponent";
 import { InputText } from "primereact/inputtext";
 import TitleHeader from "../NewComponents/TitleHeader";
+import { DataTable } from "primereact/datatable";
+import { Column } from "primereact/column";
 
 const AddCountryAndOperatorPage = () => {
   const [country, setCountry] = useState("");
@@ -21,16 +23,16 @@ const AddCountryAndOperatorPage = () => {
   const navigate = useNavigate();
 
   const [sidebarHide, setSidebarHide] = useState(() =>
-  localStorage.getItem("sidebar")
-    ? JSON.parse(localStorage.getItem("sidebar"))
-    : false
-);
-const sidebarHandler = () => {
-  localStorage.setItem("sidebar", JSON.stringify(!sidebarHide));
-  setSidebarHide(JSON.parse(localStorage.getItem("sidebar")));
-};
+    localStorage.getItem("sidebar")
+      ? JSON.parse(localStorage.getItem("sidebar"))
+      : false
+  );
+  const sidebarHandler = () => {
+    localStorage.setItem("sidebar", JSON.stringify(!sidebarHide));
+    setSidebarHide(JSON.parse(localStorage.getItem("sidebar")));
+  };
 
-  console.log({country,operator});
+  console.log({ country, operator });
 
   useEffect(() => {
     if (localStorage.getItem("userName") == "etho_1234") {
@@ -161,13 +163,16 @@ const sidebarHandler = () => {
               </form>
             </div>
 
-            <TitleHeader title="Country and Operator" icon={ <i className="fa-solid fa-globe" aria-hidden="true"></i>} />
+            <TitleHeader
+              title="Country and Operator"
+              icon={<i className="fa-solid fa-globe" aria-hidden="true"></i>}
+            />
 
             {data ? (
               <div className={classes.table_container}>
                 <div className={classes.table_sub_container}>
                   <ThemeComponent>
-                    <DataGrid
+                    {/* <DataGrid
                       rows={data.map((row, index) => ({ ...row, id: index }))}
                       getRowId={(row) => row.id}
                       columns={[
@@ -184,7 +189,24 @@ const sidebarHandler = () => {
                           headerName: "Operator",
                         },
                       ]}
-                    />
+                    /> */}
+                    <DataTable
+                      value={data.map((row, index) => ({ ...row, id: index }))}
+                      emptyMessage="No data found"
+                      showGridlines
+                      responsive
+                      scrollable
+                      scrollHeight="500px" 
+                      rows={10} 
+                      paginator
+                    >
+                      <Column field="country_name" header="Country"  />
+                      <Column
+                        field="operator_name"
+                        header="Operator"
+                        
+                      />
+                    </DataTable>
                   </ThemeComponent>
                 </div>
               </div>

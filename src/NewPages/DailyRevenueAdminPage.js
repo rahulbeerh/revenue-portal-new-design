@@ -20,6 +20,10 @@ import NewLineGraph from "../NewComponents/NewLineGraph";
 import ThemeComponent from "../NewComponents/ThemeComponent";
 import NewSidebarAdmin from "../NewComponents/NewSidebarAdmin";
 import NewHeaderAdmin from "../NewComponents/NewHeaderAdmin";
+import { Column } from "primereact/column";
+import { DataTable } from "primereact/datatable";
+import ExportDailyRevenueAdmin from "../NewComponents/ExportDailyRevenueAdmin";
+import { Button } from "primereact/button";
 
 const DailyRevenueAdminPage = () => {
   const navigate = useNavigate();
@@ -283,13 +287,10 @@ const DailyRevenueAdminPage = () => {
     setDates({ ...dates, to: utcDate });
   };
 
-  function CustomToolbar() {
-    return (
-      <GridToolbarContainer>
-        <GridToolbarExport />
-      </GridToolbarContainer>
-    );
-  }
+  const header = (
+    <ExportDailyRevenueAdmin data={[...data,totals]}/>
+  );
+
 
   return (
     <>
@@ -384,65 +385,55 @@ const DailyRevenueAdminPage = () => {
             <NewLineGraph data={data} width={width} biggest={biggest} />
 
             <div className={classes.table_container}>
-              <div className={classes.table_sub_container}>
+              {/* <div className={classes.table_sub_container}> */}
                 <ThemeComponent>
-                  <DataGrid
-                    rows={[...data, totals]}
-                    columns={[
-                      {
-                        field: "misDate",
-                        sortable: false,
-                        minWidth: 150,
-                        headerName: "Date",
-                      },
-                      {
-                        field: "totalBase",
-                        sortable: false,
-                        minWidth: 150,
-                        headerName: "Total Base",
-                      },
-                      {
-                        field: "totalActiveBase",
-                        sortable: false,
-                        minWidth: 150,
-                        headerName: "Total Active Base",
-                      },
-                      {
-                        field: "subscriptions",
-                        sortable: false,
-                        minWidth: 150,
-                        headerName: "Subscriptions",
-                      },
-                      {
-                        field: "unsubscriptions",
-                        sortable: false,
-                        minWidth: 150,
-                        headerName: "Unsubscriptions",
-                      },
-                      {
-                        field: "renewalsRevenue",
-                        sortable: false,
-                        minWidth: 150,
-                        headerName: "Renewal Revenue",
-                      },
-                      {
-                        field: "subscriptionRevenue",
-                        sortable: false,
-                        minWidth: 150,
-                        headerName: "Subscription Revenue",
-                      },
-                      {
-                        field: "totalRevenue",
-                        minWidth: 150,
-                        headerName: "Total Revenue",
-                      },
-                    ]}
-                    slots={{
-                      toolbar: CustomToolbar,
-                    }}
-                  />
+
+                  <DataTable
+                    value={[...data, totals]}
+                    emptyMessage="No data found"
+                    showGridlines
+                    responsive
+                    scrollable
+                    scrollHeight="500px" 
+                    rows={10} 
+                    paginator
+                    header={header}
+                  >
+                    <Column field="misDate" header="Date"  />
+                    <Column field="totalBase" header="Total Base"  />
+                    <Column
+                      field="totalActiveBase"
+                      header="Total Active Base"
+                      
+                    />
+                    <Column
+                      field="subscriptions"
+                      header="Subscriptions"
+                      
+                    />
+                    <Column
+                      field="unsubscriptions"
+                      header="Unsubscriptions"
+                      
+                    />
+                    <Column
+                      field="renewalsRevenue"
+                      header="Renewal Revenue"
+                      
+                    />
+                    <Column
+                      field="subscriptionRevenue"
+                      header="Subscription Revenue"
+                      
+                    />
+                    <Column
+                      field="totalRevenue"
+                      header="Total Revenue"
+                      
+                    />
+                  </DataTable>
                 </ThemeComponent>
-              </div>
+              {/* </div> */}
             </div>
           </div>
         </div>

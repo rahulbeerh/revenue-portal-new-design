@@ -17,6 +17,8 @@ import ThemeComponent from "../NewComponents/ThemeComponent";
 import { Calendar } from "primereact/calendar";
 import { Dropdown } from "primereact/dropdown";
 import TitleHeader from "../NewComponents/TitleHeader";
+import { DataTable } from "primereact/datatable";
+import { Column } from "primereact/column";
 
 const AdvertiserTrafficPage = () => {
   const navigate = useNavigate();
@@ -69,7 +71,7 @@ const AdvertiserTrafficPage = () => {
         return [newClient, ...prevClients];
       });
       setClient(newClient?.client_name);
-      setService('All');
+      setService("All");
       setLoading("none");
     } catch (error) {
       setLoading("none");
@@ -160,8 +162,8 @@ const AdvertiserTrafficPage = () => {
     setEndDate(moment(new Date(utcDate)).format("yyyy-MM-DD"));
   };
 
-  console.log(client,'c');
-  console.log(service,'s');
+  console.log(client, "c");
+  console.log(service, "s");
 
   return (
     <>
@@ -264,7 +266,7 @@ const AdvertiserTrafficPage = () => {
               <div className={classes.table_container}>
                 <div className={classes.table_sub_container}>
                   <ThemeComponent>
-                    <DataGrid
+                    {/* <DataGrid
                       rows={traffic?.map((row, index) => ({
                         ...row,
                         id: index,
@@ -308,7 +310,24 @@ const AdvertiserTrafficPage = () => {
                           headerName: "Count",
                         },
                       ]}
-                    />
+                    /> */}
+                    <DataTable
+                      value={traffic}
+                      emptyMessage="No data found"
+                      showGridlines
+                      responsive
+                      scrollable
+                      scrollHeight="500px"
+                      rows={10}
+                      paginator
+                    >
+                      <Column field="clientName" header="Client"  />
+                      <Column field="serviceName" header="Service"  />
+                      <Column field="publisher" header="Publisher"  />
+                      <Column field="country" header="Country"  />
+                      <Column field="operator" header="Operator"  />
+                      <Column field="COUNT" header="Count"  />
+                    </DataTable>
                   </ThemeComponent>
                 </div>
               </div>

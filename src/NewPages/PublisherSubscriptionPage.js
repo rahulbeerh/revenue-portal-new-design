@@ -16,6 +16,8 @@ import ThemeComponent from "../NewComponents/ThemeComponent";
 import { Calendar } from "primereact/calendar";
 import { Dropdown } from "primereact/dropdown";
 import TitleHeader from "../NewComponents/TitleHeader";
+import { DataTable } from "primereact/datatable";
+import { Column } from "primereact/column";
 
 const PublisherSubscriptionPage = () => {
   const [data, setData] = useState([]);
@@ -36,14 +38,14 @@ const PublisherSubscriptionPage = () => {
   const [publisher, setPublisher] = useState("");
 
   const [sidebarHide, setSidebarHide] = useState(() =>
-  localStorage.getItem("sidebar")
-    ? JSON.parse(localStorage.getItem("sidebar"))
-    : false
-);
-const sidebarHandler = () => {
-  localStorage.setItem("sidebar", JSON.stringify(!sidebarHide));
-  setSidebarHide(JSON.parse(localStorage.getItem("sidebar")));
-};
+    localStorage.getItem("sidebar")
+      ? JSON.parse(localStorage.getItem("sidebar"))
+      : false
+  );
+  const sidebarHandler = () => {
+    localStorage.setItem("sidebar", JSON.stringify(!sidebarHide));
+    setSidebarHide(JSON.parse(localStorage.getItem("sidebar")));
+  };
 
   const navigate = useNavigate();
 
@@ -268,7 +270,7 @@ const sidebarHandler = () => {
               <div className={classes.table_container}>
                 <div className={classes.table_sub_container}>
                   <ThemeComponent>
-                    <DataGrid
+                    {/* <DataGrid
                       rows={data?.map((row, index) => ({
                         ...row,
                         id: index,
@@ -338,7 +340,71 @@ const sidebarHandler = () => {
                               : params.value,
                         },
                       ]}
-                    />
+                    /> */}
+                    <DataTable
+                      value={data}
+                      emptyMessage="No data found"
+                      showGridlines
+                      responsive
+                      scrollable
+                      scrollHeight="500px"
+                      rows={10}
+                      paginator
+                    >
+                      <Column field="partner" header="Partner"  />
+                      <Column field="servicename" header="Service"  />
+                      <Column
+                        field="queue"
+                        header="Queue"
+                        
+                        body={(rowData) =>
+                          rowData.queue === undefined || rowData.queue === null
+                            ? 0
+                            : rowData.queue
+                        }
+                      />
+                      <Column
+                        field="sent"
+                        header="Sent"
+                        
+                        body={(rowData) =>
+                          rowData.sent === undefined || rowData.sent === null
+                            ? 0
+                            : rowData.sent
+                        }
+                      />
+                      <Column
+                        field="skip"
+                        header="Skip"
+                        
+                        body={(rowData) =>
+                          rowData.skip === undefined || rowData.skip === null
+                            ? 0
+                            : rowData.skip
+                        }
+                      />
+                      <Column
+                        field="duplicateRec"
+                        header="Duplicate Record"
+                        
+                        body={(rowData) =>
+                          rowData.duplicateRec === undefined ||
+                          rowData.duplicateRec === null
+                            ? 0
+                            : rowData.duplicateRec
+                        }
+                      />
+                      <Column
+                        field="total"
+                        header="Total"
+                        
+                        body={(rowData) =>
+                          rowData.total === undefined || rowData.total === null
+                            ? 0
+                            : rowData.total
+                        }
+                      />
+                    </DataTable>
                   </ThemeComponent>
                 </div>
               </div>

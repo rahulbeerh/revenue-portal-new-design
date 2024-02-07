@@ -18,6 +18,7 @@
     "lottie-react": "^2.4.0",
     "lottie-web": "^5.12.2",
     "moment": "^2.29.4",
+    "primeicons": "^6.0.1",
     "primereact": "^9.6.4",
     "react": "^18.2.0",
     "react-datepicker": "^4.25.0",

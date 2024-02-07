@@ -1,14 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import moment from "moment/moment";
 import { sendDataApi } from "../Data/Api";
 import PostSecure from "../Request/PostSecure";
 import { toast, ToastContainer } from "react-toastify";
 import Loader from "../Components/Loader";
-import {
-  DataGrid,
-  GridToolbarContainer,
-  GridToolbarExport,
-} from "@mui/x-data-grid";
 import { useNavigate } from "react-router-dom";
 import NewHeader from "../NewComponents/NewHeader";
 import NewSidebar from "../NewComponents/NewSidebar";
@@ -18,6 +13,9 @@ import ThemeComponent from "../NewComponents/ThemeComponent";
 import { Dropdown } from "primereact/dropdown";
 import { Calendar } from "primereact/calendar";
 import TitleHeader from "../NewComponents/TitleHeader";
+import { DataTable } from "primereact/datatable";
+import { Column } from "primereact/column";
+import ExportDailyRevenueToExcel from "../NewComponents/ExportDailyRevenueToExcel";
 
 const DailyRevenuePage = () => {
   const navigate = useNavigate();
@@ -38,6 +36,8 @@ const DailyRevenuePage = () => {
   const [services, setServices] = useState([]);
 
   const [biggest, setBiggest] = useState(0);
+
+  const dt = useRef(null);
 
   const gettingServices = () => {
     let services = JSON.parse(localStorage.getItem("services"));
@@ -204,14 +204,6 @@ const DailyRevenuePage = () => {
     getDataFromBackend(service);
   };
 
-  function CustomToolbar() {
-    return (
-      <GridToolbarContainer>
-        <GridToolbarExport />
-      </GridToolbarContainer>
-    );
-  }
-
   const convertStartDate = (utcDate) => {
     setStartDateForCalendar(utcDate);
     setDates({ ...dates, from: utcDate });
@@ -221,6 +213,12 @@ const DailyRevenuePage = () => {
     setEndDateForCalendar(utcDate);
     setDates({ ...dates, to: utcDate });
   };
+
+  
+
+  const header = (
+    <ExportDailyRevenueToExcel data={[...data,totals]}/>
+  );
 
   return (
     <>
@@ -314,66 +312,36 @@ const DailyRevenuePage = () => {
             <div className={classes.table_container}>
               <div className={classes.table_sub_container}>
                 <ThemeComponent>
-                  <DataGrid
-                    rows={[...data, totals]}
-                    columns={[
-                      {
-                        field: "misDate",
-                        sortable: false,
-                        minWidth: 150,
-                        headerName: "Date",
-                      },
-                      {
-                        field: "totalBase",
-                        sortable: false,
-                        minWidth: 150,
-                        headerName: "Total Subscription",
-                      },
-                      {
-                        field: "totalActiveBase",
-                        sortable: false,
-                        minWidth: 150,
-                        headerName: "Active Subscription",
-                      },
-                      {
-                        field: "subscriptions",
-                        sortable: false,
-                        minWidth: 150,
-                        headerName: "Paid Subscriptions",
-                      },
-                      {
-                        field: "unsubscriptions",
-                        sortable: false,
-                        minWidth: 150,
-                        headerName: "Unsubscriptions",
-                      },
-                      {
-                        field: "renewalsRevenue",
-                        sortable: false,
-                        minWidth: 150,
-                        headerName: "Renewal Revenue",
-                      },
-                      {
-                        field: "subscriptionRevenue",
-                        sortable: false,
-                        minWidth: 150,
-                        headerName: "Subscription Revenue",
-                      },
-                      {
-                        field: "totalRevenue",
-                        minWidth: 150,
-                        headerName: "Revenue",
-                      },
-                      {
-                        field: "dailyIncreaseAccumulated",
-                        minWidth: 150,
-                        headerName: "Total Revenue",
-                      },
-                    ]}
-                    slots={{
-                      toolbar: CustomToolbar,
-                    }}
-                  />
+                  <DataTable
+                    value={[...data, totals]}
+                    emptyMessage="No data found"
+                    showGridlines
+                    responsive
+                    scrollable
+                    scrollHeight="500px"
+                    rows={10}
+                    paginator
+                    header={header}
+                  >
+                    <Column field="misDate" header="Date" />
+                    <Column field="totalBase" header="Total Subscription" />
+                    <Column
+                      field="totalActiveBase"
+                      header="Active Subscription"
+                    />
+                    <Column field="subscriptions" header="Paid Subscriptions" />
+                    <Column field="unsubscriptions" header="Unsubscriptions" />
+                    <Column field="renewalsRevenue" header="Renewal Revenue" />
+                    <Column
+                      field="subscriptionRevenue"
+                      header="Subscription Revenue"
+                    />
+                    <Column field="totalRevenue" header="Revenue" />
+                    <Column
+                      field="dailyIncreaseAccumulated"
+                      header="Total Revenue"
+                    />
+                  </DataTable>
                 </ThemeComponent>
               </div>
             </div>

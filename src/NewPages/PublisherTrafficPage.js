@@ -13,6 +13,8 @@ import ThemeComponent from "../NewComponents/ThemeComponent";
 import { Dropdown } from "primereact/dropdown";
 import { Calendar } from "primereact/calendar";
 import TitleHeader from "../NewComponents/TitleHeader";
+import { DataTable } from "primereact/datatable";
+import { Column } from "primereact/column";
 
 const PublisherTrafficPage = () => {
   const navigate = useNavigate();
@@ -33,14 +35,14 @@ const PublisherTrafficPage = () => {
   const [publisher, setPublisher] = useState("");
 
   const [sidebarHide, setSidebarHide] = useState(() =>
-  localStorage.getItem("sidebar")
-    ? JSON.parse(localStorage.getItem("sidebar"))
-    : false
-);
-const sidebarHandler = () => {
-  localStorage.setItem("sidebar", JSON.stringify(!sidebarHide));
-  setSidebarHide(JSON.parse(localStorage.getItem("sidebar")));
-};
+    localStorage.getItem("sidebar")
+      ? JSON.parse(localStorage.getItem("sidebar"))
+      : false
+  );
+  const sidebarHandler = () => {
+    localStorage.setItem("sidebar", JSON.stringify(!sidebarHide));
+    setSidebarHide(JSON.parse(localStorage.getItem("sidebar")));
+  };
 
   useEffect(() => {
     if (localStorage.getItem("userName") == "etho_1234") {
@@ -276,7 +278,7 @@ const sidebarHandler = () => {
               <div className={classes.table_container}>
                 <div className={classes.table_sub_container}>
                   <ThemeComponent>
-                    <DataGrid
+                    {/* <DataGrid
                       rows={publisherData?.map((row, index) => ({
                         ...row,
                         id: index,
@@ -314,7 +316,22 @@ const sidebarHandler = () => {
                           headerName: "Count",
                         },
                       ]}
-                    />
+                    /> */}
+                    <DataTable value={publisherData} 
+                    emptyMessage="No data found"
+                    showGridlines
+                    responsive
+                    scrollable
+                    scrollHeight="500px" 
+                    rows={10} 
+                    paginator
+                    >
+                      <Column field="partnerid" header="Partner Id"  />
+                      <Column field="service" header="Service"  />
+                      <Column field="country" header="Country"  />
+                      <Column field="operator" header="Operator"  />
+                      <Column field="count" header="Count"  />
+                    </DataTable>
                   </ThemeComponent>
                 </div>
               </div>

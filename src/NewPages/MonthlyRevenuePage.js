@@ -16,6 +16,9 @@ import NewLineGraph from "../NewComponents/NewLineGraph";
 import ThemeComponent from "../NewComponents/ThemeComponent";
 import { Dropdown } from "primereact/dropdown";
 import TitleHeader from "../NewComponents/TitleHeader";
+import { DataTable } from "primereact/datatable";
+import { Column } from "primereact/column";
+import ExportMonthlyRevenueToExcel from "../NewComponents/ExportMonthlyRevenueToExcel";
 
 const MonthlyRevenuePage = () => {
   //to start on load
@@ -30,14 +33,14 @@ const MonthlyRevenuePage = () => {
   const [service, setService] = useState();
 
   const [sidebarHide, setSidebarHide] = useState(() =>
-  localStorage.getItem("sidebar")
-    ? JSON.parse(localStorage.getItem("sidebar"))
-    : false
-);
-const sidebarHandler = () => {
-  localStorage.setItem("sidebar", JSON.stringify(!sidebarHide));
-  setSidebarHide(JSON.parse(localStorage.getItem("sidebar")));
-};
+    localStorage.getItem("sidebar")
+      ? JSON.parse(localStorage.getItem("sidebar"))
+      : false
+  );
+  const sidebarHandler = () => {
+    localStorage.setItem("sidebar", JSON.stringify(!sidebarHide));
+    setSidebarHide(JSON.parse(localStorage.getItem("sidebar")));
+  };
 
   //Getting Services
   const gettingServices = () => {
@@ -152,6 +155,10 @@ const sidebarHandler = () => {
     totalRevenue: totalRevenue.toFixed(0),
   };
 
+  const header = (
+    <ExportMonthlyRevenueToExcel data={[...data,totals]}/>
+  );
+
   // console.log([...data,totals])
   return (
     <>
@@ -242,38 +249,33 @@ const sidebarHandler = () => {
             <div className={classes.table_container}>
               <div className={classes.table_sub_container}>
                 <ThemeComponent>
-                  <DataGrid
-                    rows={[...data, totals]}
-                    columns={[
-                      {
-                        field: "misDate",
-                        sortable: false,
-                        minWidth: 150,
-                        headerName: "Date",
-                      },
-                      {
-                        field: "renewalsRevenue",
-                        sortable: false,
-                        minWidth: 150,
-                        headerName: "Renewals Revenue",
-                      },
-                      {
-                        field: "subscriptionRevenue",
-                        sortable: false,
-                        minWidth: 150,
-                        headerName: "Subscription Revenue",
-                      },
-                      {
-                        field: "totalRevenue",
-                        sortable: false,
-                        minWidth: 150,
-                        headerName: "Total Revenue",
-                      },
-                    ]}
-                    slots={{
-                      toolbar: CustomToolbar,
-                    }}
-                  />
+                  <DataTable value={[...data, totals]}
+                  emptyMessage="No data found"
+                  showGridlines
+                  responsive
+                  scrollable
+                  scrollHeight="500px" 
+                  rows={10} 
+                  paginator
+                  header={header}
+                  >
+                    <Column field="misDate" header="Date"  />
+                    <Column
+                      field="renewalsRevenue"
+                      header="Renewals Revenue"
+                      
+                    />
+                    <Column
+                      field="subscriptionRevenue"
+                      header="Subscription Revenue"
+                      
+                    />
+                    <Column
+                      field="totalRevenue"
+                      header="Total Revenue"
+                      
+                    />
+                  </DataTable>
                 </ThemeComponent>
               </div>
             </div>

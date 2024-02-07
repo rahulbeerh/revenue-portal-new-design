@@ -129,19 +129,29 @@
     border-collapse: collapse;
     margin-bottom: 20px;
     color: #fff;
-    background-color: #212135;
+    /* background-color: #212135; */
+    background-color: #fff;
   }
   
   .th {
-    background-color: #000000;
+    /* background-color: #000000; */
+    background-color: #F8F9FA;
     border: 1px solid #555;
     padding: 10px;
     text-align: left;
+    color: #343A40;
   }
+
+  /* .tr_th{
+    position: sticky;
+    top: 0;
+    z-index: 99;
+  } */
   
   .td {
     border: 1px solid #555;
     padding: 10px;
+    color: #343A40;
   }
 
   .main.short{

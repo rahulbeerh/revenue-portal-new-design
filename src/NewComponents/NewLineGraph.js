@@ -30,11 +30,13 @@ const NewLineGraph = (props) => {
           <CartesianGrid strokeDasharray="3 3" stroke="#555" />
           <XAxis
             dataKey="misDate"
-            stroke="white"
+            // stroke="white"
+            stroke="#343A40"
             style={{ fontSize: "smaller" }}
           />
           <YAxis
-            stroke="white"
+            // stroke="white"
+            stroke="#343A40"
             allowDataOverflow={true}
             allowDecimals={true}
             scale="auto"

@@ -1,6 +1,7 @@
 .title_container {
     width: 100%;
-    border: 1px solid rgba(255,255,255,0.6);
+    /* border: 1px solid rgba(255,255,255,0.6); */
+    border: 1px solid rgba(0, 0, 0, 0.6);
     border-radius: 0.3rem;
     padding: 0.5rem; 
   }
@@ -16,7 +17,8 @@
   .title_sub_container h3 {
     font-size: 1rem;
     font-family: 'Montserrat', sans-serif;
-    color: #fff;
+    /* color: #fff; */
+    color: #343A40;
     margin: 0; 
   }
   

@@ -15,7 +15,8 @@
     padding: 0.5rem;
     font-size: 1rem;
     color: #6B7281;
-    background-color: #212135;
+    /* background-color: #212135; */
+    background-color: #fff;
     cursor: pointer;
 }
 .sidebar_sub_container{

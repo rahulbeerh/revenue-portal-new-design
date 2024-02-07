@@ -127,7 +127,6 @@ const sidebarHandler = () => {
           <NewHeader service="All Services" highlight={3} />
           <div className={classes.sub_container}>
             <TitleHeader title="Main Services" icon="" />
-            <ThemeComponent>
               <div className={classes.flex_container}>
                 {mainServices.map((service, i) => {
                   return (
@@ -156,13 +155,11 @@ const sidebarHandler = () => {
                   );
                 })}
               </div>
-            </ThemeComponent>
 
             {filteredServices.length > 0 && (
               <TitleHeader title="Sub Services" icon="" />
             )}
 
-            <ThemeComponent>
               <div className={classes.flex_container}>
                 {filteredServices.map((service, i) => {
                   // console.log(service.id);
@@ -191,7 +188,6 @@ const sidebarHandler = () => {
                   );
                 })}
               </div>
-            </ThemeComponent>
 
             {children}
           </div>

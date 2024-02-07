@@ -10,7 +10,8 @@
     min-height: 100dvh;
     max-width: 15rem; /* Set minimum width to 15rem */
     width: 100%; /* Take full width of the viewport */
-    background-color: #212135;
+    /* background-color: #212135; */
+    background-color: #fff;
     display: flex;
     justify-content: flex-start;
     align-items: flex-start;
@@ -46,7 +47,7 @@
     border-radius: 50%;
     background-color: #696CFF;
     cursor: pointer;
-    box-shadow: 0 2rem 2rem rgba(0,0,0,0.6);
+    /* box-shadow: 0 2rem 2rem rgba(0,0,0,0.6); */
 }
 
 .arrow_icon{
@@ -55,7 +56,8 @@
 
 
 .dashboard_text{
-    color: white;
+    /* color: white; */
+    color: #343A40;
     font-size: 1.5rem;
     font-family: 'Montserrat',sans-serif;
     font-weight: 400;
@@ -83,7 +85,8 @@
     overflow: hidden;
     border-radius:0.3rem;
     margin-top: 1rem;
-    background-color:#212135;
+    /* background-color:#212135; */
+    background-color:#fff;
 }
 
 .form{
