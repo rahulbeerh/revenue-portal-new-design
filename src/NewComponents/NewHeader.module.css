@@ -128,3 +128,20 @@
 .logout_btn:active{
     transform: scale(1.1);
 }
+
+.menu{
+    display: none;
+}
+
+@media screen and (max-width:700px){
+    .menu{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .menu_icon{
+        font-size: 1rem;
+        color: white;
+        cursor: pointer;
+    }
+}

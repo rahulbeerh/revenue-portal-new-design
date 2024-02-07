@@ -209,7 +209,7 @@ const sidebarHandler = () => {
           <NewSidebar highlight={5} sidebarHide={sidebarHide} />
         </div>
         <div className={classes.container}>
-          <NewHeader service="Publisher Traffic" />
+          <NewHeader service="Publisher Traffic" highlight={5} />
           <div className={classes.sub_container}>
             <form className={classes.form} onSubmit={submitHandler}>
               <div className={classes.service}>

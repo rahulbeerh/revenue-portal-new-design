@@ -188,7 +188,7 @@ const sidebarHandler = () => {
           <NewSidebar highlight={7} sidebarHide={sidebarHide} />
         </div>
         <div className={classes.container}>
-          <NewHeader service="All Services" />
+          <NewHeader service="All Services" highlight={7} />
           <div className={classes.sub_container}>
             <form className={classes.form}>
               <div className={classes.client}>

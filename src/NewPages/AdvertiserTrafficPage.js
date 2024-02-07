@@ -197,7 +197,7 @@ const AdvertiserTrafficPage = () => {
           <NewSidebar highlight={8} sidebarHide={sidebarHide} />
         </div>
         <div className={classes.container}>
-          <NewHeader service="Advertiser Traffic" />
+          <NewHeader service="Advertiser Traffic" highlight={8} />
           <div className={classes.sub_container}>
             <form className={classes.form} onSubmit={submitHandler}>
               <div className={classes.client}>

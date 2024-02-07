@@ -3,10 +3,20 @@ import { useNavigate } from "react-router-dom";
 import { MobileNavbarContext } from "../MobileNavbarContext";
 import { FaBars, FaRegWindowClose } from "react-icons/fa";
 import classes from "./NewHeader.module.css";
+import NewMobileMenu from "./NewMobileMenu";
 
-const NewHeader = ({ service }) => {
+const NewHeader = ({ service,highlight }) => {
   const { show, showHandler } = useContext(MobileNavbarContext);
   const navigate = useNavigate();
+  const [mobileMenu, setMobileMenu] = useState(false);
+
+  const showMobileMenuHandler = () => {
+    setMobileMenu(true);
+  };
+
+  const hideMobileMenuHandler=()=>{
+    setMobileMenu(false);
+  }
 
   const [client, setClient] = useState("Client");
   const [showDropdown, setShowDropdown] = useState(false);
@@ -40,14 +50,20 @@ const NewHeader = ({ service }) => {
           {show ? <FaRegWindowClose /> : <FaBars />}
         </button> */}
         <div className={classes.header_sub_container}>
+          <div className={classes.menu}>
+            <i
+              className={`fa-solid fa-bars ${classes.menu_icon}`}
+              onClick={showMobileMenuHandler}
+            ></i>
+          </div>
           <button className={classes.client_name}>{client}</button>
 
           <button className={classes.service_name}>{service}</button>
         </div>
         <div className={classes.header_avatar} onClick={dropdownHandler}>
           <img
-            src="/assets/images/avatar.png"
-            alt=""
+            src="/assets/images/avatarDropdown.png"
+            alt="Avatar"
             className={classes.avatar}
           />
           {showDropdown ? (
@@ -76,6 +92,7 @@ const NewHeader = ({ service }) => {
           </div>
         </div>
       </header>
+      <NewMobileMenu highlight={highlight} mobileMenu={mobileMenu} hideMobileMenuHandler={hideMobileMenuHandler} />
     </>
   );
 };

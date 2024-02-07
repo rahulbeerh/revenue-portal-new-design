@@ -124,7 +124,7 @@ const sidebarHandler = () => {
           <NewSidebar highlight={3} sidebarHide={sidebarHide} />
         </div>
         <div className={classes.container}>
-          <NewHeader service="All Services" />
+          <NewHeader service="All Services" highlight={3} />
           <div className={classes.sub_container}>
             <TitleHeader title="Main Services" icon="" />
             <ThemeComponent>

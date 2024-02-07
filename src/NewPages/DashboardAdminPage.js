@@ -14,6 +14,7 @@ import { Dropdown } from "primereact/dropdown";
 import classes from "./DailyRevenuePage.module.css";
 import ThemeComponent from "../NewComponents/ThemeComponent";
 import { Calendar } from "primereact/calendar";
+import NewHeaderAdmin from "../NewComponents/NewHeaderAdmin";
 
 const DashboardAdminPage = () => {
   const [month, setMonth] = useState(new Date().getMonth() + 1);
@@ -115,7 +116,7 @@ const sidebarHandler = () => {
           <NewSidebarAdmin highlight={1} sidebarHide={sidebarHide} />
         </div>
         <div className={classes.container}>
-          <NewHeader service="All Services" />
+          <NewHeaderAdmin service="All Services" highlight={1} />
           <div className={classes.sub_container}>
             <form className={classes.form}>
               <div className={classes.client}>
@@ -127,10 +128,11 @@ const sidebarHandler = () => {
                     value: client?.id,
                   }))}
                   placeholder="Select a client"
+                  style={{ width: "100%" }}
                 />
               </div>
 
-              <div className={classes.month}>
+              <div className={classes.start_date}>
                 <Calendar
                   value={selectedDate}
                   onChange={(e)=>handleDateChange(e.value)}
@@ -138,6 +140,7 @@ const sidebarHandler = () => {
                   dateFormat="mm/yy"
                   showIcon
                   maxDate={new Date()} 
+                  style={{ width: "100%" }}
                 />
               </div>
             </form>

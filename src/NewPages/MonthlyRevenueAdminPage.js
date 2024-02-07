@@ -18,6 +18,7 @@ import classes from "./DailyRevenuePage.module.css";
 import NewSidebarAdmin from "../NewComponents/NewSidebarAdmin";
 import NewHeader from "../NewComponents/NewHeader";
 import { Dropdown } from "primereact/dropdown";
+import NewHeaderAdmin from "../NewComponents/NewHeaderAdmin";
 // import ExportToExcel from "../Components/ExportToExcel";
 
 const MonthlyRevenueAdminPage = () => {
@@ -239,7 +240,7 @@ const sidebarHandler = () => {
           <NewSidebarAdmin highlight={3} sidebarHide={sidebarHide} />
         </div>
         <div className={classes.container}>
-          <NewHeader service={responseService} />
+          <NewHeaderAdmin service={responseService} highlight={3} />
           <div className={classes.sub_container}>
             <form className={classes.form} onSubmit={handleFormSubmit}>
               <div className={classes.client}>
@@ -265,6 +266,7 @@ const sidebarHandler = () => {
                     value: client,
                   }))}
                   placeholder="Select a client"
+                  style={{ width: "100%" }}
                 />
               </div>
 
@@ -291,10 +293,11 @@ const sidebarHandler = () => {
                     value: serviceItem,
                   }))}
                   placeholder="Select a service"
+                  style={{ width: "100%" }}
                 />
               </div>
 
-              <div className={classes.month}>
+              <div className={classes.start_date}>
                 {/* <label htmlFor="interval">Months:</label>
                 <select
                   id="interval"
@@ -333,6 +336,7 @@ const sidebarHandler = () => {
                   ]}
                   onChange={(e) => setInterval(e.value)}
                   placeholder="Select Month"
+                  style={{ width: "100%" }}
                 />
               </div>
               

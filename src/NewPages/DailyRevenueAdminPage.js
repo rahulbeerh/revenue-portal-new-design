@@ -19,6 +19,7 @@ import TitleHeader from "../NewComponents/TitleHeader";
 import NewLineGraph from "../NewComponents/NewLineGraph";
 import ThemeComponent from "../NewComponents/ThemeComponent";
 import NewSidebarAdmin from "../NewComponents/NewSidebarAdmin";
+import NewHeaderAdmin from "../NewComponents/NewHeaderAdmin";
 
 const DailyRevenueAdminPage = () => {
   const navigate = useNavigate();
@@ -324,7 +325,7 @@ const DailyRevenueAdminPage = () => {
           <NewSidebarAdmin highlight={2} sidebarHide={sidebarHide} />
         </div>
         <div className={classes.container}>
-          <NewHeader service={responseService} />
+          <NewHeaderAdmin service={responseService} highlight={2} />
           <div className={classes.sub_container}>
             <form className={classes.form} onSubmit={handleFormSubmit}>
               <div className={classes.client}>
@@ -336,6 +337,7 @@ const DailyRevenueAdminPage = () => {
                     value: client,
                   }))}
                   placeholder="Select a Client"
+                  style={{ width: "100%" }}
                 />
               </div>
 
@@ -348,6 +350,7 @@ const DailyRevenueAdminPage = () => {
                     value: service,
                   }))}
                   placeholder="Select a Service"
+                  style={{ width: "100%" }}
                 />
               </div>
 
@@ -358,6 +361,7 @@ const DailyRevenueAdminPage = () => {
                   showIcon
                   showButtonBar
                   placeholder="Start Date"
+                  style={{ width: "100%" }}
                 />
               </div>
               <div className={classes.end_date}>
@@ -367,6 +371,7 @@ const DailyRevenueAdminPage = () => {
                   showIcon
                   showButtonBar
                   placeholder="End Date"
+                  style={{ width: "100%" }}
                 />
               </div>
               <button type="submit" className={classes.search_btn}>

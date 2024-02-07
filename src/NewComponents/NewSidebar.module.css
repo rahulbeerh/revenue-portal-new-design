@@ -39,8 +39,13 @@
     visibility: hidden;
 }
 
-@media screen and (max-width:900px) {
-        .tab span{
-            display: none;
-        }
-}
+/* @media screen and (max-width:900px) {
+    .short{
+        display: none;
+        visibility: hidden;
+    }
+} */
+
+/* @media screen and (max-width:700px){
+  
+} */
