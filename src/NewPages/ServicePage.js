@@ -143,37 +143,37 @@ const ServicePage = () => {
             ) : (
               <div className={classes.table_container}>
                 <div className={classes.table_sub_container}>
-                  <table>
+                  <table className={classes.table}>
                     <tbody>
-                      <tr>
-                        <th>Client</th>
-                        <th>Name</th>
-                        <th>Amount Per Subscription</th>
-                        <th>Service Url</th>
-                        <th>Postback Url</th>
-                        <th>Promotion Url</th>
-                        <th>Operator</th>
-                        <th>Country</th>
-                        <th>Service</th>
-                        <th>Skip</th>
-                        <th>Daily Cap</th>
-                        <th>Edit</th>
-                        <th>Delete</th>
-                        <th>Enable/Disable</th>
-                        <th>Dummy Hit</th>
+                      <tr className={classes.tr}>
+                        <th className={classes.th}>Client</th>
+                        <th className={classes.th}>Name</th>
+                        <th className={classes.th}>Amount Per Subscription</th>
+                        <th className={classes.th}>Service Url</th>
+                        <th className={classes.th}>Postback Url</th>
+                        <th className={classes.th}>Promotion Url</th>
+                        <th className={classes.th}>Operator</th>
+                        <th className={classes.th}>Country</th>
+                        <th className={classes.th}>Service</th>
+                        <th className={classes.th}>Skip</th>
+                        <th className={classes.th}>Daily Cap</th>
+                        <th className={classes.th}>Edit</th>
+                        <th className={classes.th}>Delete</th>
+                        <th className={classes.th}>Enable/Disable</th>
+                        <th className={classes.th}>Dummy Hit</th>
                       </tr>
 
                       {publisherData?.map((data) => {
                         return (
-                          <tr key={data.id}>
-                            <td>{data.client}</td>
-                            <td>{data.name}</td>
-                            <td>{data.amount}</td>
-                            <td style={{ width: "100%" }}>{data.serviceUrl}</td>
-                            <td style={{ width: "100%" }}>
+                          <tr className={classes.tr} key={data.id}>
+                            <td className={classes.td}>{data.client}</td>
+                            <td className={classes.td}>{data.name}</td>
+                            <td className={classes.td}>{data.amount}</td>
+                            <td className={classes.td} style={{ width: "100%" }}>{data.serviceUrl}</td>
+                            <td className={classes.td} style={{ width: "100%" }}>
                               {data.postbackUrl}
                             </td>
-                            <td style={{ width: "100%" }}>
+                            <td className={classes.td} style={{ width: "100%" }}>
                               {data.promotionUrl}
                               <IconButton
                                 aria-label="copy"
@@ -187,12 +187,12 @@ const ServicePage = () => {
                                 <ContentCopyIcon sx={{color:"#696CFF"}} fontSize="small" />
                               </IconButton>
                             </td>
-                            <td>{data.operator}</td>
-                            <td>{data.country}</td>
-                            <td>{data.service}</td>
-                            <td>{data.skipValue}</td>
-                            <td>{data?.dailyCap}</td>
-                            <td>
+                            <td className={classes.td}>{data.operator}</td>
+                            <td className={classes.td}>{data.country}</td>
+                            <td className={classes.td}>{data.service}</td>
+                            <td className={classes.td}>{data.skipValue}</td>
+                            <td className={classes.td}>{data?.dailyCap}</td>
+                            <td className={classes.td}>
                               <Button
                                 variant="contained"
                                 onClick={() => openEditHandler(data.id)}
@@ -200,7 +200,7 @@ const ServicePage = () => {
                                 Edit
                               </Button>
                             </td>
-                            <td>
+                            <td className={classes.td}>
                               <Button
                                 variant="contained"
                                 onClick={() =>
@@ -213,7 +213,7 @@ const ServicePage = () => {
                                 Delete
                               </Button>
                             </td>
-                            <td>
+                            <td className={classes.td}>
                               <FormControlLabel
                                 control={
                                   <Switch
@@ -226,7 +226,7 @@ const ServicePage = () => {
                                 label="Enable"
                               />
                             </td>
-                            <td>
+                            <td className={classes.td}>
                               <Button
                                 variant="contained"
                                 endIcon={<SendIcon />}

@@ -22,7 +22,18 @@ import { Dropdown } from "primereact/dropdown";
 
 const MonthlyRevenueAdminPage = () => {
   const [clients, setClients] = useState([]);
+  const [clientForDropdown,setClientForDropdown]=useState("");
   const navigate = useNavigate();
+
+  const [sidebarHide, setSidebarHide] = useState(() =>
+  localStorage.getItem("sidebar")
+    ? JSON.parse(localStorage.getItem("sidebar"))
+    : false
+);
+const sidebarHandler = () => {
+  localStorage.setItem("sidebar", JSON.stringify(!sidebarHide));
+  setSidebarHide(JSON.parse(localStorage.getItem("sidebar")));
+};
 
   useEffect(() => {
     const admin = localStorage.getItem("userName") == "admin";
@@ -35,10 +46,8 @@ const MonthlyRevenueAdminPage = () => {
   useEffect(() => {
     const clients_variable = JSON.parse(localStorage.getItem("clients"));
     setClients(clients_variable);
-    // console.log("clients",clients[0]);
+    setClientForDropdown(clients_variable[0]);
     gettingClientServices(clients_variable[0].id);
-    // gettingServices();
-    // eslint-disable-next-line
   }, []);
 
   //Hook to store services
@@ -151,9 +160,9 @@ const MonthlyRevenueAdminPage = () => {
     getDataFromBackend(serviceName);
   };
 
-  const handleClientChange = (clientId) => {
-    // console.log("client change",clientId);
-    gettingClientServices(clientId);
+  const handleClientChange = (client) => {
+    setClientForDropdown(client);
+    gettingClientServices(client?.id);
   };
 
   const dataLength = data.length;
@@ -200,9 +209,13 @@ const MonthlyRevenueAdminPage = () => {
     <>
       <Loader value={loader} />
       <ToastContainer />
-      <div className={classes.main}>
-        <div className={classes.sidebar}>
-          <div className={classes.sidebar_header}>
+      <div className={`${classes.main} ${sidebarHide && classes.short}`}>
+        <div className={`${classes.sidebar} ${sidebarHide && classes.short}`}>
+          <div
+            className={`${classes.sidebar_header} ${
+              sidebarHide && classes.short
+            }`}
+          >
             <img
               src="/assets/images/logo.png"
               alt="Revenue portal"
@@ -210,7 +223,20 @@ const MonthlyRevenueAdminPage = () => {
             />
             <h3 className={classes.dashboard_text}>Dashboard</h3>
           </div>
-          <NewSidebarAdmin highlight={3} />
+          <div className={classes.sidebar_icon}>
+            <div className={classes.circle} onClick={sidebarHandler}>
+              {sidebarHide ? (
+                <i
+                  className={`fa-solid fa-arrow-right ${classes.arrow_icon}`}
+                ></i>
+              ) : (
+                <i
+                  className={`fa-solid fa-arrow-left ${classes.arrow_icon}`}
+                ></i>
+              )}
+            </div>
+          </div>
+          <NewSidebarAdmin highlight={3} sidebarHide={sidebarHide} />
         </div>
         <div className={classes.container}>
           <NewHeader service={responseService} />
@@ -232,11 +258,11 @@ const MonthlyRevenueAdminPage = () => {
                     })}
                 </select> */}
                 <Dropdown
-                //   value={client}
+                  value={clientForDropdown}
                   onChange={(e) => handleClientChange(e.value)}
                   options={clients?.map((client) => ({
                     label: client?.username,
-                    value: client?.id,
+                    value: client,
                   }))}
                   placeholder="Select a client"
                 />

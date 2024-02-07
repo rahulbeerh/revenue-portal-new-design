@@ -1,16 +1,15 @@
 .main {
     display: grid;
-    grid-template-columns: 15rem 1fr;
+    grid-template-columns: 15rem auto;
     gap: 1rem;
+    transition: all 0.2s;
 }
 
 .sidebar {
-    min-height: 100dvh;
-    grid-area: 1/2;
-    width:15rem;
     position: fixed;
-    top: 0;
-    left: 0;
+    min-height: 100dvh;
+    max-width: 15rem; /* Set minimum width to 15rem */
+    width: 100%; /* Take full width of the viewport */
     background-color: #212135;
     display: flex;
     justify-content: flex-start;
@@ -20,8 +19,8 @@
     z-index: 99;
     padding: 2rem 0 2rem 0;
     overflow-y: auto;
+    transition: all 0.2s;
 }
-
 .sidebar_header{
     width: 100%;
     display: flex;
@@ -43,6 +42,7 @@
     min-height: 100vh;
     background-attachment: fixed;
     overflow-x: hidden;
+    transition: all 0.3s;
 }
 
 
@@ -124,3 +124,47 @@
         width: 100%;
 }
 
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+    color: #fff;
+    background-color: #212135;
+  }
+  
+  .th {
+    background-color: #000000;
+    border: 1px solid #555;
+    padding: 10px;
+    text-align: left;
+  }
+  
+  .td {
+    border: 1px solid #555;
+    padding: 10px;
+  }
+
+  .main.short{
+    display: grid;
+    grid-template-columns: 3rem auto;
+    gap: 1rem;
+    transition: all 0.3s;
+}
+.sidebar_header.short{
+    display: none;
+}
+.sidebar.short {
+    max-width: 3rem;
+}
+
+@media screen and (max-width:900px){
+    .main {
+        grid-template-columns: 4rem auto;
+    }
+    .sidebar {
+        max-width: 4rem;
+    }
+    .sidebar_header{
+        display: none;
+    }
+}

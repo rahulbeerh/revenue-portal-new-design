@@ -24,8 +24,10 @@ const NewSidebar = (props) => {
             handleNavigate("/dailyRevenue");
           }}
         >
-         <i className="fa-solid fa-chart-simple"></i>
-          <span>Daily Revenue</span>
+          <i className="fa-solid fa-chart-simple"></i>
+          <span className={`${props.sidebarHide && classes.short}`}>
+            Daily Revenue
+          </span>
         </div>
         {/* <!-- 2 --> */}
         <div
@@ -37,8 +39,10 @@ const NewSidebar = (props) => {
             handleNavigate("/monthlyRevenue");
           }}
         >
-           <i className="fa-regular fa-chart-bar"></i>
-          <span>Monthly Revenue</span>
+          <i className="fa-regular fa-chart-bar"></i>
+          <span className={`${props.sidebarHide && classes.short}`}>
+            Monthly Revenue
+          </span>
         </div>
 
         {localStorage.getItem("userName") != "etho_1234" && (
@@ -51,9 +55,10 @@ const NewSidebar = (props) => {
               handleNavigate("/dashboard");
             }}
           >
-          
-              <i className="fa-solid fa-wifi" aria-hidden="true"></i>
-            <span>Add Networks</span>
+            <i className="fa-solid fa-wifi" aria-hidden="true"></i>
+            <span className={`${props.sidebarHide && classes.short}`}>
+              Add Networks
+            </span>
           </div>
         )}
 
@@ -67,8 +72,10 @@ const NewSidebar = (props) => {
               handleNavigate("/add-country-and-add-operator");
             }}
           >
-              <i className="fa-solid fa-globe" aria-hidden="true"></i>
-            <span>Add Country and Add Operator</span>
+            <i className="fa-solid fa-globe" aria-hidden="true"></i>
+            <span className={`${props.sidebarHide && classes.short}`}>
+              Add Country and Add Operator
+            </span>
           </div>
         )}
 
@@ -83,10 +90,10 @@ const NewSidebar = (props) => {
             }}
           >
             {" "}
-            <span>
-              <i className="fa-solid fa-bolt" aria-hidden="true"></i>
-            </span>{" "}
-            <span>Publisher Traffic</span>
+            <i className="fa-solid fa-bolt" aria-hidden="true"></i>
+            <span className={`${props.sidebarHide && classes.short}`}>
+              Publisher Traffic
+            </span>
           </div>
         )}
 
@@ -101,10 +108,10 @@ const NewSidebar = (props) => {
             }}
           >
             {" "}
-            <span>
-              <i className="fa-solid fa-snowflake" aria-hidden="true"></i>
-            </span>{" "}
-            <span>Publisher Subscription</span>
+            <i className="fa-solid fa-snowflake" aria-hidden="true"></i>
+            <span className={`${props.sidebarHide && classes.short}`}>
+              Publisher Subscription
+            </span>
           </div>
         )}
 
@@ -119,10 +126,11 @@ const NewSidebar = (props) => {
             }}
           >
             {" "}
-            <span>
-              <i className="fa fa-user" aria-hidden="true"></i>
-            </span>{" "}
-            <span>Advertiser</span>
+            {/* <i className="fa fa-user" aria-hidden="true"></i> */}
+            <i className="fa-solid fa-rectangle-ad"></i>
+            <span className={`${props.sidebarHide && classes.short}`}>
+              Advertiser
+            </span>
           </div>
         )}
 
@@ -137,10 +145,12 @@ const NewSidebar = (props) => {
             }}
           >
             {" "}
-            <span>
-              <i className="fa fa-user" aria-hidden="true"></i>
-            </span>{" "}
-            <span>Advertiser Traffic</span>
+            <i className="fa-solid fa-traffic-light"></i>
+            {/* <i className="fa-solid fa-rectangle-ad"></i>
+            <i className="fa-solid fa-bolt" aria-hidden="true"></i> */}
+            <span className={`${props.sidebarHide && classes.short}`}>
+              Advertiser Traffic
+            </span>
           </div>
         )}
 
@@ -155,13 +165,14 @@ const NewSidebar = (props) => {
             }}
           >
             {" "}
-            <span>
-              <i className="fa fa-user" aria-hidden="true"></i>
-            </span>{" "}
-            <span>Advertiser Subscription</span>
+            {/* <i className="fa-solid fa-rectangle-ad"></i>
+            <i className="fa-solid fa-snowflake" aria-hidden="true"></i> */}
+            <i className="fa-solid fa-asterisk"></i>
+            <span className={`${props.sidebarHide && classes.short}`}>
+              Advertiser Subscription
+            </span>
           </div>
         )}
-
       </div>
     </div>
   );

@@ -1,4 +1,3 @@
-import "./App.css";
 import { useNavigate } from "react-router-dom";
 import Routing from "./Routes/Routing";
 import "react-toastify/dist/ReactToastify.css";

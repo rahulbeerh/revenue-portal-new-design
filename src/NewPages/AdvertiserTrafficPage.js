@@ -35,10 +35,22 @@ const AdvertiserTrafficPage = () => {
   const [endDate, setEndDate] = useState(
     moment(new Date()).format("yyyy-MM-DD")
   );
+  const [startDateForCalendar, setStartDateForCalendar] = useState(new Date());
+  const [endDateForCalendar, setEndDateForCalendar] = useState(new Date());
   const [services, setServices] = useState([]);
   const [clients, setClients] = useState([]);
   const [service, setService] = useState("");
   const [client, setClient] = useState("");
+
+  const [sidebarHide, setSidebarHide] = useState(() =>
+    localStorage.getItem("sidebar")
+      ? JSON.parse(localStorage.getItem("sidebar"))
+      : false
+  );
+  const sidebarHandler = () => {
+    localStorage.setItem("sidebar", JSON.stringify(!sidebarHide));
+    setSidebarHide(JSON.parse(localStorage.getItem("sidebar")));
+  };
 
   const fetchAdvertiserTrafficClients = async () => {
     const data = {
@@ -56,6 +68,8 @@ const AdvertiserTrafficPage = () => {
       setClients((prevClients) => {
         return [newClient, ...prevClients];
       });
+      setClient(newClient?.client_name);
+      setService('All');
       setLoading("none");
     } catch (error) {
       setLoading("none");
@@ -130,26 +144,36 @@ const AdvertiserTrafficPage = () => {
     setClient(client);
     if (client === "All") {
       setServices([{ serviceName: "All" }]);
+      setService("All");
     } else {
       fetchAdvertiserTrafficServices(client);
     }
   };
 
   const convertStartDate = (utcDate) => {
+    setStartDateForCalendar(utcDate);
     setStartDate(moment(new Date(utcDate)).format("yyyy-MM-DD"));
   };
 
   const convertEndDate = (utcDate) => {
+    setEndDateForCalendar(utcDate);
     setEndDate(moment(new Date(utcDate)).format("yyyy-MM-DD"));
   };
+
+  console.log(client,'c');
+  console.log(service,'s');
 
   return (
     <>
       <Loader value={loading} />
       <ToastContainer />
-      <div className={classes.main}>
-        <div className={classes.sidebar}>
-          <div className={classes.sidebar_header}>
+      <div className={`${classes.main} ${sidebarHide && classes.short}`}>
+        <div className={`${classes.sidebar} ${sidebarHide && classes.short}`}>
+          <div
+            className={`${classes.sidebar_header} ${
+              sidebarHide && classes.short
+            }`}
+          >
             <img
               src="/assets/images/logo.png"
               alt="Revenue portal"
@@ -157,14 +181,27 @@ const AdvertiserTrafficPage = () => {
             />
             <h3 className={classes.dashboard_text}>Dashboard</h3>
           </div>
-          <NewSidebar highlight={8} />
+          <div className={classes.sidebar_icon}>
+            <div className={classes.circle} onClick={sidebarHandler}>
+              {sidebarHide ? (
+                <i
+                  className={`fa-solid fa-arrow-right ${classes.arrow_icon}`}
+                ></i>
+              ) : (
+                <i
+                  className={`fa-solid fa-arrow-left ${classes.arrow_icon}`}
+                ></i>
+              )}
+            </div>
+          </div>
+          <NewSidebar highlight={8} sidebarHide={sidebarHide} />
         </div>
         <div className={classes.container}>
           <NewHeader service="Advertiser Traffic" />
           <div className={classes.sub_container}>
             <form className={classes.form} onSubmit={submitHandler}>
               <div className={classes.client}>
-                 <Dropdown
+                <Dropdown
                   value={client}
                   onChange={(e) => handleClientChange(e.value)}
                   options={clients?.map((data) => ({
@@ -172,6 +209,7 @@ const AdvertiserTrafficPage = () => {
                     value: data?.client_name,
                   }))}
                   placeholder="Select a Client"
+                  style={{ width: "100%" }}
                 />
               </div>
 
@@ -184,33 +222,43 @@ const AdvertiserTrafficPage = () => {
                     value: data?.serviceName,
                   }))}
                   placeholder="Select Service"
+                  style={{ width: "100%" }}
                 />
               </div>
 
               <div className={classes.start_date}>
-                  <Calendar
-                  value={startDate}
+                <Calendar
+                  // value={startDate}
+                  value={startDateForCalendar}
                   onChange={(e) => convertStartDate(e.value)}
                   showIcon
                   // touchUI
                   showButtonBar
                   placeholder="Start Date"
+                  style={{ width: "100%" }}
                 />
               </div>
               <div className={classes.end_date}>
-             <Calendar
-                  value={endDate}
+                <Calendar
+                  // value={endDate}
+                  value={endDateForCalendar}
                   onChange={(e) => convertEndDate(e.value)}
                   showIcon
                   // touchUI
                   showButtonBar
                   placeholder="End Date"
+                  style={{ width: "100%" }}
                 />
               </div>
-                <button type="submit" className={classes.search_btn}>Search</button>
+              <button type="submit" className={classes.search_btn}>
+                Search
+              </button>
             </form>
 
-            <TitleHeader title="Advertiser Traffic" icon={<i className="fa-solid fa-bolt" aria-hidden="true"></i>} />
+            <TitleHeader
+              title="Advertiser Traffic"
+              icon={<i className="fa-solid fa-bolt" aria-hidden="true"></i>}
+            />
 
             {traffic ? (
               <div className={classes.table_container}>

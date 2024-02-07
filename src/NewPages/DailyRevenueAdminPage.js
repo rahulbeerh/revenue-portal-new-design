@@ -32,20 +32,29 @@ const DailyRevenueAdminPage = () => {
 
   const [clients, setClients] = useState([]);
   const [client, setClient] = useState("");
+  const [clientForDropdown, setClientForDropdown] = useState("");
+
+  const [sidebarHide, setSidebarHide] = useState(() =>
+    localStorage.getItem("sidebar")
+      ? JSON.parse(localStorage.getItem("sidebar"))
+      : false
+  );
+  const sidebarHandler = () => {
+    localStorage.setItem("sidebar", JSON.stringify(!sidebarHide));
+    setSidebarHide(JSON.parse(localStorage.getItem("sidebar")));
+  };
+
   //to start on load
   useEffect(() => {
     const clients_variable = JSON.parse(localStorage.getItem("clients"));
     setClients(clients_variable);
-    // console.log("clients",clients[0]);
     setClient(clients_variable[0]?.id);
+    setClientForDropdown(clients_variable[0]);
     gettingClientServices(clients_variable[0].id);
-    // gettingServices();
-    // eslint-disable-next-line
   }, []);
 
   //Hook to store services
   const [services, setServices] = useState([]);
-  console.log(client);
 
   //Hook to store biggest value
   const [biggest, setBiggest] = useState(0);
@@ -93,6 +102,11 @@ const DailyRevenueAdminPage = () => {
     to: moment(new Date()).format("yyyy-MM-DD"),
     from: moment().subtract(30, "days").format("yyyy-MM-DD"),
   });
+
+  const [startDateForCalendar, setStartDateForCalendar] = useState(
+    moment().subtract(30, "days").toDate()
+  );
+  const [endDateForCalendar, setEndDateForCalendar] = useState(new Date());
 
   const [service, setService] = useState("");
   const [responseService, setResponseService] = useState("");
@@ -252,10 +266,20 @@ const DailyRevenueAdminPage = () => {
     getDataFromBackend(service);
   };
 
-  const handleClientChange = (clientId) => {
-    // console.log("client change",clientId);
-    setClient(clientId);
-    gettingClientServices(clientId);
+  const handleClientChange = (client) => {
+    setClientForDropdown(client);
+    setClient(client?.id);
+    gettingClientServices(client?.id);
+  };
+
+  const convertStartDate = (utcDate) => {
+    setStartDateForCalendar(utcDate);
+    setDates({ ...dates, from: utcDate });
+  };
+
+  const convertEndDate = (utcDate) => {
+    setEndDateForCalendar(utcDate);
+    setDates({ ...dates, to: utcDate });
   };
 
   function CustomToolbar() {
@@ -270,9 +294,13 @@ const DailyRevenueAdminPage = () => {
     <>
       <Loader value={loader} />
       <ToastContainer />
-      <div className={classes.main}>
-        <div className={classes.sidebar}>
-          <div className={classes.sidebar_header}>
+      <div className={`${classes.main} ${sidebarHide && classes.short}`}>
+        <div className={`${classes.sidebar} ${sidebarHide && classes.short}`}>
+          <div
+            className={`${classes.sidebar_header} ${
+              sidebarHide && classes.short
+            }`}
+          >
             <img
               src="/assets/images/logo.png"
               alt="Revenue portal"
@@ -280,34 +308,32 @@ const DailyRevenueAdminPage = () => {
             />
             <h3 className={classes.dashboard_text}>Dashboard</h3>
           </div>
-          <NewSidebarAdmin highlight={2} />
+          <div className={classes.sidebar_icon}>
+            <div className={classes.circle} onClick={sidebarHandler}>
+              {sidebarHide ? (
+                <i
+                  className={`fa-solid fa-arrow-right ${classes.arrow_icon}`}
+                ></i>
+              ) : (
+                <i
+                  className={`fa-solid fa-arrow-left ${classes.arrow_icon}`}
+                ></i>
+              )}
+            </div>
+          </div>
+          <NewSidebarAdmin highlight={2} sidebarHide={sidebarHide} />
         </div>
         <div className={classes.container}>
           <NewHeader service={responseService} />
           <div className={classes.sub_container}>
             <form className={classes.form} onSubmit={handleFormSubmit}>
               <div className={classes.client}>
-                {/* <label htmlFor="client">Client:</label>
-                <select
-                  id="client"
-                  // onChange={(e) => setService(e.target.value)}
-                  onChange={(e)=>handleClientChange(e.target.value)}
-                >
-                  {clients.length > 0 &&
-                    clients.map((item, index) => {
-                      return (
-                        <option key={index} value={item.id}>
-                          {item.username}
-                        </option>
-                      );
-                    })}
-                </select> */}
                 <Dropdown
-                  value={client ? client?.id : null}
+                  value={clientForDropdown}
                   onChange={(e) => handleClientChange(e.value)}
                   options={clients?.map((client) => ({
                     label: client?.username,
-                    value: client?.id,
+                    value: client,
                   }))}
                   placeholder="Select a Client"
                 />
@@ -326,37 +352,19 @@ const DailyRevenueAdminPage = () => {
               </div>
 
               <div className={classes.start_date}>
-                {/* <label htmlFor="start">Start date:</label>
-                <input
-                  type="date"
-                  id="start"
-                  name="start"
-                  required
-                  onChange={(e) => setDates({ ...dates, from: e.target.value })}
-                /> */}
                 <Calendar
-                  value={dates.from}
-                  onChange={(e) => setDates({ ...dates, from: e.value })}
+                  value={startDateForCalendar}
+                  onChange={(e) => convertStartDate(e.value)}
                   showIcon
-                  // touchUI
                   showButtonBar
                   placeholder="Start Date"
                 />
               </div>
               <div className={classes.end_date}>
-                {/* <label htmlFor="end">End date:</label>
-                <input
-                  type="date"
-                  id="end"
-                  name="end"
-                  required
-                  onChange={(e) => setDates({ ...dates, to: e.target.value })}
-                /> */}
                 <Calendar
-                  value={dates.to}
-                  onChange={(e) => setDates({ ...dates, to: e.value })}
+                  value={endDateForCalendar}
+                  onChange={(e) => convertEndDate(e.value)}
                   showIcon
-                  // touchUI
                   showButtonBar
                   placeholder="End Date"
                 />
@@ -365,16 +373,6 @@ const DailyRevenueAdminPage = () => {
                 Search
               </button>
             </form>
-
-            {/* <!-- user --> */}
-            {/* <div className="title-ic">
-            <p>
-              <span>
-                <i className="fa fa-user" aria-hidden="true"></i>
-              </span>{" "}
-              <span>Revenue</span>
-            </p>
-          </div> */}
 
             <TitleHeader title="Revenue" icon="" />
 

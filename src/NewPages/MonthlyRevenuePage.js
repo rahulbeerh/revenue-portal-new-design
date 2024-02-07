@@ -29,6 +29,16 @@ const MonthlyRevenuePage = () => {
   const [responseService, setResponseService] = useState("");
   const [service, setService] = useState();
 
+  const [sidebarHide, setSidebarHide] = useState(() =>
+  localStorage.getItem("sidebar")
+    ? JSON.parse(localStorage.getItem("sidebar"))
+    : false
+);
+const sidebarHandler = () => {
+  localStorage.setItem("sidebar", JSON.stringify(!sidebarHide));
+  setSidebarHide(JSON.parse(localStorage.getItem("sidebar")));
+};
+
   //Getting Services
   const gettingServices = () => {
     let services = JSON.parse(localStorage.getItem("services"));
@@ -148,9 +158,13 @@ const MonthlyRevenuePage = () => {
       {/* <!-- subscribers-sec --> */}
       <Loader value={loader} />
       <ToastContainer />
-      <div className={classes.main}>
-        <div className={classes.sidebar}>
-          <div className={classes.sidebar_header}>
+      <div className={`${classes.main} ${sidebarHide && classes.short}`}>
+        <div className={`${classes.sidebar} ${sidebarHide && classes.short}`}>
+          <div
+            className={`${classes.sidebar_header} ${
+              sidebarHide && classes.short
+            }`}
+          >
             <img
               src="/assets/images/logo.png"
               alt="Revenue portal"
@@ -158,7 +172,20 @@ const MonthlyRevenuePage = () => {
             />
             <h3 className={classes.dashboard_text}>Dashboard</h3>
           </div>
-          <NewSidebar highlight={2} />
+          <div className={classes.sidebar_icon}>
+            <div className={classes.circle} onClick={sidebarHandler}>
+              {sidebarHide ? (
+                <i
+                  className={`fa-solid fa-arrow-right ${classes.arrow_icon}`}
+                ></i>
+              ) : (
+                <i
+                  className={`fa-solid fa-arrow-left ${classes.arrow_icon}`}
+                ></i>
+              )}
+            </div>
+          </div>
+          <NewSidebar highlight={2} sidebarHide={sidebarHide} />
         </div>
         <div className={classes.container}>
           <NewHeader service={responseService} />
@@ -173,9 +200,10 @@ const MonthlyRevenuePage = () => {
                     value: service,
                   }))}
                   placeholder="Select a Service"
+                  style={{ width: "100%" }}
                 />
               </div>
-              <div className={classes.month}>
+              <div className={classes.start_date}>
                 <Dropdown
                   id="interval"
                   value={interval}
@@ -195,6 +223,7 @@ const MonthlyRevenuePage = () => {
                   ]}
                   onChange={(e) => setInterval(e.value)}
                   placeholder="Select an interval"
+                  style={{ width: "100%" }}
                 />
               </div>
               <button type="submit" className={classes.search_btn}>

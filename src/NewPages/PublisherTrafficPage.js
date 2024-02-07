@@ -24,11 +24,23 @@ const PublisherTrafficPage = () => {
   const [endDate, setEndDate] = useState(
     moment(new Date()).format("yyyy-MM-DD")
   );
+  const [startDateForCalendar, setStartDateForCalendar] = useState(new Date());
+  const [endDateForCalendar, setEndDateForCalendar] = useState(new Date());
   // const [date, setDate] = useState(moment(new Date()).format("yyyy-MM-DD"));
   const [services, setServices] = useState([]);
   const [publishers, setPublishers] = useState([]);
   const [service, setService] = useState("");
   const [publisher, setPublisher] = useState("");
+
+  const [sidebarHide, setSidebarHide] = useState(() =>
+  localStorage.getItem("sidebar")
+    ? JSON.parse(localStorage.getItem("sidebar"))
+    : false
+);
+const sidebarHandler = () => {
+  localStorage.setItem("sidebar", JSON.stringify(!sidebarHide));
+  setSidebarHide(JSON.parse(localStorage.getItem("sidebar")));
+};
 
   useEffect(() => {
     if (localStorage.getItem("userName") == "etho_1234") {
@@ -59,11 +71,15 @@ const PublisherTrafficPage = () => {
         return [newService, ...prevServices];
       });
 
+      setService(newService?.service);
+
       let newPublisher = { publisher: "All" };
       setPublishers((prevPublishers) => {
         // Inserting the new service at the first index
         return [newPublisher, ...prevPublishers];
       });
+
+      setPublisher(newPublisher?.publisher);
 
       // console.log(res);
       setLoading("none");
@@ -150,10 +166,12 @@ const PublisherTrafficPage = () => {
   };
 
   const convertStartDate = (utcDate) => {
+    setStartDateForCalendar(utcDate);
     setStartDate(moment(new Date(utcDate)).format("yyyy-MM-DD"));
   };
 
   const convertEndDate = (utcDate) => {
+    setEndDateForCalendar(utcDate);
     setEndDate(moment(new Date(utcDate)).format("yyyy-MM-DD"));
   };
 
@@ -161,9 +179,13 @@ const PublisherTrafficPage = () => {
     <>
       <Loader value={loading} />
       <ToastContainer />
-      <div className={classes.main}>
-        <div className={classes.sidebar}>
-          <div className={classes.sidebar_header}>
+      <div className={`${classes.main} ${sidebarHide && classes.short}`}>
+        <div className={`${classes.sidebar} ${sidebarHide && classes.short}`}>
+          <div
+            className={`${classes.sidebar_header} ${
+              sidebarHide && classes.short
+            }`}
+          >
             <img
               src="/assets/images/logo.png"
               alt="Revenue portal"
@@ -171,7 +193,20 @@ const PublisherTrafficPage = () => {
             />
             <h3 className={classes.dashboard_text}>Dashboard</h3>
           </div>
-          <NewSidebar highlight={5} />
+          <div className={classes.sidebar_icon}>
+            <div className={classes.circle} onClick={sidebarHandler}>
+              {sidebarHide ? (
+                <i
+                  className={`fa-solid fa-arrow-right ${classes.arrow_icon}`}
+                ></i>
+              ) : (
+                <i
+                  className={`fa-solid fa-arrow-left ${classes.arrow_icon}`}
+                ></i>
+              )}
+            </div>
+          </div>
+          <NewSidebar highlight={5} sidebarHide={sidebarHide} />
         </div>
         <div className={classes.container}>
           <NewHeader service="Publisher Traffic" />
@@ -186,6 +221,7 @@ const PublisherTrafficPage = () => {
                     value: data?.service,
                   }))}
                   placeholder="Select a Service"
+                  style={{ width: "100%" }}
                 />
               </div>
 
@@ -198,27 +234,32 @@ const PublisherTrafficPage = () => {
                     value: data?.publisher,
                   }))}
                   placeholder="Select a Publisher"
+                  style={{ width: "100%" }}
                 />
               </div>
 
               <div className={classes.start_date}>
                 <Calendar
-                  value={startDate}
+                  value={startDateForCalendar}
                   onChange={(e) => convertStartDate(e.value)}
+                  // onChange={(e) => setStartDate(e.value)}
                   showIcon
                   // touchUI
-                  showButtonBar
+                  // showButtonBar
                   placeholder="Start Date"
+                  style={{ width: "100%" }}
                 />
               </div>
               <div className={classes.end_date}>
                 <Calendar
-                  value={endDate}
+                  value={endDateForCalendar}
                   onChange={(e) => convertEndDate(e.value)}
+                  // onChange={(e) => setEndDate(e.value)}
                   showIcon
                   // touchUI
-                  showButtonBar
+                  // showButtonBar
                   placeholder="End Date"
+                  style={{ width: "100%" }}
                 />
               </div>
               <button type="submit" className={classes.search_btn}>
@@ -226,7 +267,10 @@ const PublisherTrafficPage = () => {
               </button>
             </form>
 
-            <TitleHeader title="Publisher Traffic" icon={<i className="fa-solid fa-bolt" aria-hidden="true"></i>} />
+            <TitleHeader
+              title="Publisher Traffic"
+              icon={<i className="fa-solid fa-bolt" aria-hidden="true"></i>}
+            />
 
             {publisherData ? (
               <div className={classes.table_container}>

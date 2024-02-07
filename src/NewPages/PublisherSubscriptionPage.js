@@ -6,7 +6,7 @@ import {
   publisherSubscriptionApi,
   publisherSubscriptionServicesApi,
 } from "../Data/Api";
-import moment from "moment";
+import moment, { utc } from "moment";
 import { useNavigate } from "react-router-dom";
 import classes from "./DailyRevenuePage.module.css";
 import NewSidebar from "../NewComponents/NewSidebar";
@@ -27,10 +27,23 @@ const PublisherSubscriptionPage = () => {
     moment(new Date()).format("yyyy-MM-DD")
   );
 
+  const [startDateForCalendar, setStartDateForCalendar] = useState(new Date());
+  const [endDateForCalendar, setEndDateForCalendar] = useState(new Date());
+
   const [services, setServices] = useState([]);
   const [publishers, setPublishers] = useState([]);
   const [service, setService] = useState("");
   const [publisher, setPublisher] = useState("");
+
+  const [sidebarHide, setSidebarHide] = useState(() =>
+  localStorage.getItem("sidebar")
+    ? JSON.parse(localStorage.getItem("sidebar"))
+    : false
+);
+const sidebarHandler = () => {
+  localStorage.setItem("sidebar", JSON.stringify(!sidebarHide));
+  setSidebarHide(JSON.parse(localStorage.getItem("sidebar")));
+};
 
   const navigate = useNavigate();
 
@@ -60,11 +73,14 @@ const PublisherSubscriptionPage = () => {
         return [newService, ...prevServices];
       });
 
+      setService(newService?.servicename);
+
       let newPublisher = { partner: "All" };
       setPublishers((prevPublishers) => {
         // Inserting the new service at the first index
         return [newPublisher, ...prevPublishers];
       });
+      setPublisher(newPublisher?.partner);
 
       setLoading("none");
     } catch (error) {
@@ -140,10 +156,12 @@ const PublisherSubscriptionPage = () => {
   };
 
   const convertStartDate = (utcDate) => {
+    setStartDateForCalendar(utcDate);
     setStartDate(moment(new Date(utcDate)).format("yyyy-MM-DD"));
   };
 
   const convertEndDate = (utcDate) => {
+    setEndDateForCalendar(utcDate);
     setEndDate(moment(new Date(utcDate)).format("yyyy-MM-DD"));
   };
 
@@ -151,9 +169,13 @@ const PublisherSubscriptionPage = () => {
     <>
       <Loader value={loading} />
       <ToastContainer />
-      <div className={classes.main}>
-        <div className={classes.sidebar}>
-          <div className={classes.sidebar_header}>
+      <div className={`${classes.main} ${sidebarHide && classes.short}`}>
+        <div className={`${classes.sidebar} ${sidebarHide && classes.short}`}>
+          <div
+            className={`${classes.sidebar_header} ${
+              sidebarHide && classes.short
+            }`}
+          >
             <img
               src="/assets/images/logo.png"
               alt="Revenue portal"
@@ -161,7 +183,20 @@ const PublisherSubscriptionPage = () => {
             />
             <h3 className={classes.dashboard_text}>Dashboard</h3>
           </div>
-          <NewSidebar highlight={6} />
+          <div className={classes.sidebar_icon}>
+            <div className={classes.circle} onClick={sidebarHandler}>
+              {sidebarHide ? (
+                <i
+                  className={`fa-solid fa-arrow-right ${classes.arrow_icon}`}
+                ></i>
+              ) : (
+                <i
+                  className={`fa-solid fa-arrow-left ${classes.arrow_icon}`}
+                ></i>
+              )}
+            </div>
+          </div>
+          <NewSidebar highlight={6} sidebarHide={sidebarHide} />
         </div>
         <div className={classes.container}>
           <NewHeader service="Publisher Subscription" />
@@ -176,6 +211,7 @@ const PublisherSubscriptionPage = () => {
                     value: data?.servicename,
                   }))}
                   placeholder="Select a Service"
+                  style={{ width: "100%" }}
                 />
               </div>
 
@@ -188,27 +224,32 @@ const PublisherSubscriptionPage = () => {
                     value: data?.partner,
                   }))}
                   placeholder="Select a Partner"
+                  style={{ width: "100%" }}
                 />
               </div>
 
               <div className={classes.start_date}>
                 <Calendar
-                  value={startDate}
+                  // value={startDate}
+                  value={startDateForCalendar}
                   onChange={(e) => convertStartDate(e.value)}
                   showIcon
                   // touchUI
                   showButtonBar
                   placeholder="Start Date"
+                  style={{ width: "100%" }}
                 />
               </div>
               <div className={classes.end_date}>
                 <Calendar
-                  value={endDate}
+                  // value={endDate}
+                  value={endDateForCalendar}
                   onChange={(e) => convertEndDate(e.value)}
                   showIcon
                   // touchUI
                   showButtonBar
                   placeholder="End Date"
+                  style={{ width: "100%" }}
                 />
               </div>
               <button type="submit" className={classes.search_btn}>
@@ -216,7 +257,12 @@ const PublisherSubscriptionPage = () => {
               </button>
             </form>
 
-            <TitleHeader title="Publisher Subscription" icon={<i className="fa-solid fa-snowflake" aria-hidden="true"></i>} />
+            <TitleHeader
+              title="Publisher Subscription"
+              icon={
+                <i className="fa-solid fa-snowflake" aria-hidden="true"></i>
+              }
+            />
 
             {data ? (
               <div className={classes.table_container}>

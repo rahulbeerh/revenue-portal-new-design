@@ -18,6 +18,16 @@ const DashboardPage = ({ serviceName, id, children }) => {
   const [loader, setLoader] = useState("block");
   const navigate = useNavigate();
 
+  const [sidebarHide, setSidebarHide] = useState(() =>
+  localStorage.getItem("sidebar")
+    ? JSON.parse(localStorage.getItem("sidebar"))
+    : false
+);
+const sidebarHandler = () => {
+  localStorage.setItem("sidebar", JSON.stringify(!sidebarHide));
+  setSidebarHide(JSON.parse(localStorage.getItem("sidebar")));
+};
+
   useEffect(() => {
     if (localStorage.getItem("userName") == "etho_1234") {
       navigate("/dailyRevenue");
@@ -84,9 +94,13 @@ const DashboardPage = ({ serviceName, id, children }) => {
     <>
       <Loader value={loader} />
       <ToastContainer />
-      <div className={classes.main}>
-        <div className={classes.sidebar}>
-          <div className={classes.sidebar_header}>
+      <div className={`${classes.main} ${sidebarHide && classes.short}`}>
+        <div className={`${classes.sidebar} ${sidebarHide && classes.short}`}>
+          <div
+            className={`${classes.sidebar_header} ${
+              sidebarHide && classes.short
+            }`}
+          >
             <img
               src="/assets/images/logo.png"
               alt="Revenue portal"
@@ -94,7 +108,20 @@ const DashboardPage = ({ serviceName, id, children }) => {
             />
             <h3 className={classes.dashboard_text}>Dashboard</h3>
           </div>
-          <NewSidebar highlight={3} />
+          <div className={classes.sidebar_icon}>
+            <div className={classes.circle} onClick={sidebarHandler}>
+              {sidebarHide ? (
+                <i
+                  className={`fa-solid fa-arrow-right ${classes.arrow_icon}`}
+                ></i>
+              ) : (
+                <i
+                  className={`fa-solid fa-arrow-left ${classes.arrow_icon}`}
+                ></i>
+              )}
+            </div>
+          </div>
+          <NewSidebar highlight={3} sidebarHide={sidebarHide} />
         </div>
         <div className={classes.container}>
           <NewHeader service="All Services" />

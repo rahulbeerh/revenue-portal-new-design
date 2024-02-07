@@ -25,10 +25,10 @@ const NewSidebarAdmin = (props) => {
           id="defaultOpen"
         >
           {" "}
-          <span>
-            <i className="fa fa-user" aria-hidden="true"></i>
-          </span>{" "}
-          <span>Main Dashboard</span>
+          <i className="fa-solid fa-gauge"></i>
+          <span className={`${props.sidebarHide && classes.short}`}>
+            Main Dashboard
+          </span>
         </div>
         {/* <!-- 1 --> */}
         <div
@@ -42,10 +42,10 @@ const NewSidebarAdmin = (props) => {
           id="defaultOpen"
         >
           {" "}
-          <span>
-            <i className="fa fa-user" aria-hidden="true"></i>
-          </span>{" "}
-          <span>Daily Revenue</span>
+          <i className="fa-solid fa-chart-simple"></i>
+          <span className={`${props.sidebarHide && classes.short}`}>
+            Daily Revenue
+          </span>
         </div>
         {/* <!-- 2 --> */}
         <div
@@ -58,10 +58,10 @@ const NewSidebarAdmin = (props) => {
           }}
         >
           {" "}
-          <span>
-            <i className="fa fa-user" aria-hidden="true"></i>
-          </span>{" "}
-          <span>Monthly Revenue</span>
+          <i className="fa-regular fa-chart-bar"></i>
+          <span className={`${props.sidebarHide && classes.short}`}>
+            Monthly Revenue
+          </span>
         </div>
 
         {/* <div

@@ -42,6 +42,16 @@ const AdvertiserPage = () => {
   const [service, setService] = useState("");
   const navigate = useNavigate();
 
+  const [sidebarHide, setSidebarHide] = useState(() =>
+  localStorage.getItem("sidebar")
+    ? JSON.parse(localStorage.getItem("sidebar"))
+    : false
+);
+const sidebarHandler = () => {
+  localStorage.setItem("sidebar", JSON.stringify(!sidebarHide));
+  setSidebarHide(JSON.parse(localStorage.getItem("sidebar")));
+};
+
   useEffect(() => {
     if (localStorage.getItem("userName") != "panz") {
       navigate("/dailyRevenue");
@@ -148,9 +158,13 @@ const AdvertiserPage = () => {
     <>
       <Loader value={loading} />
       <ToastContainer />
-      <div className={classes.main}>
-        <div className={classes.sidebar}>
-          <div className={classes.sidebar_header}>
+      <div className={`${classes.main} ${sidebarHide && classes.short}`}>
+        <div className={`${classes.sidebar} ${sidebarHide && classes.short}`}>
+          <div
+            className={`${classes.sidebar_header} ${
+              sidebarHide && classes.short
+            }`}
+          >
             <img
               src="/assets/images/logo.png"
               alt="Revenue portal"
@@ -158,7 +172,20 @@ const AdvertiserPage = () => {
             />
             <h3 className={classes.dashboard_text}>Dashboard</h3>
           </div>
-          <NewSidebar highlight={7} />
+          <div className={classes.sidebar_icon}>
+            <div className={classes.circle} onClick={sidebarHandler}>
+              {sidebarHide ? (
+                <i
+                  className={`fa-solid fa-arrow-right ${classes.arrow_icon}`}
+                ></i>
+              ) : (
+                <i
+                  className={`fa-solid fa-arrow-left ${classes.arrow_icon}`}
+                ></i>
+              )}
+            </div>
+          </div>
+          <NewSidebar highlight={7} sidebarHide={sidebarHide} />
         </div>
         <div className={classes.container}>
           <NewHeader service="All Services" />
@@ -193,16 +220,16 @@ const AdvertiserPage = () => {
             {filteredData?.length > 0 && (
               <div className={classes.table_container}>
                 <div className={classes.table_sub_container}>
-                  <table>
+                  <table className={classes.table}>
                     <tbody>
-                      <tr>
-                        <th>Client</th>
-                        <th>Publisher</th>
-                        <th>Service</th>
-                        <th>Amount</th>
-                        <th>Service Url</th>
-                        <th>Postback Url</th>
-                        <th>
+                      <tr className={classes.tr}>
+                        <th className={classes.th}>Client</th>
+                        <th className={classes.th}>Publisher</th>
+                        <th className={classes.th}>Service</th>
+                        <th className={classes.th}>Amount</th>
+                        <th className={classes.th}>Service Url</th>
+                        <th className={classes.th}>Postback Url</th>
+                        <th className={classes.th}>
                           Provider's Postback Url
                           <Tooltip title="This is our postback url in which you will send your pixel">
                             <IconButton>
@@ -212,30 +239,30 @@ const AdvertiserPage = () => {
                             </IconButton>
                           </Tooltip>
                         </th>
-                        <th>Promotion Url</th>
-                        <th>Operator</th>
-                        <th>Country</th>
-                        <th>Skip</th>
-                        <th>Daily Cap</th>
-                        <th>Edit</th>
-                        <th>Delete</th>
-                        <th>Enable/Disable</th>
-                        <th>Dummy Hit</th>
+                        <th className={classes.th}>Promotion Url</th>
+                        <th className={classes.th}>Operator</th>
+                        <th className={classes.th}>Country</th>
+                        <th className={classes.th}>Skip</th>
+                        <th className={classes.th}>Daily Cap</th>
+                        <th className={classes.th}>Edit</th>
+                        <th className={classes.th}>Delete</th>
+                        <th className={classes.th}>Enable/Disable</th>
+                        <th className={classes.th}>Dummy Hit</th>
                       </tr>
                       {filteredData.map((dataItem) => {
                         return (
                           <tr key={dataItem?.id}>
-                            <td>{dataItem?.client_name}</td>
-                            <td>{dataItem?.publisherName}</td>
-                            <td>{dataItem?.serviceName}</td>
-                            <td>{dataItem?.amount_per_sub}</td>
-                            <td style={{ width: "100%" }}>
+                            <td className={classes.td}>{dataItem?.client_name}</td>
+                            <td className={classes.td}>{dataItem?.publisherName}</td>
+                            <td className={classes.td}>{dataItem?.serviceName}</td>
+                            <td className={classes.td}>{dataItem?.amount_per_sub}</td>
+                            <td className={classes.td} style={{ width: "100%" }}>
                               {dataItem?.service_url}
                             </td>
-                            <td style={{ width: "100%" }}>
+                            <td className={classes.td} style={{ width: "100%" }}>
                               {dataItem?.postback_url}
                             </td>
-                            <td style={{ width: "100%" }}>
+                            <td className={classes.td} style={{ width: "100%" }}>
                               {dataItem?.postbackForClient}
                               <IconButton
                                 aria-label="copy"
@@ -249,7 +276,7 @@ const AdvertiserPage = () => {
                                 <ContentCopyIcon sx={{color:"#696CFF"}} fontSize="small" />
                               </IconButton>
                             </td>
-                            <td style={{ width: "100%" }}>
+                            <td className={classes.td} style={{ width: "100%" }}>
                               {dataItem?.promotion_url}
                               <IconButton
                                 aria-label="copy"
@@ -263,11 +290,11 @@ const AdvertiserPage = () => {
                                 <ContentCopyIcon sx={{color:"#696CFF"}} fontSize="small" />
                               </IconButton>
                             </td>
-                            <td>{dataItem?.operator}</td>
-                            <td>{dataItem?.country}</td>
-                            <td>{dataItem?.skipBy}</td>
-                            <td>{dataItem?.dailyCap}</td>
-                            <td>
+                            <td className={classes.td}>{dataItem?.operator}</td>
+                            <td className={classes.td}>{dataItem?.country}</td>
+                            <td className={classes.td}>{dataItem?.skipBy}</td>
+                            <td className={classes.td}>{dataItem?.dailyCap}</td>
+                            <td className={classes.td}>
                               <Button
                                 variant="contained"
                                 onClick={() =>
@@ -277,7 +304,7 @@ const AdvertiserPage = () => {
                                 Edit
                               </Button>
                             </td>
-                            <td>
+                            <td className={classes.td}>
                               <Button
                                 variant="contained"
                                 onClick={() =>
@@ -290,7 +317,7 @@ const AdvertiserPage = () => {
                                 Delete
                               </Button>
                             </td>
-                            <td>
+                            <td className={classes.td}>
                               <FormControlLabel
                                 control={
                                   <Switch
@@ -306,7 +333,7 @@ const AdvertiserPage = () => {
                                 label="Enable"
                               />
                             </td>
-                            <td>
+                            <td className={classes.td}>
                               <Button
                                 variant="contained"
                                 endIcon={<SendIcon />}

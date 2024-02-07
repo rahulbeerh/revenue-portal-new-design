@@ -24,6 +24,16 @@ const DashboardAdminPage = () => {
   const [data, setData] = useState([]);
   const [selectedDate, setSelectedDate] = useState(new Date());
 
+  const [sidebarHide, setSidebarHide] = useState(() =>
+  localStorage.getItem("sidebar")
+    ? JSON.parse(localStorage.getItem("sidebar"))
+    : false
+);
+const sidebarHandler = () => {
+  localStorage.setItem("sidebar", JSON.stringify(!sidebarHide));
+  setSidebarHide(JSON.parse(localStorage.getItem("sidebar")));
+};
+
   const handleDateChange = (date) => {
     setSelectedDate(date);
     console.log(date);
@@ -75,9 +85,13 @@ const DashboardAdminPage = () => {
     <>
       <Loader value={loader} />
       <ToastContainer />
-      <div className={classes.main}>
-        <div className={classes.sidebar}>
-          <div className={classes.sidebar_header}>
+      <div className={`${classes.main} ${sidebarHide && classes.short}`}>
+        <div className={`${classes.sidebar} ${sidebarHide && classes.short}`}>
+          <div
+            className={`${classes.sidebar_header} ${
+              sidebarHide && classes.short
+            }`}
+          >
             <img
               src="/assets/images/logo.png"
               alt="Revenue portal"
@@ -85,27 +99,26 @@ const DashboardAdminPage = () => {
             />
             <h3 className={classes.dashboard_text}>Dashboard</h3>
           </div>
-          <NewSidebarAdmin highlight={1} />
+          <div className={classes.sidebar_icon}>
+            <div className={classes.circle} onClick={sidebarHandler}>
+              {sidebarHide ? (
+                <i
+                  className={`fa-solid fa-arrow-right ${classes.arrow_icon}`}
+                ></i>
+              ) : (
+                <i
+                  className={`fa-solid fa-arrow-left ${classes.arrow_icon}`}
+                ></i>
+              )}
+            </div>
+          </div>
+          <NewSidebarAdmin highlight={1} sidebarHide={sidebarHide} />
         </div>
         <div className={classes.container}>
           <NewHeader service="All Services" />
           <div className={classes.sub_container}>
             <form className={classes.form}>
               <div className={classes.client}>
-                {/* <label htmlFor="client">Client:</label>
-                <select
-                  id="client"
-                  onChange={(e) => handleClientChange(e.target.value)}
-                >
-                  {clients.length > 0 &&
-                    clients.map((item, index) => {
-                      return (
-                        <option key={index} value={item.id}>
-                          {item.username}
-                        </option>
-                      );
-                    })}
-                </select> */}
                 <Dropdown
                   value={client}
                   onChange={(e) => handleClientChange(e.value)}
@@ -118,16 +131,6 @@ const DashboardAdminPage = () => {
               </div>
 
               <div className={classes.month}>
-                {/* <label htmlFor="interval">Month:</label>
-                <DatePicker
-                  className="datePickerInput"
-                  selected={selectedDate}
-                  onChange={handleDateChange}
-                  dateFormat="MM/yyyy"
-                  style={{ width: "100%" }}
-                  showMonthYearPicker
-                  maxDate={new Date()}
-                /> */}
                 <Calendar
                   value={selectedDate}
                   onChange={(e)=>handleDateChange(e.value)}
@@ -139,7 +142,7 @@ const DashboardAdminPage = () => {
               </div>
             </form>
 
-            <TitleHeader title="All Services Montly Services" />
+            <TitleHeader title="All Services Montly Revenue" />
             <div className={classes.table_container}>
               <div className={classes.table_sub_container}>
                 <ThemeComponent>

@@ -34,11 +34,23 @@ const AdvertiserSubscriptionPage = () => {
   const [endDate, setEndDate] = useState(
     moment(new Date()).format("yyyy-MM-DD")
   );
+  const [startDateForCalendar, setStartDateForCalendar] = useState(new Date());
+  const [endDateForCalendar, setEndDateForCalendar] = useState(new Date());
 
   const [clients, setClients] = useState([]);
   const [client, setClient] = useState("");
   const [services, setServices] = useState([]);
   const [service, setService] = useState("");
+
+  const [sidebarHide, setSidebarHide] = useState(() =>
+  localStorage.getItem("sidebar")
+    ? JSON.parse(localStorage.getItem("sidebar"))
+    : false
+);
+const sidebarHandler = () => {
+  localStorage.setItem("sidebar", JSON.stringify(!sidebarHide));
+  setSidebarHide(JSON.parse(localStorage.getItem("sidebar")));
+};
 
   console.log(client, "client");
   const fetchAdvertiserClients = async () => {
@@ -57,6 +69,7 @@ const AdvertiserSubscriptionPage = () => {
       setClients((prevClients) => {
         return [newClient, ...prevClients];
       });
+      setClient(newClient?.client_name);
       setLoading("none");
     } catch (error) {
       setLoading("none");
@@ -115,6 +128,7 @@ const AdvertiserSubscriptionPage = () => {
   useEffect(() => {
     fetchAdvertiserClients();
     setServices([{ serviceName: "All" }]);
+    setService("All");
     fetchDataFromBackend();
   }, []);
 
@@ -130,16 +144,19 @@ const AdvertiserSubscriptionPage = () => {
     setClient(client);
     if (client === "All") {
       setServices([{ serviceName: "All" }]);
+      setService("All");
     } else {
       fetchAdvertiserServices(client);
     }
   };
 
   const convertStartDate = (utcDate) => {
+    setStartDateForCalendar(utcDate);
     setStartDate(moment(new Date(utcDate)).format("yyyy-MM-DD"));
   };
 
   const convertEndDate = (utcDate) => {
+    setEndDateForCalendar(utcDate);
     setEndDate(moment(new Date(utcDate)).format("yyyy-MM-DD"));
   };
 
@@ -147,9 +164,13 @@ const AdvertiserSubscriptionPage = () => {
     <>
       <Loader value={loading} />
       <ToastContainer />
-      <div className={classes.main}>
-        <div className={classes.sidebar}>
-          <div className={classes.sidebar_header}>
+      <div className={`${classes.main} ${sidebarHide && classes.short}`}>
+        <div className={`${classes.sidebar} ${sidebarHide && classes.short}`}>
+          <div
+            className={`${classes.sidebar_header} ${
+              sidebarHide && classes.short
+            }`}
+          >
             <img
               src="/assets/images/logo.png"
               alt="Revenue portal"
@@ -157,7 +178,20 @@ const AdvertiserSubscriptionPage = () => {
             />
             <h3 className={classes.dashboard_text}>Dashboard</h3>
           </div>
-          <NewSidebar highlight={9} />
+          <div className={classes.sidebar_icon}>
+            <div className={classes.circle} onClick={sidebarHandler}>
+              {sidebarHide ? (
+                <i
+                  className={`fa-solid fa-arrow-right ${classes.arrow_icon}`}
+                ></i>
+              ) : (
+                <i
+                  className={`fa-solid fa-arrow-left ${classes.arrow_icon}`}
+                ></i>
+              )}
+            </div>
+          </div>
+          <NewSidebar highlight={9} sidebarHide={sidebarHide} />
         </div>
         <div className={classes.container}>
           <NewHeader service="Advertiser Subscription" />
@@ -172,6 +206,7 @@ const AdvertiserSubscriptionPage = () => {
                     value: data?.client_name,
                   }))}
                   placeholder="Select a Client"
+                  style={{ width: "100%" }}
                 />
               </div>
               <div className={classes.service}>
@@ -183,27 +218,30 @@ const AdvertiserSubscriptionPage = () => {
                     value: data?.serviceName,
                   }))}
                   placeholder="Select a Service"
+                  style={{ width: "100%" }}
                 />
               </div>
 
               <div className={classes.start_date}>
                 <Calendar
-                  value={startDate}
+                  value={startDateForCalendar}
                   onChange={(e) => convertStartDate(e.value)}
                   showIcon
                   // touchUI
                   showButtonBar
                   placeholder="Start Date"
+                  style={{ width: "100%" }}
                 />
               </div>
               <div className={classes.end_date}>
                 <Calendar
-                  value={endDate}
+                  value={endDateForCalendar}
                   onChange={(e) => convertEndDate(e.value)}
                   showIcon
                   // touchUI
                   showButtonBar
                   placeholder="End Date"
+                  style={{ width: "100%" }}
                 />
               </div>
               <button type="submit" className={classes.search_btn}>

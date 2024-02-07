@@ -21,41 +21,46 @@ import TitleHeader from "../NewComponents/TitleHeader";
 
 const DailyRevenuePage = () => {
   const navigate = useNavigate();
-  //to start on load
   useEffect(() => {
     gettingServices();
-    // eslint-disable-next-line
   }, []);
 
-  //Hook to store services
+  const [sidebarHide, setSidebarHide] = useState(() =>
+    localStorage.getItem("sidebar")
+      ? JSON.parse(localStorage.getItem("sidebar"))
+      : false
+  );
+  const sidebarHandler = () => {
+    localStorage.setItem("sidebar", JSON.stringify(!sidebarHide));
+    setSidebarHide(JSON.parse(localStorage.getItem("sidebar")));
+  };
+
   const [services, setServices] = useState([]);
 
-  //Hook to store biggest value
   const [biggest, setBiggest] = useState(0);
 
-  //Getting Services
   const gettingServices = () => {
     let services = JSON.parse(localStorage.getItem("services"));
     setServices(services);
     getDataFromBackend(services[0]);
   };
 
-  //Hook to store dates
   const [dates, setDates] = useState({
     to: moment(new Date()).format("yyyy-MM-DD"),
     from: moment().subtract(30, "days").format("yyyy-MM-DD"),
   });
 
+  const [startDateForCalendar, setStartDateForCalendar] = useState(
+    moment().subtract(30, "days").toDate()
+  );
+  const [endDateForCalendar, setEndDateForCalendar] = useState(new Date());
+
   const [service, setService] = useState("");
   const [responseService, setResponseService] = useState("");
 
-  // console.log(service);
-
-  //Method to get data from Backend
   const getDataFromBackend = (service) => {
     setService(service);
     let data = { from: dates.from, to: dates.to, serviceName: service };
-    // console.log("input ",data);
 
     let promise = PostSecure(sendDataApi, data);
     promise
@@ -65,13 +70,10 @@ const DailyRevenuePage = () => {
       .catch((err) => toast.error(err?.data?.message || err?.message || err));
   };
 
-  //Hook to store data
   const [data, setData] = useState([]);
   const [kidzManiaData, setKidzManiaData] = useState([]);
 
-  //Method to handle response
   const handleDataResponse = (e) => {
-    // console.log(e);
     if (e.response === "error") {
       toast.error(e.error?.response?.data?.message || e.error?.message);
       setTimeout(() => {
@@ -118,7 +120,6 @@ const DailyRevenuePage = () => {
           revenueShare:
             dataItem.revenueShare == null ? 0 : dataItem.revenueShare,
           dailyIncreaseAccumulated: dataItem?.DailyIncreaseAccumulated,
-          // companyRevenue:dataItem.companyRevenue==null?0:dataItem.companyRevenue
         };
       });
 
@@ -168,7 +169,6 @@ const DailyRevenuePage = () => {
     width = 500;
   }
 
-  // Math.round(num * 100) / 100;
   const monthlyTotalSubscriptions = data.reduce(
     (total, dataItem) => total + dataItem.subscriptions,
     0
@@ -212,13 +212,27 @@ const DailyRevenuePage = () => {
     );
   }
 
+  const convertStartDate = (utcDate) => {
+    setStartDateForCalendar(utcDate);
+    setDates({ ...dates, from: utcDate });
+  };
+
+  const convertEndDate = (utcDate) => {
+    setEndDateForCalendar(utcDate);
+    setDates({ ...dates, to: utcDate });
+  };
+
   return (
     <>
       <Loader value={loader} />
       <ToastContainer />
-      <div className={classes.main}>
-        <div className={classes.sidebar}>
-          <div className={classes.sidebar_header}>
+      <div className={`${classes.main} ${sidebarHide && classes.short}`}>
+        <div className={`${classes.sidebar} ${sidebarHide && classes.short}`}>
+          <div
+            className={`${classes.sidebar_header} ${
+              sidebarHide && classes.short
+            }`}
+          >
             <img
               src="/assets/images/logo.png"
               alt="Revenue portal"
@@ -226,7 +240,20 @@ const DailyRevenuePage = () => {
             />
             <h3 className={classes.dashboard_text}>Dashboard</h3>
           </div>
-          <NewSidebar highlight={1} />
+          <div className={classes.sidebar_icon}>
+            <div className={classes.circle} onClick={sidebarHandler}>
+              {sidebarHide ? (
+                <i
+                  className={`fa-solid fa-arrow-right ${classes.arrow_icon}`}
+                ></i>
+              ) : (
+                <i
+                  className={`fa-solid fa-arrow-left ${classes.arrow_icon}`}
+                ></i>
+              )}
+            </div>
+          </div>
+          <NewSidebar highlight={1} sidebarHide={sidebarHide} />
         </div>
         <div className={classes.container}>
           <NewHeader service={responseService} />
@@ -241,27 +268,34 @@ const DailyRevenuePage = () => {
                     value: service,
                   }))}
                   placeholder="Select a Service"
+                  style={{ width: "100%" }}
                 />
               </div>
 
               <div className={classes.start_date}>
                 <Calendar
-                  value={dates.from}
-                  onChange={(e) => setDates({ ...dates, from: e.value })}
+                  value={startDateForCalendar}
+                  // value={dates.from}
+                  onChange={(e) => convertStartDate(e.value)}
+                  // onChange={(e) => setDates({ ...dates, from: e.value })}
                   showIcon
                   // touchUI
                   showButtonBar
                   placeholder="Start Date"
+                  style={{ width: "100%" }}
                 />
               </div>
               <div className={classes.end_date}>
                 <Calendar
-                  value={dates.to}
-                  onChange={(e) => setDates({ ...dates, to: e.value })}
+                  // value={dates.to}
+                  value={endDateForCalendar}
+                  onChange={(e) => convertEndDate(e.value)}
+                  // onChange={(e) => setDates({ ...dates, to: e.value })}
                   showIcon
                   // touchUI
                   showButtonBar
                   placeholder="End Date"
+                  style={{ width: "100%" }}
                 />
               </div>
               <button type="submit" className={classes.search_btn}>
