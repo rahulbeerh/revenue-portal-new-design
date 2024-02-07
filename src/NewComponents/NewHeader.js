@@ -9,6 +9,11 @@ const NewHeader = ({ service }) => {
   const navigate = useNavigate();
 
   const [client, setClient] = useState("Client");
+  const [showDropdown, setShowDropdown] = useState(false);
+
+  const dropdownHandler = () => {
+    setShowDropdown((prevValue) => !prevValue);
+  };
 
   useEffect(() => {
     getServiceFromLocalStorage();
@@ -38,17 +43,37 @@ const NewHeader = ({ service }) => {
           <button className={classes.client_name}>{client}</button>
 
           <button className={classes.service_name}>{service}</button>
-        
         </div>
-        <div className={classes.header_logout_container}>
-        <button
-            className={classes.logout_btn}
-            onClick={() => {
-              handleLogout();
-            }}
-          >
-            Logout
-          </button>
+        <div className={classes.header_avatar} onClick={dropdownHandler}>
+          <img
+            src="/assets/images/avatar.png"
+            alt=""
+            className={classes.avatar}
+          />
+          {showDropdown ? (
+            <i class={`fa-solid fa-caret-up ${classes.avatar_icon}`}></i>
+          ) : (
+            <i className={`fa-solid fa-sort-down ${classes.avatar_icon}`}></i>
+          )}
+        </div>
+
+        <div className={`${classes.dropdown} ${showDropdown && classes.show}`}>
+          <div className={classes.dropdown_sub_container}>
+            <div className={classes.user}>
+              <i className={`fa-solid fa-user ${classes.user_icon}`}></i>
+              <p className={classes.dropdown_client_name}>{client}</p>
+            </div>
+            <div className={classes.underline}></div>
+            <button
+              className={classes.logout_btn}
+              onClick={() => {
+                handleLogout();
+              }}
+            >
+              <i className={`fa-solid fa-power-off ${classes.logout_icon}`}></i>
+              Logout
+            </button>
+          </div>
         </div>
       </header>
     </>
