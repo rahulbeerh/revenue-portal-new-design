@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
-import {
-  DataGrid,
-} from "@mui/x-data-grid";
+import { DataGrid } from "@mui/x-data-grid";
 import axios from "axios";
 import Loader from "../Components/Loader";
 import { fetchClientsServicesData } from "../Data/Api";
@@ -15,6 +13,8 @@ import classes from "./DailyRevenuePage.module.css";
 import ThemeComponent from "../NewComponents/ThemeComponent";
 import { Calendar } from "primereact/calendar";
 import NewHeaderAdmin from "../NewComponents/NewHeaderAdmin";
+import { DataTable } from 'primereact/datatable';
+import { Column } from 'primereact/column';
 
 const DashboardAdminPage = () => {
   const [month, setMonth] = useState(new Date().getMonth() + 1);
@@ -26,14 +26,14 @@ const DashboardAdminPage = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
 
   const [sidebarHide, setSidebarHide] = useState(() =>
-  localStorage.getItem("sidebar")
-    ? JSON.parse(localStorage.getItem("sidebar"))
-    : false
-);
-const sidebarHandler = () => {
-  localStorage.setItem("sidebar", JSON.stringify(!sidebarHide));
-  setSidebarHide(JSON.parse(localStorage.getItem("sidebar")));
-};
+    localStorage.getItem("sidebar")
+      ? JSON.parse(localStorage.getItem("sidebar"))
+      : false
+  );
+  const sidebarHandler = () => {
+    localStorage.setItem("sidebar", JSON.stringify(!sidebarHide));
+    setSidebarHide(JSON.parse(localStorage.getItem("sidebar")));
+  };
 
   const handleDateChange = (date) => {
     setSelectedDate(date);
@@ -135,11 +135,11 @@ const sidebarHandler = () => {
               <div className={classes.start_date}>
                 <Calendar
                   value={selectedDate}
-                  onChange={(e)=>handleDateChange(e.value)}
+                  onChange={(e) => handleDateChange(e.value)}
                   view="month"
                   dateFormat="mm/yy"
                   showIcon
-                  maxDate={new Date()} 
+                  maxDate={new Date()}
                   style={{ width: "100%" }}
                 />
               </div>
@@ -190,6 +190,36 @@ const sidebarHandler = () => {
                       },
                     ]}
                   />
+
+                  {/* <DataTable
+                    value={data.map((dataItem, i) => ({
+                      id: i,
+                      service: dataItem.service,
+                      month: `${dataItem.MONTH}-${dataItem.YEAR}`,
+                      renewalsRevenue: dataItem?.renewalsRevenue || 0,
+                      subscriptionRevenue: dataItem?.subscriptionRevenue || 0,
+                      totalRevenue: dataItem?.totalRevenue || 0,
+                    }))}
+                    emptyMessage="No data found"
+                  >
+                    <Column field="service" header="Service" sortable />
+                    <Column field="month" header="Month" sortable />
+                    <Column
+                      field="renewalsRevenue"
+                      header="Renewals Revenue"
+                      sortable
+                    />
+                    <Column
+                      field="subscriptionRevenue"
+                      header="Subscription Revenue"
+                      sortable
+                    />
+                    <Column
+                      field="totalRevenue"
+                      header="Total Revenue"
+                      sortable
+                    />
+                  </DataTable> */}
                 </ThemeComponent>
               </div>
             </div>

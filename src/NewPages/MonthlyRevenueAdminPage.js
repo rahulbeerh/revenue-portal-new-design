@@ -244,20 +244,7 @@ const sidebarHandler = () => {
           <div className={classes.sub_container}>
             <form className={classes.form} onSubmit={handleFormSubmit}>
               <div className={classes.client}>
-                {/* <label htmlFor="client">Client:</label>
-                <select
-                  id="client"
-                  onChange={(e) => handleClientChange(e.target.value)}
-                >
-                  {clients.length > 0 &&
-                    clients.map((item, index) => {
-                      return (
-                        <option key={index} value={item.id}>
-                          {item.username}
-                        </option>
-                      );
-                    })}
-                </select> */}
+              
                 <Dropdown
                   value={clientForDropdown}
                   onChange={(e) => handleClientChange(e.value)}
