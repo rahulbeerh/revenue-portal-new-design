@@ -268,7 +268,6 @@ const PublisherSubscriptionPage = () => {
 
             {data ? (
               <div className={classes.table_container}>
-                <div className={classes.table_sub_container}>
                   <ThemeComponent>
                     {/* <DataGrid
                       rows={data?.map((row, index) => ({
@@ -348,7 +347,7 @@ const PublisherSubscriptionPage = () => {
                       responsive
                       scrollable
                       scrollHeight="500px"
-                      rows={10}
+                      rows={15}
                       paginator
                     >
                       <Column field="partner" header="Partner"  />
@@ -407,7 +406,6 @@ const PublisherSubscriptionPage = () => {
                     </DataTable>
                   </ThemeComponent>
                 </div>
-              </div>
             ) : null}
           </div>
         </div>

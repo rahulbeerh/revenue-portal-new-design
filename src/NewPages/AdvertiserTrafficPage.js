@@ -264,7 +264,6 @@ const AdvertiserTrafficPage = () => {
 
             {traffic ? (
               <div className={classes.table_container}>
-                <div className={classes.table_sub_container}>
                   <ThemeComponent>
                     {/* <DataGrid
                       rows={traffic?.map((row, index) => ({
@@ -318,7 +317,7 @@ const AdvertiserTrafficPage = () => {
                       responsive
                       scrollable
                       scrollHeight="500px"
-                      rows={10}
+                      rows={15}
                       paginator
                     >
                       <Column field="clientName" header="Client"  />
@@ -330,7 +329,6 @@ const AdvertiserTrafficPage = () => {
                     </DataTable>
                   </ThemeComponent>
                 </div>
-              </div>
             ) : null}
           </div>
         </div>

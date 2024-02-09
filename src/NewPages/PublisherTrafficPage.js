@@ -276,9 +276,8 @@ const PublisherTrafficPage = () => {
 
             {publisherData ? (
               <div className={classes.table_container}>
-                <div className={classes.table_sub_container}>
-                  <ThemeComponent>
-                    {/* <DataGrid
+                <ThemeComponent>
+                  {/* <DataGrid
                       rows={publisherData?.map((row, index) => ({
                         ...row,
                         id: index,
@@ -317,23 +316,23 @@ const PublisherTrafficPage = () => {
                         },
                       ]}
                     /> */}
-                    <DataTable value={publisherData} 
+                  <DataTable
+                    value={publisherData}
                     emptyMessage="No data found"
                     showGridlines
                     responsive
                     scrollable
-                    scrollHeight="500px" 
-                    rows={10} 
+                    scrollHeight="500px"
+                    rows={15}
                     paginator
-                    >
-                      <Column field="partnerid" header="Partner Id"  />
-                      <Column field="service" header="Service"  />
-                      <Column field="country" header="Country"  />
-                      <Column field="operator" header="Operator"  />
-                      <Column field="count" header="Count"  />
-                    </DataTable>
-                  </ThemeComponent>
-                </div>
+                  >
+                    <Column field="partnerid" header="Partner Id" />
+                    <Column field="service" header="Service" />
+                    <Column field="country" header="Country" />
+                    <Column field="operator" header="Operator" />
+                    <Column field="count" header="Count" />
+                  </DataTable>
+                </ThemeComponent>
               </div>
             ) : null}
           </div>

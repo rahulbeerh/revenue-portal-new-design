@@ -8,13 +8,13 @@ const Loader=(value)=>{
     <div className="loading-div" style={{display:`${value.value}`}}>
       <div
         className="three-dots-div"
-        style={{ position: "absolute", top: "50%", left: "50%" }}
+        style={{ position: "absolute", top: "50%", left: "50%",zIndex:300 }}
       >
         <ThreeDots
           height="80"
           width="80"
           radius="9"
-          color={theme?"#fff":"black"}
+          color="black"
           ariaLabel="three-dots-loading"
           wrapperStyle={{}}
           wrapperClassName=""

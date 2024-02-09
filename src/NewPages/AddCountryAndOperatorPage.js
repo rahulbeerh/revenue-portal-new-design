@@ -170,9 +170,8 @@ const AddCountryAndOperatorPage = () => {
 
             {data ? (
               <div className={classes.table_container}>
-                <div className={classes.table_sub_container}>
-                  <ThemeComponent>
-                    {/* <DataGrid
+                <ThemeComponent>
+                  {/* <DataGrid
                       rows={data.map((row, index) => ({ ...row, id: index }))}
                       getRowId={(row) => row.id}
                       columns={[
@@ -190,25 +189,20 @@ const AddCountryAndOperatorPage = () => {
                         },
                       ]}
                     /> */}
-                    <DataTable
-                      value={data.map((row, index) => ({ ...row, id: index }))}
-                      emptyMessage="No data found"
-                      showGridlines
-                      responsive
-                      scrollable
-                      scrollHeight="500px" 
-                      rows={10} 
-                      paginator
-                    >
-                      <Column field="country_name" header="Country"  />
-                      <Column
-                        field="operator_name"
-                        header="Operator"
-                        
-                      />
-                    </DataTable>
-                  </ThemeComponent>
-                </div>
+                  <DataTable
+                    value={data.map((row, index) => ({ ...row, id: index }))}
+                    emptyMessage="No data found"
+                    showGridlines
+                    responsive
+                    scrollable
+                    scrollHeight="500px"
+                    rows={15}
+                    paginator
+                  >
+                    <Column field="country_name" header="Country" />
+                    <Column field="operator_name" header="Operator" />
+                  </DataTable>
+                </ThemeComponent>
               </div>
             ) : null}
           </div>

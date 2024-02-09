@@ -17,7 +17,7 @@ const NewSidebarAdmin = (props) => {
         <div
           className={classes.tab}
           style={{
-            color: props.highlight === 1 ? "#000" : "#6B7281",
+            color: props.highlight === 1 ? "#696CFF" : "#6B7281",
           }}
           onClick={() => {
             handleNavigate("/dashboardAdmin");
@@ -34,7 +34,7 @@ const NewSidebarAdmin = (props) => {
         <div
           className={classes.tab}
           style={{
-              color: props.highlight === 2 ? "#000" : "#6B7281",
+              color: props.highlight === 2 ? "#696CFF" : "#6B7281",
           }}
           onClick={() => {
             handleNavigate("/dailyRevenueAdmin");
@@ -51,7 +51,7 @@ const NewSidebarAdmin = (props) => {
         <div
           className={classes.tab}
           style={{
-            color: props.highlight === 3 ? "#000" : "#6B7281",
+            color: props.highlight === 3 ? "#696CFF" : "#6B7281",
           }}
           onClick={() => {
             handleNavigate("/monthlyRevenueAdmin");

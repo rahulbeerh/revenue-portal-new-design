@@ -260,9 +260,8 @@ const AdvertiserSubscriptionPage = () => {
 
             {data ? (
               <div className={classes.table_container}>
-                <div className={classes.table_sub_container}>
-                  <ThemeComponent>
-                    {/* <DataGrid
+                <ThemeComponent>
+                  {/* <DataGrid
                       rows={data?.map((row, index) => ({
                         ...row,
                         id: index,
@@ -339,47 +338,46 @@ const AdvertiserSubscriptionPage = () => {
                         },
                       ]}
                     /> */}
-                    <DataTable
-                      value={data}
-                      emptyMessage="No data found"
-                      showGridlines
-                      responsive
-                      scrollable
-                      scrollHeight="500px"
-                      rows={10}
-                      paginator
-                    >
-                      <Column field="clientName" header="Client" />
-                      <Column field="serviceName" header="Service" />
-                      <Column field="publisher" header="Publisher" />
-                      <Column
-                        field="queue"
-                        header="Queue"
-                        body={(rowData) => rowData.queue || 0}
-                      />
-                      <Column
-                        field="sent"
-                        header="Sent"
-                        body={(rowData) => rowData.sent || 0}
-                      />
-                      <Column
-                        field="skip"
-                        header="Skip"
-                        body={(rowData) => rowData.skip || 0}
-                      />
-                      <Column
-                        field="duplicateRec"
-                        header="Duplicate Record"
-                        body={(rowData) => rowData.duplicateRec || 0}
-                      />
-                      <Column
-                        field="total"
-                        header="Total"
-                        body={(rowData) => rowData.total || 0}
-                      />
-                    </DataTable>
-                  </ThemeComponent>
-                </div>
+                  <DataTable
+                    value={data}
+                    emptyMessage="No data found"
+                    showGridlines
+                    responsive
+                    scrollable
+                    scrollHeight="500px"
+                    rows={15}
+                    paginator
+                  >
+                    <Column field="clientName" header="Client" />
+                    <Column field="serviceName" header="Service" />
+                    <Column field="publisher" header="Publisher" />
+                    <Column
+                      field="queue"
+                      header="Queue"
+                      body={(rowData) => rowData.queue || 0}
+                    />
+                    <Column
+                      field="sent"
+                      header="Sent"
+                      body={(rowData) => rowData.sent || 0}
+                    />
+                    <Column
+                      field="skip"
+                      header="Skip"
+                      body={(rowData) => rowData.skip || 0}
+                    />
+                    <Column
+                      field="duplicateRec"
+                      header="Duplicate Record"
+                      body={(rowData) => rowData.duplicateRec || 0}
+                    />
+                    <Column
+                      field="total"
+                      header="Total"
+                      body={(rowData) => rowData.total || 0}
+                    />
+                  </DataTable>
+                </ThemeComponent>
               </div>
             ) : null}
           </div>

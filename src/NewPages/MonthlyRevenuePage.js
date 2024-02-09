@@ -247,7 +247,6 @@ const MonthlyRevenuePage = () => {
 
             {/* <div style={{ height: 600, width: "100%"}}> */}
             <div className={classes.table_container}>
-              <div className={classes.table_sub_container}>
                 <ThemeComponent>
                   <DataTable value={[...data, totals]}
                   emptyMessage="No data found"
@@ -255,7 +254,7 @@ const MonthlyRevenuePage = () => {
                   responsive
                   scrollable
                   scrollHeight="500px" 
-                  rows={10} 
+                  rows={15} 
                   paginator
                   header={header}
                   >
@@ -278,7 +277,6 @@ const MonthlyRevenuePage = () => {
                   </DataTable>
                 </ThemeComponent>
               </div>
-            </div>
           </div>
         </div>
       </div>

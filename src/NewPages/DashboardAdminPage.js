@@ -205,7 +205,7 @@ const DashboardAdminPage = () => {
                   responsive
                   scrollable
                   scrollHeight="500px" 
-                  rows={10} 
+                  rows={15} 
                   paginator
                 >
                   <Column field="service" header="Service" />

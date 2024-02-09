@@ -303,7 +303,6 @@ const MonthlyRevenueAdminPage = () => {
 
             <NewLineGraph data={data} width={width} biggest={biggest} />
             <div className={classes.table_container}>
-              <div className={classes.table_sub_container}>
                 <ThemeComponent>
                   <DataTable
                     value={[...data, totals]}
@@ -312,7 +311,7 @@ const MonthlyRevenueAdminPage = () => {
                     responsive
                     scrollable
                     scrollHeight="500px" 
-                    rows={10} 
+                    rows={15} 
                     paginator
                     header={header}
                   >
@@ -326,7 +325,6 @@ const MonthlyRevenueAdminPage = () => {
                   </DataTable>
                 </ThemeComponent>
               </div>
-            </div>
           </div>
         </div>
       </div>

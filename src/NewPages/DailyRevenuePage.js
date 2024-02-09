@@ -310,7 +310,6 @@ const DailyRevenuePage = () => {
 
             {/* <div style={{ height: 600, width: "100%"}}> */}
             <div className={classes.table_container}>
-              <div className={classes.table_sub_container}>
                 <ThemeComponent>
                   <DataTable
                     value={[...data, totals]}
@@ -319,7 +318,7 @@ const DailyRevenuePage = () => {
                     responsive
                     scrollable
                     scrollHeight="500px"
-                    rows={10}
+                    rows={15}
                     paginator
                     header={header}
                   >
@@ -343,7 +342,6 @@ const DailyRevenuePage = () => {
                     />
                   </DataTable>
                 </ThemeComponent>
-              </div>
             </div>
           </div>
         </div>

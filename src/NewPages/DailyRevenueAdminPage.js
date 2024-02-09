@@ -162,6 +162,7 @@ const DailyRevenueAdminPage = () => {
           renewalsRevenue: dataItem.renewalsRevenue,
           subscriptionRevenue: dataItem.subscriptionRevenue,
           totalRevenue: dataItem.totalRevenue,
+          totalRevenueAccumulated:dataItem?.DailyIncreaseAccumulated
         };
       });
 
@@ -395,7 +396,7 @@ const DailyRevenueAdminPage = () => {
                     responsive
                     scrollable
                     scrollHeight="500px" 
-                    rows={10} 
+                    rows={15} 
                     paginator
                     header={header}
                   >
@@ -428,8 +429,14 @@ const DailyRevenueAdminPage = () => {
                     />
                     <Column
                       field="totalRevenue"
-                      header="Total Revenue"
+                      // header="Total Revenue"
+                      header="Daily Revenue"
                       
+                    />
+                     <Column
+                      field="totalRevenueAccumulated"
+                      // header="Total Revenue"
+                      header="Total Revenue"
                     />
                   </DataTable>
                 </ThemeComponent>
