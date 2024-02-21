@@ -4,7 +4,6 @@ import { DataGrid } from "@mui/x-data-grid";
 import axios from "axios";
 import Loader from "../Components/Loader";
 import { fetchClientsServicesData } from "../Data/Api";
-import "react-datepicker/dist/react-datepicker.css";
 import NewSidebarAdmin from "../NewComponents/NewSidebarAdmin";
 import NewHeader from "../NewComponents/NewHeader";
 import TitleHeader from "../NewComponents/TitleHeader";
