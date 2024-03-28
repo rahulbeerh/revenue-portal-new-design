@@ -92,6 +92,7 @@ const DailyRevenuePage = () => {
           totalActiveBase: dataItem.totalActiveBase,
           subscriptions: dataItem.subscriptions,
           unsubscriptions: dataItem.unsubscriptions,
+          renewals: dataItem?.renewals,
           renewalsRevenue: dataItem.renewalsRevenue,
           subscriptionRevenue: dataItem.subscriptionRevenue,
           totalRevenue: dataItem.totalRevenue,
@@ -214,11 +215,7 @@ const DailyRevenuePage = () => {
     setDates({ ...dates, to: utcDate });
   };
 
-  
-
-  const header = (
-    <ExportDailyRevenueToExcel data={[...data,totals]}/>
-  );
+  const header = <ExportDailyRevenueToExcel data={[...data, totals]} />;
 
   return (
     <>
@@ -310,38 +307,41 @@ const DailyRevenuePage = () => {
 
             {/* <div style={{ height: 600, width: "100%"}}> */}
             <div className={classes.table_container}>
-                <ThemeComponent>
-                  <DataTable
-                    value={[...data, totals]}
-                    emptyMessage="No data found"
-                    showGridlines
-                    responsive
-                    scrollable
-                    scrollHeight="500px"
-                    rows={15}
-                    paginator
-                    header={header}
-                  >
-                    <Column field="misDate" header="Date" />
-                    <Column field="totalBase" header="Total Subscription" />
-                    <Column
-                      field="totalActiveBase"
-                      header="Active Subscription"
-                    />
-                    <Column field="subscriptions" header="Paid Subscriptions" />
-                    <Column field="unsubscriptions" header="Unsubscriptions" />
-                    <Column field="renewalsRevenue" header="Renewal Revenue" />
-                    <Column
-                      field="subscriptionRevenue"
-                      header="Subscription Revenue"
-                    />
-                    <Column field="totalRevenue" header="Revenue" />
-                    <Column
-                      field="dailyIncreaseAccumulated"
-                      header="Total Revenue"
-                    />
-                  </DataTable>
-                </ThemeComponent>
+              <ThemeComponent>
+                <DataTable
+                  value={[...data, totals]}
+                  emptyMessage="No data found"
+                  showGridlines
+                  responsive
+                  scrollable
+                  scrollHeight="500px"
+                  rows={15}
+                  paginator
+                  header={header}
+                >
+                  <Column field="misDate" header="Date" />
+                  <Column field="totalBase" header="Total Subscription" />
+                  <Column
+                    field="totalActiveBase"
+                    header="Active Subscription"
+                  />
+                  <Column field="subscriptions" header="Paid Subscriptions" />
+                  <Column field="unsubscriptions" header="Unsubscriptions" />
+                  {localStorage.getItem("userName") == "h2n" ? (
+                    <Column field="renewals" header="Renewals" />
+                  ) : null}
+                  <Column field="renewalsRevenue" header="Renewal Revenue" />
+                  <Column
+                    field="subscriptionRevenue"
+                    header="Subscription Revenue"
+                  />
+                  <Column field="totalRevenue" header="Revenue" />
+                  <Column
+                    field="dailyIncreaseAccumulated"
+                    header="Total Revenue"
+                  />
+                </DataTable>
+              </ThemeComponent>
             </div>
           </div>
         </div>

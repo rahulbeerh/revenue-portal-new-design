@@ -159,49 +159,51 @@ const EditFormModal = (props) => {
       return;
     }
     if (
-      serviceUrl.includes("ext_ref=<") ||
-      serviceUrl.includes("&bmgfy_transid=<") ||
-      serviceUrl.includes("bm_transid=<") ||
-      serviceUrl.includes("bmffy_transid=<") ||
-      serviceUrl.includes("bmkdz_transid=<")
+      // serviceUrl.includes("ext_ref=<") ||
+      // serviceUrl.includes("&bmgfy_transid=<") ||
+      // serviceUrl.includes("bm_transid=<") ||
+      // serviceUrl.includes("bmffy_transid=<") ||
+      // serviceUrl.includes("bmkdz_transid=<")
+      serviceUrl.includes("<CLICK_ID>")
     ) {
       // if (postbackUrl.includes("tid=<")) {
-      let index = serviceUrl.indexOf("ext_ref=<");
+      // let index = serviceUrl.indexOf("ext_ref=<");
 
-      let index2 = serviceUrl?.indexOf("&bmgfy_transid=<");
-      let index3 = serviceUrl?.indexOf("bm_transid=<");
-      let index4 = serviceUrl?.indexOf("bmffy_transid=<");
-      let index5 = serviceUrl?.indexOf("bmkdz_transid=<");
+      // let index2 = serviceUrl?.indexOf("&bmgfy_transid=<");
+      // let index3 = serviceUrl?.indexOf("bm_transid=<");
+      // let index4 = serviceUrl?.indexOf("bmffy_transid=<");
+      // let index5 = serviceUrl?.indexOf("bmkdz_transid=<");
 
-      let indexLast = serviceUrl.length;
-      const string = serviceUrl.substring(index + 9, indexLast - 1);
+      // let indexLast = serviceUrl.length;
+      // const string = serviceUrl.substring(index + 9, indexLast - 1);
 
-      const string2 = serviceUrl?.substring(index2 + 9, indexLast - 1);
-      const string3 = serviceUrl?.substring(index3 + 9, indexLast - 1);
-      const string4 = serviceUrl?.substring(index4 + 9, indexLast - 1);
-      const string5 = serviceUrl?.substring(index5 + 9, indexLast - 1);
+      // const string2 = serviceUrl?.substring(index2 + 9, indexLast - 1);
+      // const string3 = serviceUrl?.substring(index3 + 9, indexLast - 1);
+      // const string4 = serviceUrl?.substring(index4 + 9, indexLast - 1);
+      // const string5 = serviceUrl?.substring(index5 + 9, indexLast - 1);
 
-      const checkLastCharacter = serviceUrl.substring(-1).includes(">");
+      // const checkLastCharacter = serviceUrl.substring(-1).includes(">");
       // console.log(checkLastCharacter);
       // console.log(serviceUrl.substring(-1));
 
-      const stringCheck = string.includes("CLICK_ID");
+      // const stringCheck = string.includes("CLICK_ID");
 
-      const stringCheck2 = string2.includes("CLICK_ID");
-      const stringCheck3 = string3.includes("CLICK_ID");
-      const stringCheck4 = string4.includes("CLICK_ID");
-      const stringCheck5 = string5.includes("CLICK_ID");
+      // const stringCheck2 = string2.includes("CLICK_ID");
+      // const stringCheck3 = string3.includes("CLICK_ID");
+      // const stringCheck4 = string4.includes("CLICK_ID");
+      // const stringCheck5 = string5.includes("CLICK_ID");
 
       // console.log(stringCheck);
 
       if (
-        !stringCheck ||
-        !checkLastCharacter ||
-        string.trim() === "" ||
-        !stringCheck2 ||
-        !stringCheck3 ||
-        !stringCheck4 ||
-        !stringCheck5
+        // !stringCheck ||
+        // !checkLastCharacter ||
+        // string.trim() === "" ||
+        // !stringCheck2 ||
+        // !stringCheck3 ||
+        // !stringCheck4 ||
+        // !stringCheck5
+        !serviceUrl.includes('<CLICK_ID>')
       ) {
         setServiceUrlError(true);
         setPostbackUrlError(false);

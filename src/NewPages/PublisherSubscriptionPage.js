@@ -97,9 +97,14 @@ const PublisherSubscriptionPage = () => {
     }
   };
 
-  async function fetchDataFromBackend() {
+  async function fetchDataFromBackend(
+    showLoading,
+    dateStart,
+    dateEnd,
+    serviceName,
+    publisherName
+  ) {
     try {
-      setLoading("block");
       const client = localStorage.getItem("userName");
       let token = localStorage.getItem("userToken");
       let headers = { Authorization: "Bearer " + token };
@@ -107,19 +112,22 @@ const PublisherSubscriptionPage = () => {
       if (service == "All" || service == "") {
         data = {
           client,
-          startDate,
-          endDate,
+          startDate:dateStart,
+          endDate:dateEnd,
           service: "All",
-          publisher: publisher,
+          publisher: publisherName,
         };
       } else {
         data = {
           client,
-          startDate,
-          endDate,
-          service: service,
-          publisher: publisher,
+          startDate:dateStart,
+          endDate:dateEnd,
+          service: serviceName,
+          publisher: publisherName,
         };
+      }
+      if (showLoading) {
+        setLoading("block");
       }
       // const data = { client, startDate, endDate };
       const res = await axios.post(publisherSubscriptionApi, data, {
@@ -142,12 +150,20 @@ const PublisherSubscriptionPage = () => {
 
   useEffect(() => {
     fetchServices();
-    fetchDataFromBackend();
+    fetchDataFromBackend(true, startDate, endDate, service, publisher);
   }, []);
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      fetchDataFromBackend(null, startDate, endDate, service, publisher);
+    }, 10000);
+
+    return () => clearInterval(intervalId);
+  }, [startDate, endDate, service, publisher]);
 
   const submitHandler = async (e) => {
     e.preventDefault();
-    fetchDataFromBackend();
+    fetchDataFromBackend(true, startDate, endDate, service, publisher);
   };
   const handleServiceChange = (service) => {
     setService(service);
