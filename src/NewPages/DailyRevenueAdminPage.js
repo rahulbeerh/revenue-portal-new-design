@@ -39,6 +39,8 @@ const DailyRevenueAdminPage = () => {
   const [client, setClient] = useState("");
   const [clientForDropdown, setClientForDropdown] = useState("");
 
+  const [tabIndex, setTabIndex] = useState(0);
+
   const [sidebarHide, setSidebarHide] = useState(() =>
     localStorage.getItem("sidebar")
       ? JSON.parse(localStorage.getItem("sidebar"))
@@ -135,7 +137,6 @@ const DailyRevenueAdminPage = () => {
 
   //Hook to store data
   const [data, setData] = useState([]);
-  const [kidzManiaData, setKidzManiaData] = useState([]);
 
   //Method to handle response
   const handleDataResponse = (e) => {
@@ -153,46 +154,19 @@ const DailyRevenueAdminPage = () => {
       // console.log("DataFromBackend", dataFromBackend);
       const dataDateManupulate = dataFromBackend.map((dataItem) => {
         return {
-          id: dataItem.id,
-          misDate: dataItem.misDate.substring(0, 10),
-          totalBase: dataItem.totalBase,
-          totalActiveBase: dataItem.totalActiveBase,
-          subscriptions: dataItem.subscriptions,
-          unsubscriptions: dataItem.unsubscriptions,
-          renewalsRevenue: dataItem.renewalsRevenue,
-          renewals:dataItem?.renewals,
-          subscriptionRevenue: dataItem.subscriptionRevenue,
-          totalRevenue: dataItem.totalRevenue,
-          totalRevenueAccumulated:dataItem?.DailyIncreaseAccumulated
+          id: dataItem?.id,
+          misDate: dataItem?.misDate.substring(0, 10),
+          totalBase: dataItem?.totalBase,
+          totalActiveBase: dataItem?.totalActiveBase,
+          subscriptions: dataItem?.subscriptions,
+          unsubscriptions: dataItem?.unsubscriptions,
+          renewalsRevenue: dataItem?.renewalsRevenue,
+          renewals: dataItem?.renewals,
+          subscriptionRevenue: dataItem?.subscriptionRevenue,
+          totalRevenue: dataItem?.totalRevenue,
+          totalRevenueAccumulated: dataItem?.DailyIncreaseAccumulated,
         };
       });
-
-      const kidzmaniaData = dataFromBackend.map((dataItem) => {
-        return {
-          id: dataItem.id,
-          misDate: dataItem.misDate.substring(0, 10),
-          totalBase: dataItem.totalBase,
-          totalActiveBase: dataItem.totalActiveBase,
-          subscriptions: dataItem.subscriptions,
-          unsubscriptions: dataItem.unsubscriptions,
-          renewalsRevenue: dataItem.renewalsRevenue,
-          subscriptionRevenue: dataItem.subscriptionRevenue,
-          totalRevenue: dataItem.totalRevenue,
-          fame:
-            dataItem.fame == null || dataItem.fame.trim().length <= 0
-              ? 0
-              : dataItem.fame,
-          subFailed: dataItem.SubFailed == null ? 0 : dataItem.SubFailed,
-          callbackcount:
-            dataItem.callbackcount == null ? 0 : dataItem.callbackcount,
-          revenueShare:
-            dataItem.revenueShare == null ? 0 : dataItem.revenueShare,
-          // companyRevenue:dataItem.companyRevenue==null?0:dataItem.companyRevenue
-        };
-      });
-
-      const kidzDataLimit = kidzmaniaData.slice(0, 31);
-      setKidzManiaData(kidzDataLimit.reverse());
 
       const dataLimit = dataDateManupulate.slice(0, 31);
       setData(dataLimit.reverse());
@@ -289,10 +263,17 @@ const DailyRevenueAdminPage = () => {
     setDates({ ...dates, to: utcDate });
   };
 
-  const header = (
-    <ExportDailyRevenueAdmin data={[...data,totals]}/>
-  );
+  const handleTabChanged = (indexValue) => {
+    setTabIndex(indexValue);
+  };
 
+  const header = (
+    <ExportDailyRevenueAdmin
+      data={[...data, totals]}
+      handleTabChanged={handleTabChanged}
+      tabIndex={tabIndex}
+    />
+  );
 
   return (
     <>
@@ -388,64 +369,62 @@ const DailyRevenueAdminPage = () => {
 
             <div className={classes.table_container}>
               {/* <div className={classes.table_sub_container}> */}
-                <ThemeComponent>
-
-                  <DataTable
-                    value={[...data, totals]}
-                    emptyMessage="No data found"
-                    showGridlines
-                    responsive
-                    scrollable
-                    scrollHeight="500px" 
-                    rows={15} 
-                    paginator
-                    header={header}
-                  >
-                    <Column field="misDate" header="Date"  />
-                    <Column field="totalBase" header="Total Subscription"  />
+              <ThemeComponent>
+                <DataTable
+                  value={[...data, totals]}
+                  emptyMessage="No data found"
+                  showGridlines
+                  responsive
+                  scrollable
+                  scrollHeight="500px"
+                  rows={15}
+                  paginator
+                  header={header}
+                >
+                  <Column field="misDate" header="Date" />
+                  {(tabIndex == 0 || tabIndex == 1) && (
+                    <Column field="totalBase" header="Total Subscription" />
+                  )}
+                  {(tabIndex == 0 || tabIndex == 1) && (
                     <Column
                       field="totalActiveBase"
                       header="Active Subscription"
-                      
                     />
-                    <Column
-                      field="subscriptions"
-                      header="Paid Subscriptions"
-                      
-                    />
-                    <Column
-                      field="unsubscriptions"
-                      header="Unsubscriptions"
-                      
-                    />
-                    <Column
-                      field="renewalsRevenue"
-                      header="Renewal Revenue"
-                      
-                    />
-                     <Column
-                      field="renewals"
-                      header="Renewals Count"
-                      
-                    />
+                  )}
+                  {(tabIndex == 0 || tabIndex == 1) && (
+                    <Column field="subscriptions" header="Paid Subscriptions" />
+                  )}
+                  {(tabIndex == 0 || tabIndex == 2) && (
+                    <Column field="unsubscriptions" header="Unsubscriptions" />
+                  )}
+                  {(tabIndex == 0 || tabIndex == 3) && (
+                    <Column field="renewals" header="Renewals Count" />
+                  )}
+                  {(tabIndex == 0 || tabIndex == 3 || tabIndex == 4) && (
+                    <Column field="renewalsRevenue" header="Renewal Revenue" />
+                  )}
+                  {(tabIndex == 0 || tabIndex == 1 || tabIndex == 4) && (
                     <Column
                       field="subscriptionRevenue"
                       header="Subscription Revenue"
-                      
                     />
+                  )}
+                  {(tabIndex == 0 || tabIndex == 4) && (
                     <Column
                       field="totalRevenue"
                       // header="Total Revenue"
                       header="Daily Revenue"
-                      
                     />
-                     <Column
+                  )}
+                  {(tabIndex == 0 || tabIndex == 4) && (
+                    <Column
                       field="totalRevenueAccumulated"
                       // header="Total Revenue"
                       header="Total Revenue"
                     />
-                  </DataTable>
-                </ThemeComponent>
+                  )}
+                </DataTable>
+              </ThemeComponent>
               {/* </div> */}
             </div>
           </div>

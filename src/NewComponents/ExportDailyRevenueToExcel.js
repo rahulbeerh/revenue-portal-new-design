@@ -48,9 +48,10 @@ const ExportDailyRevenueToExcel = ({ data }) => {
         D: "Paid Subscriptions",
         E: "Unsubscriptions",
         F: "Renewal Revenue",
-        G: "Subscription Revenue",
-        H: "Revenue",
-        I: "Total Revenue",
+        G:"Renewals Count",
+        H: "Subscription Revenue",
+        I: "Revenue",
+        J: "Total Revenue",
       },
     ];
     data.forEach((row) => {
@@ -60,9 +61,10 @@ const ExportDailyRevenueToExcel = ({ data }) => {
       const subscriptions = row.subscriptions;
       const unsubscriptions = row.unsubscriptions;
       const renewalsRevenue = row.renewalsRevenue;
+      const renewals = row?.renewals;
       const subscriptionRevenue = row.subscriptionRevenue;
       const totalRevenue = row.totalRevenue;
-      const dailyIncreaseAccumulated=row.dailyIncreaseAccumulated;
+      const dailyIncreaseAccumulated = row.dailyIncreaseAccumulated;
 
       table.push({
         A: misDate,
@@ -71,9 +73,10 @@ const ExportDailyRevenueToExcel = ({ data }) => {
         D: subscriptions,
         E: unsubscriptions,
         F: renewalsRevenue,
-        G: subscriptionRevenue,
-        H: totalRevenue,
-        I: dailyIncreaseAccumulated,
+        G: renewals,
+        H: subscriptionRevenue,
+        I: totalRevenue,
+        J: dailyIncreaseAccumulated,
       });
     });
     // console.log(table);
@@ -125,6 +128,7 @@ const ExportDailyRevenueToExcel = ({ data }) => {
         sheet.column("G").width(20);
         sheet.column("H").width(20);
         sheet.column("I").width(15);
+        sheet.column("J").width(20);
       });
       return workbook
         .outputAsync()
@@ -143,16 +147,16 @@ const ExportDailyRevenueToExcel = ({ data }) => {
     // <Button variant="contained" onClick={createDownloadData} color="secondary">
     //   Export
     // </Button>
-     <div style={headerStyles}>
-     <Button
-       type="button"
-       icon="pi pi-file-excel"
-       severity="success"
-       rounded
-       onClick={createDownloadData}
-       data-pr-tooltip="XLS"
-     />
-   </div>
+    <div style={headerStyles}>
+      <Button
+        type="button"
+        icon="pi pi-file-excel"
+        severity="success"
+        rounded
+        onClick={createDownloadData}
+        data-pr-tooltip="XLS"
+      />
+    </div>
   );
 };
 

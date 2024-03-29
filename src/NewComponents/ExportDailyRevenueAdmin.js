@@ -2,8 +2,22 @@ import { Button } from "primereact/button";
 import React from "react";
 import * as XLSX from "xlsx";
 import * as XlsxPopulate from "xlsx-populate/browser/xlsx-populate";
+import classes from "./ExportDailyRevenueAdmin.module.css";
+import { TabMenu } from "primereact/tabmenu";
 
-const ExportDailyRevenueAdmin = ({ data }) => {
+const ExportDailyRevenueAdmin = ({ data, handleTabChanged, tabIndex }) => {
+  const items = [
+    { label: "Overview" },
+    { label: "Subscriptions" },
+    { label: "Unsubscriptions" },
+    { label: "Renewals" },
+    { label: "Revenue" },
+  ];
+
+  const handleTabChange = (index) => {
+    handleTabChanged(index);
+  };
+
   const createDownloadData = () => {
     handleExport().then((url) => {
       const downloadAnchorElement = document.createElement("a");
@@ -48,8 +62,10 @@ const ExportDailyRevenueAdmin = ({ data }) => {
         D: "Subscriptions",
         E: "Unsubscriptions",
         F: "Renewal Revenue",
-        G: "Subscription Revenue",
-        H: "Total Revenue",
+        G: "Renewals Count",
+        H: "Subscription Revenue",
+        I: "Daily Revenue",
+        J: "Total Revenue",
       },
     ];
     data.forEach((row) => {
@@ -59,8 +75,10 @@ const ExportDailyRevenueAdmin = ({ data }) => {
       const subscriptions = row.subscriptions;
       const unsubscriptions = row.unsubscriptions;
       const renewalsRevenue = row.renewalsRevenue;
+      const renewals = row?.renewals;
       const subscriptionRevenue = row.subscriptionRevenue;
-      const totalRevenue = row.totalRevenue;
+      const dailyRevenue = row?.totalRevenue;
+      const totalRevenue = row?.totalRevenueAccumulated;
 
       table.push({
         A: misDate,
@@ -69,8 +87,10 @@ const ExportDailyRevenueAdmin = ({ data }) => {
         D: subscriptions,
         E: unsubscriptions,
         F: renewalsRevenue,
-        G: subscriptionRevenue,
-        H: totalRevenue,
+        G: renewals,
+        H: subscriptionRevenue,
+        I: dailyRevenue,
+        J: totalRevenue,
       });
     });
     // console.log(table);
@@ -121,6 +141,8 @@ const ExportDailyRevenueAdmin = ({ data }) => {
         sheet.column("F").width(15);
         sheet.column("G").width(20);
         sheet.column("H").width(20);
+        sheet.column("I").width(20);
+        sheet.column("J").width(20);
       });
       return workbook
         .outputAsync()
@@ -128,24 +150,32 @@ const ExportDailyRevenueAdmin = ({ data }) => {
     });
   };
 
-  const headerStyles = {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "flex-end",
-    gap: "2rem",
-  };
+  // const headerStyles = {
+  //   display: "flex",
+  //   alignItems: "center",
+  //   justifyContent: "flex-end",
+  //   gap: "2rem",
+  // };
 
   return (
-     <div style={headerStyles}>
-     <Button
-       type="button"
-       icon="pi pi-file-excel"
-       severity="success"
-       rounded
-       onClick={createDownloadData}
-       data-pr-tooltip="XLS"
-     />
-   </div>
+    <div className={classes.header}>
+      <div className={classes.filter_button_container}>
+        <TabMenu
+          className={classes.tab}
+          model={items}
+          activeIndex={tabIndex}
+          onTabChange={(e) => handleTabChange(e?.index)}
+        />
+      </div>
+      <Button
+        type="button"
+        icon="pi pi-file-excel"
+        severity="success"
+        rounded
+        onClick={createDownloadData}
+        data-pr-tooltip="XLS"
+      />
+    </div>
   );
 };
 

@@ -132,14 +132,6 @@ const MonthlyRevenuePage = () => {
     width = 700;
   }
 
-  function CustomToolbar() {
-    return (
-      <GridToolbarContainer>
-        <GridToolbarExport />
-      </GridToolbarContainer>
-    );
-  }
-
   const totalRenewalRevenue = data.reduce(
     (total, dataItem) => total + dataItem.renewalsRevenue,
     0

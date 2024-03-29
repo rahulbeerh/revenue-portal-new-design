@@ -71,7 +71,6 @@ const DailyRevenuePage = () => {
   };
 
   const [data, setData] = useState([]);
-  const [kidzManiaData, setKidzManiaData] = useState([]);
 
   const handleDataResponse = (e) => {
     if (e.response === "error") {
@@ -86,49 +85,21 @@ const DailyRevenuePage = () => {
       console.log(dataFromBackend, "d");
       const dataDateManupulate = dataFromBackend.map((dataItem) => {
         return {
-          id: dataItem.id,
+          id: dataItem?.id,
           misDate: dataItem?.misDate.substring(0, 10),
-          totalBase: dataItem.totalBase,
-          totalActiveBase: dataItem.totalActiveBase,
-          subscriptions: dataItem.subscriptions,
-          unsubscriptions: dataItem.unsubscriptions,
+          totalBase: dataItem?.totalBase,
+          totalActiveBase: dataItem?.totalActiveBase,
+          subscriptions: dataItem?.subscriptions,
+          unsubscriptions: dataItem?.unsubscriptions,
           renewals: dataItem?.renewals,
-          renewalsRevenue: dataItem.renewalsRevenue,
-          subscriptionRevenue: dataItem.subscriptionRevenue,
-          totalRevenue: dataItem.totalRevenue,
+          renewalsRevenue: dataItem?.renewalsRevenue,
+          subscriptionRevenue: dataItem?.subscriptionRevenue,
+          totalRevenue: dataItem?.totalRevenue,
           dailyIncreaseAccumulated: dataItem?.DailyIncreaseAccumulated,
         };
       });
-
-      const kidzmaniaData = dataFromBackend.map((dataItem) => {
-        return {
-          id: dataItem.id,
-          misDate: dataItem?.misDate?.substring(0, 10),
-          totalBase: dataItem.totalBase,
-          totalActiveBase: dataItem.totalActiveBase,
-          subscriptions: dataItem.subscriptions,
-          unsubscriptions: dataItem.unsubscriptions,
-          renewalsRevenue: dataItem.renewalsRevenue,
-          subscriptionRevenue: dataItem.subscriptionRevenue,
-          totalRevenue: dataItem.totalRevenue,
-          fame:
-            dataItem.fame == null || dataItem.fame.trim().length <= 0
-              ? 0
-              : dataItem.fame,
-          subFailed: dataItem.SubFailed == null ? 0 : dataItem.SubFailed,
-          callbackcount:
-            dataItem.callbackcount == null ? 0 : dataItem.callbackcount,
-          revenueShare:
-            dataItem.revenueShare == null ? 0 : dataItem.revenueShare,
-          dailyIncreaseAccumulated: dataItem?.DailyIncreaseAccumulated,
-        };
-      });
-
-      const kidzDataLimit = kidzmaniaData.slice(0, 31);
-      setKidzManiaData(kidzDataLimit.reverse());
 
       const dataLimit = dataDateManupulate.slice(0, 31);
-
       setData(dataLimit.reverse());
 
       const biggestValue = Math.max.apply(
@@ -270,11 +241,8 @@ const DailyRevenuePage = () => {
               <div className={classes.start_date}>
                 <Calendar
                   value={startDateForCalendar}
-                  // value={dates.from}
                   onChange={(e) => convertStartDate(e.value)}
-                  // onChange={(e) => setDates({ ...dates, from: e.value })}
                   showIcon
-                  // touchUI
                   showButtonBar
                   placeholder="Start Date"
                   style={{ width: "100%" }}
@@ -282,10 +250,8 @@ const DailyRevenuePage = () => {
               </div>
               <div className={classes.end_date}>
                 <Calendar
-                  // value={dates.to}
                   value={endDateForCalendar}
                   onChange={(e) => convertEndDate(e.value)}
-                  // onChange={(e) => setDates({ ...dates, to: e.value })}
                   showIcon
                   // touchUI
                   showButtonBar
@@ -305,41 +271,35 @@ const DailyRevenuePage = () => {
 
             <NewLineGraph data={data} width={width} biggest={biggest} />
 
-            {/* <div style={{ height: 600, width: "100%"}}> */}
             <div className={classes.table_container}>
-              <ThemeComponent>
-                <DataTable
-                  value={[...data, totals]}
-                  emptyMessage="No data found"
-                  showGridlines
-                  responsive
-                  scrollable
-                  scrollHeight="500px"
-                  rows={15}
-                  paginator
-                  header={header}
-                >
-                  <Column field="misDate" header="Date" />
-                  <Column field="totalBase" header="Total Subscription" />
-                  <Column
-                    field="totalActiveBase"
-                    header="Active Subscription"
-                  />
-                  <Column field="subscriptions" header="Paid Subscriptions" />
-                  <Column field="unsubscriptions" header="Unsubscriptions" />
-                  <Column field="renewalsRevenue" header="Renewal Revenue" />
-                  <Column field="renewals" header="Renewals Count" />
-                  <Column
-                    field="subscriptionRevenue"
-                    header="Subscription Revenue"
-                  />
-                  <Column field="totalRevenue" header="Revenue" />
-                  <Column
-                    field="dailyIncreaseAccumulated"
-                    header="Total Revenue"
-                  />
-                </DataTable>
-              </ThemeComponent>
+              <DataTable
+                value={[...data, totals]}
+                emptyMessage="No data found"
+                showGridlines
+                responsive
+                scrollable
+                scrollHeight="500px"
+                rows={15}
+                paginator
+                header={header}
+              >
+                <Column field="misDate" header="Date" />
+                <Column field="totalBase" header="Total Subscription" />
+                <Column field="totalActiveBase" header="Active Subscription" />
+                <Column field="subscriptions" header="Paid Subscriptions" />
+                <Column field="unsubscriptions" header="Unsubscriptions" />
+                <Column field="renewalsRevenue" header="Renewal Revenue" />
+                <Column field="renewals" header="Renewals Count" />
+                <Column
+                  field="subscriptionRevenue"
+                  header="Subscription Revenue"
+                />
+                <Column field="totalRevenue" header="Revenue" />
+                <Column
+                  field="dailyIncreaseAccumulated"
+                  header="Total Revenue"
+                />
+              </DataTable>
             </div>
           </div>
         </div>
