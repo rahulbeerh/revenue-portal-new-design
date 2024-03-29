@@ -123,6 +123,9 @@ const MonthlyRevenueAdminPage = () => {
     if (e.response === "error") {
       toast.error(e.error?.response?.data?.message || e.error?.message);
       setLoader("none");
+      setTimeout(() => {
+        navigate("/");
+      }, 1000);
     } else {
       setLoader("none");
       // console.log(e);

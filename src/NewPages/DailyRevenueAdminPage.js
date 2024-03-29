@@ -144,7 +144,7 @@ const DailyRevenueAdminPage = () => {
       toast.error(e.error?.response?.data?.message || e.error?.message);
       setTimeout(() => {
         navigate("/");
-      }, 2000);
+      }, 1000);
       setLoader("none");
     } else {
       setLoader("none");
@@ -160,6 +160,7 @@ const DailyRevenueAdminPage = () => {
           subscriptions: dataItem.subscriptions,
           unsubscriptions: dataItem.unsubscriptions,
           renewalsRevenue: dataItem.renewalsRevenue,
+          renewals:dataItem?.renewals,
           subscriptionRevenue: dataItem.subscriptionRevenue,
           totalRevenue: dataItem.totalRevenue,
           totalRevenueAccumulated:dataItem?.DailyIncreaseAccumulated
@@ -401,15 +402,15 @@ const DailyRevenueAdminPage = () => {
                     header={header}
                   >
                     <Column field="misDate" header="Date"  />
-                    <Column field="totalBase" header="Total Base"  />
+                    <Column field="totalBase" header="Total Subscription"  />
                     <Column
                       field="totalActiveBase"
-                      header="Total Active Base"
+                      header="Active Subscription"
                       
                     />
                     <Column
                       field="subscriptions"
-                      header="Subscriptions"
+                      header="Paid Subscriptions"
                       
                     />
                     <Column
@@ -420,6 +421,11 @@ const DailyRevenueAdminPage = () => {
                     <Column
                       field="renewalsRevenue"
                       header="Renewal Revenue"
+                      
+                    />
+                     <Column
+                      field="renewals"
+                      header="Renewals Count"
                       
                     />
                     <Column

@@ -77,6 +77,9 @@ const sidebarHandler = () => {
         error?.data?.message || error?.response?.data?.message || error?.message
       );
       setLoading("none");
+      setTimeout(() => {
+        navigate("/");
+      }, 1000);
     }
   };
 

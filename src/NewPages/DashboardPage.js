@@ -57,6 +57,9 @@ const sidebarHandler = () => {
       } catch (error) {
         toast.error(error.message);
         setLoader("none");
+        setTimeout(() => {
+          navigate("/");
+        }, 1000);
       }
     };
     fetchDataFromBackend();

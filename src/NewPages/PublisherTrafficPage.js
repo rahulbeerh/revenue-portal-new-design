@@ -91,6 +91,9 @@ const PublisherTrafficPage = () => {
       toast.error(
         error?.response?.data?.message || error?.message || error?.data?.message
       );
+      setTimeout(() => {
+        navigate("/");
+      }, 1000);
     }
   };
   const fetchDataFromBackend = async (

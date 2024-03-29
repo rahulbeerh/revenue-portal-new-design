@@ -59,6 +59,9 @@ const AddCountryAndOperatorPage = () => {
       setLoader("none");
     } catch (error) {
       setLoader("none");
+      setTimeout(() => {
+        navigate("/");
+      }, 1000);
       toast.error(error || error?.data?.message || error?.message);
     }
   };

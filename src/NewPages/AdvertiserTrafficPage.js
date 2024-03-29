@@ -78,6 +78,9 @@ const AdvertiserTrafficPage = () => {
       toast.error(
         error?.response?.data?.message || error?.message || error?.data?.message
       );
+      setTimeout(() => {
+        navigate("/");
+      }, 1000);
     }
   };
 

@@ -94,6 +94,9 @@ const PublisherSubscriptionPage = () => {
           error
       );
       setLoading("none");
+      setTimeout(() => {
+        navigate("/");
+      }, 1000);
     }
   };
 
@@ -145,6 +148,9 @@ const PublisherSubscriptionPage = () => {
           error
       );
       setLoading("none");
+      setTimeout(() => {
+        navigate("/");
+      }, 1000);
     }
   }
 

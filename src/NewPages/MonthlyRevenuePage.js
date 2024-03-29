@@ -19,6 +19,7 @@ import TitleHeader from "../NewComponents/TitleHeader";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import ExportMonthlyRevenueToExcel from "../NewComponents/ExportMonthlyRevenueToExcel";
+import { useNavigate } from "react-router-dom";
 
 const MonthlyRevenuePage = () => {
   //to start on load
@@ -31,6 +32,8 @@ const MonthlyRevenuePage = () => {
   const [services, setServices] = useState([]);
   const [responseService, setResponseService] = useState("");
   const [service, setService] = useState();
+
+  const navigate=useNavigate();
 
   const [sidebarHide, setSidebarHide] = useState(() =>
     localStorage.getItem("sidebar")
@@ -75,6 +78,9 @@ const MonthlyRevenuePage = () => {
     if (e.response === "error") {
       toast.error(e.error?.response?.data?.message || e.error?.message);
       setLoader("none");
+      setTimeout(() => {
+        navigate("/");
+      }, 1000);
     } else {
       setLoader("none");
       // console.log(e);
@@ -155,9 +161,7 @@ const MonthlyRevenuePage = () => {
     totalRevenue: totalRevenue.toFixed(0),
   };
 
-  const header = (
-    <ExportMonthlyRevenueToExcel data={[...data,totals]}/>
-  );
+  const header = <ExportMonthlyRevenueToExcel data={[...data, totals]} />;
 
   // console.log([...data,totals])
   return (
@@ -247,36 +251,28 @@ const MonthlyRevenuePage = () => {
 
             {/* <div style={{ height: 600, width: "100%"}}> */}
             <div className={classes.table_container}>
-                <ThemeComponent>
-                  <DataTable value={[...data, totals]}
+              <ThemeComponent>
+                <DataTable
+                  value={[...data, totals]}
                   emptyMessage="No data found"
                   showGridlines
                   responsive
                   scrollable
-                  scrollHeight="500px" 
-                  rows={15} 
+                  scrollHeight="500px"
+                  rows={15}
                   paginator
                   header={header}
-                  >
-                    <Column field="misDate" header="Date"  />
-                    <Column
-                      field="renewalsRevenue"
-                      header="Renewals Revenue"
-                      
-                    />
-                    <Column
-                      field="subscriptionRevenue"
-                      header="Subscription Revenue"
-                      
-                    />
-                    <Column
-                      field="totalRevenue"
-                      header="Total Revenue"
-                      
-                    />
-                  </DataTable>
-                </ThemeComponent>
-              </div>
+                >
+                  <Column field="misDate" header="Date" />
+                  <Column field="renewalsRevenue" header="Renewals Revenue" />
+                  <Column
+                    field="subscriptionRevenue"
+                    header="Subscription Revenue"
+                  />
+                  <Column field="totalRevenue" header="Total Revenue" />
+                </DataTable>
+              </ThemeComponent>
+            </div>
           </div>
         </div>
       </div>

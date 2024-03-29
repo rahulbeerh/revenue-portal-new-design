@@ -14,6 +14,7 @@ import { Calendar } from "primereact/calendar";
 import NewHeaderAdmin from "../NewComponents/NewHeaderAdmin";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
+import { useNavigate } from "react-router-dom";
 
 const DashboardAdminPage = () => {
   const [month, setMonth] = useState(new Date().getMonth() + 1);
@@ -23,6 +24,8 @@ const DashboardAdminPage = () => {
   const [client, setClient] = useState("");
   const [data, setData] = useState([]);
   const [selectedDate, setSelectedDate] = useState(new Date());
+
+  const navigate=useNavigate();
 
   const [sidebarHide, setSidebarHide] = useState(() =>
     localStorage.getItem("sidebar")
@@ -78,6 +81,9 @@ const DashboardAdminPage = () => {
       toast.error(
         error?.response?.data?.message || error?.data?.message || error?.message
       );
+      setTimeout(() => {
+        navigate("/");
+      }, 1000);
     }
   };
 

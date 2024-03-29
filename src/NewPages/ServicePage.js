@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import {
   Button,
   Switch,
@@ -37,6 +37,8 @@ const ServicePage = () => {
   const [isShowPublisher, setIsShowPublisher] = useState(false);
   console.log(isShowPublisher, "isp");
 
+  const navigate=useNavigate();
+
   useEffect(() => {
     fetchDataFromBackend();
     setIsShowPublisher(JSON.parse(localStorage.getItem("showAddPublisher")));
@@ -58,6 +60,9 @@ const ServicePage = () => {
       setLoader("none");
     } catch (error) {
       toast.error(error);
+      setTimeout(() => {
+        navigate("/");
+      }, 1000);
     }
   };
 

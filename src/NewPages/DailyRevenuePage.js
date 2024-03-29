@@ -78,7 +78,7 @@ const DailyRevenuePage = () => {
       toast.error(e.error?.response?.data?.message || e.error?.message);
       setTimeout(() => {
         navigate("/");
-      }, 2000);
+      }, 1000);
       setLoader("none");
     } else {
       setLoader("none");
@@ -327,10 +327,8 @@ const DailyRevenuePage = () => {
                   />
                   <Column field="subscriptions" header="Paid Subscriptions" />
                   <Column field="unsubscriptions" header="Unsubscriptions" />
-                  {localStorage.getItem("userName") == "h2n" ? (
-                    <Column field="renewals" header="Renewals" />
-                  ) : null}
                   <Column field="renewalsRevenue" header="Renewal Revenue" />
+                  <Column field="renewals" header="Renewals Count" />
                   <Column
                     field="subscriptionRevenue"
                     header="Subscription Revenue"
