@@ -377,7 +377,7 @@ const DailyRevenueAdminPage = () => {
                   responsive
                   scrollable
                   scrollHeight="500px"
-                  rows={15}
+                  rows={16}
                   paginator
                   header={header}
                 >

@@ -2,8 +2,21 @@ import { Button } from "primereact/button";
 import React from "react";
 import * as XLSX from "xlsx";
 import * as XlsxPopulate from "xlsx-populate/browser/xlsx-populate";
+import classes from "./ExportDailyRevenueAdmin.module.css";
+import { TabMenu } from "primereact/tabmenu";
 
-const ExportDailyRevenueToExcel = ({ data }) => {
+const ExportDailyRevenueToExcel = ({ data, handleTabChanged, tabIndex }) => {
+  const items = [
+    { label: "Overview" },
+    { label: "Subscriptions" },
+    { label: "Unsubscriptions" },
+    { label: "Renewals" },
+    { label: "Revenue" },
+  ];
+  const handleTabChange = (index) => {
+    handleTabChanged(index);
+  };
+
   const createDownloadData = () => {
     handleExport().then((url) => {
       const downloadAnchorElement = document.createElement("a");
@@ -48,7 +61,7 @@ const ExportDailyRevenueToExcel = ({ data }) => {
         D: "Paid Subscriptions",
         E: "Unsubscriptions",
         F: "Renewal Revenue",
-        G:"Renewals Count",
+        G: "Renewals Count",
         H: "Subscription Revenue",
         I: "Revenue",
         J: "Total Revenue",
@@ -147,7 +160,26 @@ const ExportDailyRevenueToExcel = ({ data }) => {
     // <Button variant="contained" onClick={createDownloadData} color="secondary">
     //   Export
     // </Button>
-    <div style={headerStyles}>
+    // <div style={headerStyles}>
+    //   <Button
+    //     type="button"
+    //     icon="pi pi-file-excel"
+    //     severity="success"
+    //     rounded
+    //     onClick={createDownloadData}
+    //     data-pr-tooltip="XLS"
+    //   />
+    // </div>
+
+    <div className={classes.header}>
+      <div className={classes.filter_button_container}>
+        <TabMenu
+          className={classes.tab}
+          model={items}
+          activeIndex={tabIndex}
+          onTabChange={(e) => handleTabChange(e?.index)}
+        />
+      </div>
       <Button
         type="button"
         icon="pi pi-file-excel"

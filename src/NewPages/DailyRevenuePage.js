@@ -36,6 +36,7 @@ const DailyRevenuePage = () => {
   const [services, setServices] = useState([]);
 
   const [biggest, setBiggest] = useState(0);
+  const [tabIndex, setTabIndex] = useState(0);
 
   const dt = useRef(null);
 
@@ -186,7 +187,17 @@ const DailyRevenuePage = () => {
     setDates({ ...dates, to: utcDate });
   };
 
-  const header = <ExportDailyRevenueToExcel data={[...data, totals]} />;
+  const handleTabChanged = (indexValue) => {
+    setTabIndex(indexValue);
+  };
+
+  const header = (
+    <ExportDailyRevenueToExcel
+      data={[...data, totals]}
+      handleTabChanged={handleTabChanged}
+      tabIndex={tabIndex}
+    />
+  );
 
   return (
     <>
@@ -279,26 +290,51 @@ const DailyRevenuePage = () => {
                 responsive
                 scrollable
                 scrollHeight="500px"
-                rows={15}
+                rows={16}
                 paginator
                 header={header}
               >
                 <Column field="misDate" header="Date" />
-                <Column field="totalBase" header="Total Subscription" />
-                <Column field="totalActiveBase" header="Active Subscription" />
-                <Column field="subscriptions" header="Paid Subscriptions" />
-                <Column field="unsubscriptions" header="Unsubscriptions" />
-                <Column field="renewalsRevenue" header="Renewal Revenue" />
-                <Column field="renewals" header="Renewals Count" />
-                <Column
-                  field="subscriptionRevenue"
-                  header="Subscription Revenue"
-                />
-                <Column field="totalRevenue" header="Revenue" />
-                <Column
-                  field="dailyIncreaseAccumulated"
-                  header="Total Revenue"
-                />
+                {(tabIndex == 0 || tabIndex == 1) && (
+                  <Column field="totalBase" header="Total Subscription" />
+                )}
+                {(tabIndex == 0 || tabIndex == 1) && (
+                  <Column
+                    field="totalActiveBase"
+                    header="Active Subscription"
+                  />
+                )}
+                {(tabIndex == 0 || tabIndex == 1) && (
+                  <Column field="subscriptions" header="Paid Subscriptions" />
+                )}
+                {(tabIndex == 0 || tabIndex == 2) && (
+                  <Column field="unsubscriptions" header="Unsubscriptions" />
+                )}
+                {(tabIndex == 0 || tabIndex == 3) && (
+                  <Column field="renewals" header="Renewals Count" />
+                )}
+                {(tabIndex == 0 || tabIndex == 3 || tabIndex == 4) && (
+                  <Column field="renewalsRevenue" header="Renewal Revenue" />
+                )}
+                {(tabIndex == 0 || tabIndex == 1 || tabIndex == 4) && (
+                  <Column
+                    field="subscriptionRevenue"
+                    header="Subscription Revenue"
+                  />
+                )}
+                {(tabIndex == 0 || tabIndex == 4) && (
+                  <Column
+                    field="totalRevenue"
+                    // header="Total Revenue"
+                    header="Daily Revenue"
+                  />
+                )}
+                {(tabIndex == 0 || tabIndex == 4) && (
+                  <Column
+                    field="dailyIncreaseAccumulated"
+                    header="Total Revenue"
+                  />
+                )}
               </DataTable>
             </div>
           </div>
