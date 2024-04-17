@@ -1,6 +1,10 @@
 import React, { useEffect, useState } from "react";
 import moment from "moment/moment";
-import { fetchClientServices, sendDataApi } from "../Data/Api";
+import {
+  fetchClientServices,
+  fetchClientSubServicesApi,
+  sendDataApi,
+} from "../Data/Api";
 import PostSecure from "../Request/PostSecure";
 import { toast, ToastContainer } from "react-toastify";
 import Loader from "../Components/Loader";
@@ -38,6 +42,9 @@ const DailyRevenueAdminPage = () => {
   const [clients, setClients] = useState([]);
   const [client, setClient] = useState("");
   const [clientForDropdown, setClientForDropdown] = useState("");
+
+  const [subServices, setSubServices] = useState([]);
+  const [subService, setSubService] = useState("");
 
   const [tabIndex, setTabIndex] = useState(0);
 
@@ -81,11 +88,12 @@ const DailyRevenueAdminPage = () => {
         }
       );
       // console.log("client services api",res);
-      let servicesArray = [];
-      res.data.data.map((service) => {
-        return servicesArray.push(service.serviceName);
-      });
-      localStorage.setItem("services", JSON.stringify(servicesArray));
+      // let servicesArray = [];
+      // res.data.data.map((service) => {
+      //   return servicesArray.push(service.serviceName);
+      // });
+      // localStorage.setItem("services", JSON.stringify(servicesArray));
+      localStorage.setItem("services", JSON.stringify(res?.data?.data));
       gettingServices();
       // setLoader("none");
     } catch (error) {
@@ -99,9 +107,9 @@ const DailyRevenueAdminPage = () => {
 
   //Getting Services
   const gettingServices = () => {
-    let services = JSON.parse(localStorage.getItem("services"));
-    setServices(services);
-    getDataFromBackend(services[0]);
+    let services2 = JSON.parse(localStorage.getItem("services"));
+    setServices(services2);
+    getDataFromBackend(services2[0]?.serviceName, services2);
   };
 
   //Hook to store dates
@@ -120,19 +128,75 @@ const DailyRevenueAdminPage = () => {
 
   // console.log(service);
 
+  const fetchSubServices = async (serviceid) => {
+    try {
+      let token = localStorage.getItem("userToken");
+
+      let headers = { Authorization: "Bearer " + token };
+      const response = await axios.post(
+        `${fetchClientSubServicesApi}?mainServiceId=${serviceid}`,
+        null,
+        {
+          headers: headers,
+        }
+      );
+
+      setSubServices(response?.data?.data?.dataArray);
+      setSubService(() => response?.data?.data?.dataArray[0]?.subServiceName);
+      return response?.data?.data?.dataArray[0]?.subServiceName;
+    } catch (error) {
+      toast.error(
+        error?.response?.data?.message ||
+          error?.data?.message ||
+          error?.message ||
+          error
+      );
+      navigate("/");
+    }
+  };
+
   //Method to get data from Backend
-  const getDataFromBackend = (service) => {
-    setService(service);
-    let data = { from: dates.from, to: dates.to, serviceName: service ,subServiceName:"All"};
-    // console.log("input ",data);
-    setLoader("block");
+  const getDataFromBackend = async (service2, allServices) => {
+    setService(service2);
+    console.log(service2, "s2");
+    const serviceid = allServices.filter(
+      (data) => data?.serviceName == service2
+    );
+
+    console.log(serviceid, "sii");
+    if (serviceid.length > 0) {
+      const subServiceValue = await fetchSubServices(serviceid[0]?.id);
+      let data = {
+        from: dates.from,
+        to: dates.to,
+        serviceName: service2,
+        subServiceName: subServiceValue,
+      };
+
+      let promise = PostSecure(sendDataApi, data);
+      promise
+        .then((e) => {
+          handleDataResponse(e);
+        })
+        .catch((err) => toast.error(err?.data?.message || err?.message || err));
+    }
+  };
+
+  const getDataFromBackend2 = async (selectedSubService) => {
+    setSubService(selectedSubService);
+    let data = {
+      from: dates.from,
+      to: dates.to,
+      serviceName: service,
+      subServiceName: selectedSubService,
+    };
+
     let promise = PostSecure(sendDataApi, data);
     promise
       .then((e) => {
         handleDataResponse(e);
       })
       .catch((err) => toast.error(err?.data?.message || err?.message || err));
-    setLoader("none");
   };
 
   //Hook to store data
@@ -188,7 +252,9 @@ const DailyRevenueAdminPage = () => {
   const handleFormSubmit = (e) => {
     e.preventDefault();
     setLoader("block");
-    getDataFromBackend(service);
+    // let allServices = JSON.parse(localStorage.getItem("services"));
+    // getDataFromBackend(service,allServices);
+    getDataFromBackend2(subService);
   };
 
   //Hook to store loader div state
@@ -244,7 +310,8 @@ const DailyRevenueAdminPage = () => {
 
   const handleServiceChange = (service) => {
     setLoader("block");
-    getDataFromBackend(service);
+    let allServices = JSON.parse(localStorage.getItem("services"));
+    getDataFromBackend(service, allServices);
   };
 
   const handleClientChange = (client) => {
@@ -255,16 +322,25 @@ const DailyRevenueAdminPage = () => {
 
   const convertStartDate = (utcDate) => {
     setStartDateForCalendar(utcDate);
-    setDates({ ...dates, from: utcDate });
+    // setDates({ ...dates, from: utcDate });
+    setDates({
+      ...dates,
+      from: moment(new Date(utcDate)).format("yyyy-MM-DD"),
+    });
   };
 
   const convertEndDate = (utcDate) => {
     setEndDateForCalendar(utcDate);
-    setDates({ ...dates, to: utcDate });
+    // setDates({ ...dates, to: utcDate });
+    setDates({ ...dates, to: moment(new Date(utcDate)).format("yyyy-MM-DD") });
   };
 
   const handleTabChanged = (indexValue) => {
     setTabIndex(indexValue);
+  };
+
+  const handleSubServiceChange = (selectedSubService) => {
+    getDataFromBackend2(selectedSubService);
   };
 
   const header = (
@@ -330,10 +406,23 @@ const DailyRevenueAdminPage = () => {
                   value={service}
                   onChange={(e) => handleServiceChange(e.value)}
                   options={services?.map((service) => ({
-                    label: service,
-                    value: service,
+                    label: service?.serviceName,
+                    value: service?.serviceName,
                   }))}
                   placeholder="Select a Service"
+                  style={{ width: "100%" }}
+                />
+              </div>
+
+              <div className={classes.service}>
+                <Dropdown
+                  value={subService}
+                  onChange={(e) => handleSubServiceChange(e.target.value)}
+                  options={subServices?.map((service) => ({
+                    label: service?.subServiceName,
+                    value: service?.subServiceName,
+                  }))}
+                  placeholder="Select a Sub Service"
                   style={{ width: "100%" }}
                 />
               </div>
@@ -346,6 +435,7 @@ const DailyRevenueAdminPage = () => {
                   showButtonBar
                   placeholder="Start Date"
                   style={{ width: "100%" }}
+                  maxDate={endDateForCalendar}
                 />
               </div>
               <div className={classes.end_date}>
@@ -356,6 +446,8 @@ const DailyRevenueAdminPage = () => {
                   showButtonBar
                   placeholder="End Date"
                   style={{ width: "100%" }}
+                  minDate={startDateForCalendar}
+                  maxDate={new Date()}
                 />
               </div>
               <button type="submit" className={classes.search_btn}>
@@ -383,30 +475,68 @@ const DailyRevenueAdminPage = () => {
                 >
                   <Column field="misDate" header="Date" />
                   {(tabIndex == 0 || tabIndex == 1) && (
-                    <Column field="totalBase" header="Total Subscription" />
+                    <Column
+                      field="totalBase"
+                      header="Total Subscription"
+                      body={(rowData) =>
+                        rowData?.totalBase ? rowData?.totalBase : 0
+                      }
+                    />
                   )}
                   {(tabIndex == 0 || tabIndex == 1) && (
                     <Column
                       field="totalActiveBase"
                       header="Active Subscription"
+                      body={(rowData) =>
+                        rowData?.totalActiveBase ? rowData?.totalActiveBase : 0
+                      }
                     />
                   )}
                   {(tabIndex == 0 || tabIndex == 1) && (
-                    <Column field="subscriptions" header="Paid Subscriptions" />
+                    <Column
+                      field="subscriptions"
+                      header="Paid Subscriptions"
+                      body={(rowData) =>
+                        rowData?.subscriptions ? rowData?.subscriptions : 0
+                      }
+                    />
                   )}
                   {(tabIndex == 0 || tabIndex == 2) && (
-                    <Column field="unsubscriptions" header="Unsubscriptions" />
+                    <Column
+                      field="unsubscriptions"
+                      header="Unsubscriptions"
+                      body={(rowData) =>
+                        rowData?.unsubscriptions ? rowData?.unsubscriptions : 0
+                      }
+                    />
                   )}
                   {(tabIndex == 0 || tabIndex == 3) && (
-                    <Column field="renewals" header="Renewals Count" />
+                    <Column
+                      field="renewals"
+                      header="Renewals Count"
+                      body={(rowData) =>
+                        rowData?.renewals ? rowData?.renewals : 0
+                      }
+                    />
                   )}
                   {(tabIndex == 0 || tabIndex == 3 || tabIndex == 4) && (
-                    <Column field="renewalsRevenue" header="Renewal Revenue" />
+                    <Column
+                      field="renewalsRevenue"
+                      header="Renewal Revenue"
+                      body={(rowData) =>
+                        rowData?.renewalsRevenue ? rowData?.renewalsRevenue : 0
+                      }
+                    />
                   )}
                   {(tabIndex == 0 || tabIndex == 1 || tabIndex == 4) && (
                     <Column
                       field="subscriptionRevenue"
                       header="Subscription Revenue"
+                      body={(rowData) =>
+                        rowData?.subscriptionRevenue
+                          ? rowData?.subscriptionRevenue
+                          : 0
+                      }
                     />
                   )}
                   {(tabIndex == 0 || tabIndex == 4) && (
@@ -414,6 +544,9 @@ const DailyRevenueAdminPage = () => {
                       field="totalRevenue"
                       // header="Total Revenue"
                       header="Daily Revenue"
+                      body={(rowData) =>
+                        rowData?.totalRevenue ? rowData?.totalRevenue : 0
+                      }
                     />
                   )}
                   {(tabIndex == 0 || tabIndex == 4) && (
@@ -421,6 +554,11 @@ const DailyRevenueAdminPage = () => {
                       field="totalRevenueAccumulated"
                       // header="Total Revenue"
                       header="Total Revenue"
+                      body={(rowData) =>
+                        rowData?.totalRevenueAccumulated
+                          ? rowData?.totalRevenueAccumulated
+                          : 0
+                      }
                     />
                   )}
                 </DataTable>

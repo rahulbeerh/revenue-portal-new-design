@@ -344,6 +344,7 @@ const DailyRevenuePage = () => {
                   showButtonBar
                   placeholder="Start Date"
                   style={{ width: "100%" }}
+                  maxDate={endDateForCalendar}
                 />
               </div>
               <div className={classes.end_date}>
@@ -355,6 +356,8 @@ const DailyRevenuePage = () => {
                   showButtonBar
                   placeholder="End Date"
                   style={{ width: "100%" }}
+                  minDate={startDateForCalendar}
+                  maxDate={new Date()}
                 />
               </div>
               <button type="submit" className={classes.search_btn}>
