@@ -70,7 +70,8 @@ const LoginPage = () => {
       });
       localStorage.setItem("userToken", e.token);
       localStorage.setItem("userName", e.username);
-      localStorage.setItem("services", JSON.stringify(servicesArray));
+      // localStorage.setItem("services", JSON.stringify(servicesArray));
+      localStorage.setItem("services", JSON.stringify(e.data.data));
       localStorage.setItem("serviceObject", JSON.stringify(e.data.data));
 
       navigate("/dailyRevenue");

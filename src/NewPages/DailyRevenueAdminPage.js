@@ -123,7 +123,7 @@ const DailyRevenueAdminPage = () => {
   //Method to get data from Backend
   const getDataFromBackend = (service) => {
     setService(service);
-    let data = { from: dates.from, to: dates.to, serviceName: service };
+    let data = { from: dates.from, to: dates.to, serviceName: service ,subServiceName:"All"};
     // console.log("input ",data);
     setLoader("block");
     let promise = PostSecure(sendDataApi, data);
@@ -317,7 +317,7 @@ const DailyRevenueAdminPage = () => {
                   value={clientForDropdown}
                   onChange={(e) => handleClientChange(e.value)}
                   options={clients?.map((client) => ({
-                    label: client?.username,
+                    label: client?.clientName,
                     value: client,
                   }))}
                   placeholder="Select a Client"

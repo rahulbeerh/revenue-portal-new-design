@@ -33,7 +33,7 @@ const MonthlyRevenuePage = () => {
   const [responseService, setResponseService] = useState("");
   const [service, setService] = useState();
 
-  const navigate=useNavigate();
+  const navigate = useNavigate();
 
   const [sidebarHide, setSidebarHide] = useState(() =>
     localStorage.getItem("sidebar")
@@ -49,8 +49,8 @@ const MonthlyRevenuePage = () => {
   const gettingServices = () => {
     let services = JSON.parse(localStorage.getItem("services"));
     setServices(services);
-    setService(services[0]);
-    getDataFromBackend(services[0]);
+    setService(services[0]?.serviceName);
+    getDataFromBackend(services[0]?.serviceName);
   };
 
   //Hook to store dates
@@ -199,8 +199,8 @@ const MonthlyRevenuePage = () => {
                   value={service}
                   onChange={(e) => handleChooseService(e.value)}
                   options={services?.map((service) => ({
-                    label: service,
-                    value: service,
+                    label: service?.serviceName,
+                    value: service?.serviceName,
                   }))}
                   placeholder="Select a Service"
                   style={{ width: "100%" }}

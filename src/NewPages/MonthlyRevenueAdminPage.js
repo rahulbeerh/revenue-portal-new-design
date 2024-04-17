@@ -250,7 +250,7 @@ const MonthlyRevenueAdminPage = () => {
                   value={clientForDropdown}
                   onChange={(e) => handleClientChange(e.value)}
                   options={clients?.map((client) => ({
-                    label: client?.username,
+                    label: client?.clientName,
                     value: client,
                   }))}
                   placeholder="Select a client"

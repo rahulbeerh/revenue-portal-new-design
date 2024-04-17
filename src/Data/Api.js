@@ -1,6 +1,6 @@
 // const pre=`https://reports.visiontrek.in/`;
-// const pre=`http://192.168.1.37:4041/`;
-const pre=`/`;
+const pre=`http://192.168.1.14:4041/`;
+// const pre=`/`;
 
 const loginApi=`${pre}open/login`;
 export{loginApi};
@@ -121,3 +121,6 @@ export {editProjectByAdminApi};
 
 const deleteProjectByAdminApi=`${pre}api/v1/deleteProject`;
 export {deleteProjectByAdminApi};
+
+const fetchClientSubServicesApi=`${pre}secure/fetchClientSubServices`;
+export {fetchClientSubServicesApi};

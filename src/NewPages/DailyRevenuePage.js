@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import moment from "moment/moment";
-import { sendDataApi } from "../Data/Api";
+import { fetchClientSubServicesApi, sendDataApi } from "../Data/Api";
 import PostSecure from "../Request/PostSecure";
 import { toast, ToastContainer } from "react-toastify";
 import Loader from "../Components/Loader";
@@ -16,6 +16,7 @@ import TitleHeader from "../NewComponents/TitleHeader";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import ExportDailyRevenueToExcel from "../NewComponents/ExportDailyRevenueToExcel";
+import axios from "axios";
 
 const DailyRevenuePage = () => {
   const navigate = useNavigate();
@@ -33,19 +34,6 @@ const DailyRevenuePage = () => {
     setSidebarHide(JSON.parse(localStorage.getItem("sidebar")));
   };
 
-  const [services, setServices] = useState([]);
-
-  const [biggest, setBiggest] = useState(0);
-  const [tabIndex, setTabIndex] = useState(0);
-
-  const dt = useRef(null);
-
-  const gettingServices = () => {
-    let services = JSON.parse(localStorage.getItem("services"));
-    setServices(services);
-    getDataFromBackend(services[0]);
-  };
-
   const [dates, setDates] = useState({
     to: moment(new Date()).format("yyyy-MM-DD"),
     from: moment().subtract(30, "days").format("yyyy-MM-DD"),
@@ -57,11 +45,88 @@ const DailyRevenuePage = () => {
   const [endDateForCalendar, setEndDateForCalendar] = useState(new Date());
 
   const [service, setService] = useState("");
+  const [subService, setSubService] = useState("");
   const [responseService, setResponseService] = useState("");
 
-  const getDataFromBackend = (service) => {
-    setService(service);
-    let data = { from: dates.from, to: dates.to, serviceName: service };
+  const [services, setServices] = useState([]);
+  const [subServices, setSubServices] = useState([]);
+  const [serviceId, setServiceId] = useState("");
+
+  const [biggest, setBiggest] = useState(0);
+  const [tabIndex, setTabIndex] = useState(0);
+
+  const dt = useRef(null);
+
+  const gettingServices = () => {
+    let services2 = JSON.parse(localStorage.getItem("services"));
+    // console.log(services2,'s22');
+    setServices(services2);
+    getDataFromBackend(services2[0]?.serviceName, services2);
+  };
+
+  const fetchSubServices = async (serviceid) => {
+    try {
+      let token = localStorage.getItem("userToken");
+
+      let headers = { Authorization: "Bearer " + token };
+      const response = await axios.post(
+        `${fetchClientSubServicesApi}?mainServiceId=${serviceid}`,
+        null,
+        {
+          headers: headers,
+        }
+      );
+
+      setSubServices(response?.data?.data?.dataArray);
+      setSubService(() => response?.data?.data?.dataArray[0]?.subServiceName);
+      return response?.data?.data?.dataArray[0]?.subServiceName;
+    } catch (error) {
+      toast.error(
+        error?.response?.data?.message ||
+          error?.data?.message ||
+          error?.message ||
+          error
+      );
+      navigate("/");
+    }
+  };
+
+  const getDataFromBackend = async (service2, servicesAll) => {
+    setService(service2);
+    const serviceid = servicesAll.filter(
+      (data) => data?.serviceName == service2
+    );
+    // setServiceId(() =>
+    //   services.filter((data) => data?.serviceName == service2)
+    // );
+
+    console.log(serviceid, "sii");
+    if (serviceid.length > 0) {
+      const subServiceValue = await fetchSubServices(serviceid[0]?.id);
+      let data = {
+        from: dates.from,
+        to: dates.to,
+        serviceName: service2,
+        subServiceName: subServiceValue,
+      };
+
+      let promise = PostSecure(sendDataApi, data);
+      promise
+        .then((e) => {
+          handleDataResponse(e);
+        })
+        .catch((err) => toast.error(err?.data?.message || err?.message || err));
+    }
+  };
+
+  const getDataFromBackend2 = async (selectedSubService) => {
+    setSubService(selectedSubService);
+    let data = {
+      from: dates.from,
+      to: dates.to,
+      serviceName: service,
+      subServiceName: selectedSubService,
+    };
 
     let promise = PostSecure(sendDataApi, data);
     promise
@@ -118,7 +183,8 @@ const DailyRevenuePage = () => {
   const handleFormSubmit = (e) => {
     e.preventDefault();
     setLoader("block");
-    getDataFromBackend(service);
+    getDataFromBackend2(subService);
+    // getDataFromBackend(service);
   };
 
   //Hook to store loader div state
@@ -173,18 +239,22 @@ const DailyRevenuePage = () => {
     totalRevenue: monthlyTotalRevenue.toFixed(0),
   };
 
-  const handleServiceChange = (service) => {
-    getDataFromBackend(service);
+  const handleServiceChange = (selectedService) => {
+    getDataFromBackend(selectedService, services);
+  };
+
+  const handleSubServiceChange = (selectedSubService) => {
+    getDataFromBackend2(selectedSubService);
   };
 
   const convertStartDate = (utcDate) => {
     setStartDateForCalendar(utcDate);
-    setDates({ ...dates, from: utcDate });
+    setDates({ ...dates, from: moment(new Date(utcDate)).format("yyyy-MM-DD") });
   };
 
   const convertEndDate = (utcDate) => {
     setEndDateForCalendar(utcDate);
-    setDates({ ...dates, to: utcDate });
+    setDates({ ...dates, to: moment(new Date(utcDate)).format("yyyy-MM-DD") });
   };
 
   const handleTabChanged = (indexValue) => {
@@ -238,13 +308,30 @@ const DailyRevenuePage = () => {
             <form className={classes.form} onSubmit={handleFormSubmit}>
               <div className={classes.service}>
                 <Dropdown
+                  key={service}
                   value={service}
-                  onChange={(e) => handleServiceChange(e.value)}
+                  onChange={(e) => handleServiceChange(e.target.value)}
                   options={services?.map((service) => ({
-                    label: service,
-                    value: service,
+                    label: service?.serviceName,
+                    value: service?.serviceName,
                   }))}
+                  // options={services}
+                  // optionLabel="serviceName"
+                  // optionValue="serviceName"
                   placeholder="Select a Service"
+                  style={{ width: "100%" }}
+                />
+              </div>
+
+              <div className={classes.service}>
+                <Dropdown
+                  value={subService}
+                  onChange={(e) => handleSubServiceChange(e.target.value)}
+                  options={subServices?.map((service) => ({
+                    label: service?.subServiceName,
+                    value: service?.subServiceName,
+                  }))}
+                  placeholder="Select a Sub Service"
                   style={{ width: "100%" }}
                 />
               </div>
@@ -296,30 +383,56 @@ const DailyRevenuePage = () => {
               >
                 <Column field="misDate" header="Date" />
                 {(tabIndex == 0 || tabIndex == 1) && (
-                  <Column field="totalBase" header="Total Subscription" />
+                  <Column field="totalBase" header="Total Subscription" 
+                  body={(rowData) =>
+                    rowData?.totalBase ? rowData?.totalBase : 0
+                  }
+                  />
                 )}
                 {(tabIndex == 0 || tabIndex == 1) && (
                   <Column
                     field="totalActiveBase"
                     header="Active Subscription"
+                    body={(rowData) =>
+                      rowData?.totalActiveBase ? rowData?.totalActiveBase : 0
+                    }
                   />
                 )}
                 {(tabIndex == 0 || tabIndex == 1) && (
-                  <Column field="subscriptions" header="Paid Subscriptions" />
+                  <Column field="subscriptions" header="Paid Subscriptions"
+                  body={(rowData) =>
+                    rowData?.subscriptions ? rowData?.subscriptions : 0
+                  }
+                  />
                 )}
                 {(tabIndex == 0 || tabIndex == 2) && (
-                  <Column field="unsubscriptions" header="Unsubscriptions" />
+                  <Column field="unsubscriptions" header="Unsubscriptions" 
+                  body={(rowData) =>
+                    rowData?.unsubscriptions ? rowData?.unsubscriptions : 0
+                  }
+                  />
                 )}
                 {(tabIndex == 0 || tabIndex == 3) && (
-                  <Column field="renewals" header="Renewals Count" />
+                  <Column field="renewals" header="Renewals Count" 
+                  body={(rowData) =>
+                    rowData?.renewals ? rowData?.renewals : 0
+                  }
+                  />
                 )}
                 {(tabIndex == 0 || tabIndex == 3 || tabIndex == 4) && (
-                  <Column field="renewalsRevenue" header="Renewal Revenue" />
+                  <Column field="renewalsRevenue" header="Renewal Revenue" 
+                  body={(rowData) =>
+                    rowData?.renewalsRevenue ? rowData?.renewalsRevenue : 0
+                  }
+                  />
                 )}
                 {(tabIndex == 0 || tabIndex == 1 || tabIndex == 4) && (
                   <Column
                     field="subscriptionRevenue"
                     header="Subscription Revenue"
+                    body={(rowData) =>
+                      rowData?.subscriptionRevenue ? rowData?.subscriptionRevenue : 0
+                    }
                   />
                 )}
                 {(tabIndex == 0 || tabIndex == 4) && (
@@ -327,12 +440,18 @@ const DailyRevenuePage = () => {
                     field="totalRevenue"
                     // header="Total Revenue"
                     header="Daily Revenue"
+                    body={(rowData) =>
+                      rowData?.totalRevenue ? rowData?.totalRevenue : 0
+                    }
                   />
                 )}
                 {(tabIndex == 0 || tabIndex == 4) && (
                   <Column
                     field="dailyIncreaseAccumulated"
                     header="Total Revenue"
+                    body={(rowData) =>
+                      rowData?.dailyIncreaseAccumulated ? rowData?.dailyIncreaseAccumulated : 0
+                    }
                   />
                 )}
               </DataTable>

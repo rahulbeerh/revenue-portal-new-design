@@ -129,7 +129,7 @@ const DashboardAdminPage = () => {
                   value={client}
                   onChange={(e) => handleClientChange(e.value)}
                   options={clients?.map((client) => ({
-                    label: client?.username,
+                    label: client?.clientName,
                     value: client?.id,
                   }))}
                   placeholder="Select a client"
