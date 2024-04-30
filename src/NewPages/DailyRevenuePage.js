@@ -45,10 +45,12 @@ const DailyRevenuePage = () => {
   const [endDateForCalendar, setEndDateForCalendar] = useState(new Date());
 
   const [service, setService] = useState("");
+  const [country, setCountry] = useState("");
   const [subService, setSubService] = useState("");
   const [responseService, setResponseService] = useState("");
 
   const [services, setServices] = useState([]);
+  const [countries, setCountries] = useState([]);
   const [subServices, setSubServices] = useState([]);
   const [serviceId, setServiceId] = useState("");
 
@@ -59,9 +61,17 @@ const DailyRevenuePage = () => {
 
   const gettingServices = () => {
     let services2 = JSON.parse(localStorage.getItem("services"));
-    // console.log(services2,'s22');
-    setServices(services2);
-    getDataFromBackend(services2[0]?.serviceName, services2);
+    let countries2 = JSON.parse(localStorage.getItem("country"));
+    console.log(services2, "s2");
+    console.log(countries2, "c2");
+    let filteredServices = services2.filter(
+      (service) => service?.country == countries2[0]?.country
+    );
+    setCountry(countries2[0]?.country);
+    // setServices(services2);
+    setServices(filteredServices);
+    setCountries(countries2);
+    getDataFromBackend(filteredServices[0]?.serviceName, services2);
   };
 
   const fetchSubServices = async (serviceid) => {
@@ -100,7 +110,6 @@ const DailyRevenuePage = () => {
     //   services.filter((data) => data?.serviceName == service2)
     // );
 
-    console.log(serviceid, "sii");
     if (serviceid.length > 0) {
       const subServiceValue = await fetchSubServices(serviceid[0]?.id);
       let data = {
@@ -148,7 +157,6 @@ const DailyRevenuePage = () => {
     } else {
       setLoader("none");
       const dataFromBackend = e.data;
-      console.log(dataFromBackend, "d");
       const dataDateManupulate = dataFromBackend.map((dataItem) => {
         return {
           id: dataItem?.id,
@@ -239,6 +247,17 @@ const DailyRevenuePage = () => {
     totalRevenue: monthlyTotalRevenue.toFixed(0),
   };
 
+  const handleCountryChange = (selectedCountry) => {
+    console.log(selectedCountry, "sccc");
+    setCountry(selectedCountry);
+    let servicesAll = JSON.parse(localStorage.getItem("services"));
+    let filteredServices = servicesAll.filter(
+      (service) => service?.country == selectedCountry
+    );
+    setServices(filteredServices);
+    getDataFromBackend(filteredServices[0]?.serviceName, servicesAll);
+  };
+
   const handleServiceChange = (selectedService) => {
     getDataFromBackend(selectedService, services);
   };
@@ -249,7 +268,10 @@ const DailyRevenuePage = () => {
 
   const convertStartDate = (utcDate) => {
     setStartDateForCalendar(utcDate);
-    setDates({ ...dates, from: moment(new Date(utcDate)).format("yyyy-MM-DD") });
+    setDates({
+      ...dates,
+      from: moment(new Date(utcDate)).format("yyyy-MM-DD"),
+    });
   };
 
   const convertEndDate = (utcDate) => {
@@ -306,6 +328,20 @@ const DailyRevenuePage = () => {
           <NewHeader service={responseService} highlight={1} />
           <div className={classes.sub_container}>
             <form className={classes.form} onSubmit={handleFormSubmit}>
+              <div className={classes.service}>
+                <Dropdown
+                  key={country}
+                  value={country}
+                  onChange={(e) => handleCountryChange(e.target.value)}
+                  options={countries?.map((country) => ({
+                    label: country?.country,
+                    value: country?.country,
+                  }))}
+                  placeholder="Select a Country"
+                  style={{ width: "100%" }}
+                />
+              </div>
+
               <div className={classes.service}>
                 <Dropdown
                   key={service}
@@ -386,10 +422,12 @@ const DailyRevenuePage = () => {
               >
                 <Column field="misDate" header="Date" />
                 {(tabIndex == 0 || tabIndex == 1) && (
-                  <Column field="totalBase" header="Total Subscription" 
-                  body={(rowData) =>
-                    rowData?.totalBase ? rowData?.totalBase : 0
-                  }
+                  <Column
+                    field="totalBase"
+                    header="Total Subscription"
+                    body={(rowData) =>
+                      rowData?.totalBase ? rowData?.totalBase : 0
+                    }
                   />
                 )}
                 {(tabIndex == 0 || tabIndex == 1) && (
@@ -402,31 +440,39 @@ const DailyRevenuePage = () => {
                   />
                 )}
                 {(tabIndex == 0 || tabIndex == 1) && (
-                  <Column field="subscriptions" header="Paid Subscriptions"
-                  body={(rowData) =>
-                    rowData?.subscriptions ? rowData?.subscriptions : 0
-                  }
+                  <Column
+                    field="subscriptions"
+                    header="Paid Subscriptions"
+                    body={(rowData) =>
+                      rowData?.subscriptions ? rowData?.subscriptions : 0
+                    }
                   />
                 )}
                 {(tabIndex == 0 || tabIndex == 2) && (
-                  <Column field="unsubscriptions" header="Unsubscriptions" 
-                  body={(rowData) =>
-                    rowData?.unsubscriptions ? rowData?.unsubscriptions : 0
-                  }
+                  <Column
+                    field="unsubscriptions"
+                    header="Unsubscriptions"
+                    body={(rowData) =>
+                      rowData?.unsubscriptions ? rowData?.unsubscriptions : 0
+                    }
                   />
                 )}
                 {(tabIndex == 0 || tabIndex == 3) && (
-                  <Column field="renewals" header="Renewals Count" 
-                  body={(rowData) =>
-                    rowData?.renewals ? rowData?.renewals : 0
-                  }
+                  <Column
+                    field="renewals"
+                    header="Renewals Count"
+                    body={(rowData) =>
+                      rowData?.renewals ? rowData?.renewals : 0
+                    }
                   />
                 )}
                 {(tabIndex == 0 || tabIndex == 3 || tabIndex == 4) && (
-                  <Column field="renewalsRevenue" header="Renewal Revenue" 
-                  body={(rowData) =>
-                    rowData?.renewalsRevenue ? rowData?.renewalsRevenue : 0
-                  }
+                  <Column
+                    field="renewalsRevenue"
+                    header="Renewal Revenue"
+                    body={(rowData) =>
+                      rowData?.renewalsRevenue ? rowData?.renewalsRevenue : 0
+                    }
                   />
                 )}
                 {(tabIndex == 0 || tabIndex == 1 || tabIndex == 4) && (
@@ -434,7 +480,9 @@ const DailyRevenuePage = () => {
                     field="subscriptionRevenue"
                     header="Subscription Revenue"
                     body={(rowData) =>
-                      rowData?.subscriptionRevenue ? rowData?.subscriptionRevenue : 0
+                      rowData?.subscriptionRevenue
+                        ? rowData?.subscriptionRevenue
+                        : 0
                     }
                   />
                 )}
@@ -453,7 +501,9 @@ const DailyRevenuePage = () => {
                     field="dailyIncreaseAccumulated"
                     header="Total Revenue"
                     body={(rowData) =>
-                      rowData?.dailyIncreaseAccumulated ? rowData?.dailyIncreaseAccumulated : 0
+                      rowData?.dailyIncreaseAccumulated
+                        ? rowData?.dailyIncreaseAccumulated
+                        : 0
                     }
                   />
                 )}

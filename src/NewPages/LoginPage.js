@@ -73,6 +73,7 @@ const LoginPage = () => {
       // localStorage.setItem("services", JSON.stringify(servicesArray));
       localStorage.setItem("services", JSON.stringify(e.data.data));
       localStorage.setItem("serviceObject", JSON.stringify(e.data.data));
+      localStorage.setItem("country", JSON.stringify(e.country));
 
       navigate("/dailyRevenue");
     }

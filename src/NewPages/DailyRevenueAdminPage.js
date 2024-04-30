@@ -39,6 +39,8 @@ const DailyRevenueAdminPage = () => {
     }
   }, []);
 
+  const [countries, setCountries] = useState([]);
+  const [country, setCountry] = useState("");
   const [clients, setClients] = useState([]);
   const [client, setClient] = useState("");
   const [clientForDropdown, setClientForDropdown] = useState("");
@@ -61,10 +63,17 @@ const DailyRevenueAdminPage = () => {
   //to start on load
   useEffect(() => {
     const clients_variable = JSON.parse(localStorage.getItem("clients"));
+    const countries_variables = clients_variable[0]?.countries;
+    setCountries(countries_variables);
+    setCountry(clients_variable[0]?.countries[0]);
     setClients(clients_variable);
     setClient(clients_variable[0]?.id);
     setClientForDropdown(clients_variable[0]);
-    gettingClientServices(clients_variable[0].id);
+    // gettingClientServices(clients_variable[0].id);
+    gettingClientServices(
+      clients_variable[0].id,
+      clients_variable[0]?.countries[0]
+    );
   }, []);
 
   //Hook to store services
@@ -73,7 +82,7 @@ const DailyRevenueAdminPage = () => {
   //Hook to store biggest value
   const [biggest, setBiggest] = useState(0);
 
-  async function gettingClientServices(clientId) {
+  async function gettingClientServices(clientId, countryName) {
     try {
       setLoader("block");
       //fetch Services of that client and store in localStorage;
@@ -94,7 +103,7 @@ const DailyRevenueAdminPage = () => {
       // });
       // localStorage.setItem("services", JSON.stringify(servicesArray));
       localStorage.setItem("services", JSON.stringify(res?.data?.data));
-      gettingServices();
+      gettingServices(countryName);
       // setLoader("none");
     } catch (error) {
       // console.log(error);
@@ -106,10 +115,15 @@ const DailyRevenueAdminPage = () => {
   }
 
   //Getting Services
-  const gettingServices = () => {
+  const gettingServices = (countryName) => {
     let services2 = JSON.parse(localStorage.getItem("services"));
-    setServices(services2);
-    getDataFromBackend(services2[0]?.serviceName, services2);
+    let filteredServices = services2.filter(
+      (data) => data?.country == countryName
+    );
+    // console.log(filteredServices);
+    // setServices(services2);
+    setServices(filteredServices);
+    getDataFromBackend(filteredServices[0]?.serviceName, services2);
   };
 
   //Hook to store dates
@@ -315,9 +329,27 @@ const DailyRevenueAdminPage = () => {
   };
 
   const handleClientChange = (client) => {
+    let username = client?.username;
+    const clients_variable = JSON.parse(localStorage.getItem("clients"));
+    const countries_variables = clients_variable?.filter(
+      (data) => data?.username == username
+    );
+    console.log(countries_variables, "cvvvv");
+    setCountries(countries_variables[0]?.countries);
+    setCountry(countries_variables[0]?.countries[0]);
     setClientForDropdown(client);
     setClient(client?.id);
-    gettingClientServices(client?.id);
+    gettingClientServices(client?.id, countries_variables[0]?.countries[0]);
+  };
+
+  const handleCountryChange = (selectedCountry) => {
+    let services2 = JSON.parse(localStorage.getItem("services"));
+    let filteredServices = services2.filter(
+      (data) => data?.country == selectedCountry
+    );
+    setCountry(selectedCountry);
+    setServices(filteredServices);
+    getDataFromBackend(filteredServices[0]?.serviceName, services2);
   };
 
   const convertStartDate = (utcDate) => {
@@ -397,6 +429,19 @@ const DailyRevenueAdminPage = () => {
                     value: client,
                   }))}
                   placeholder="Select a Client"
+                  style={{ width: "100%" }}
+                />
+              </div>
+
+              <div className={classes.client}>
+                <Dropdown
+                  value={country}
+                  onChange={(e) => handleCountryChange(e.value)}
+                  options={countries?.map((data) => ({
+                    label: data,
+                    value: data,
+                  }))}
+                  placeholder="Select a Country"
                   style={{ width: "100%" }}
                 />
               </div>

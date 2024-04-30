@@ -14,3 +14,7 @@ body{
 .MuiDataGrid-columnHeaders{
     background-color: #000;
 }
+
+button{
+    cursor: pointer !important;
+}
