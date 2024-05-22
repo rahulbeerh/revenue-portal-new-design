@@ -15,6 +15,7 @@ import { Calendar } from "primereact/calendar";
 import TitleHeader from "../NewComponents/TitleHeader";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
+import date from "../utils/date";
 
 const PublisherTrafficPage = () => {
   const navigate = useNavigate();
@@ -334,6 +335,18 @@ const PublisherTrafficPage = () => {
                     <Column field="country" header="Country" />
                     <Column field="operator" header="Operator" />
                     <Column field="count" header="Count" />
+                    <Column
+                    style={{minWidth:'200px'}}
+                      body={(publisher) => {
+                        return (
+                          <p>
+                            {date(publisher?.latest_date)?.date},{" "}
+                            {date(publisher?.latest_date)?.time}
+                          </p>
+                        );
+                      }}
+                      header="Last Traffic Date-Time"
+                    />
                   </DataTable>
                 </ThemeComponent>
               </div>
