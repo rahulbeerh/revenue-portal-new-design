@@ -1,11 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import {
-  Button,
-  Switch,
-  FormControlLabel,
-  IconButton,
-} from "@mui/material";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { Button, Switch, FormControlLabel, IconButton } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import classes from "./ServicePage.module.css";
 import { ModalContext } from "../ModalContext";
@@ -31,13 +26,21 @@ const ServicePage = () => {
   const [publisherData, setPublisherData] = useState();
   const [loader, setLoader] = useState("block");
   const { serviceName, id } = useParams();
+  const [mainServiceId, setMainServiceId] = useState("");
+  const [mainServiceName, setMainServiceName] = useState("");
   const { openHandler } = useContext(ModalContext);
   const { openEditHandler } = useContext(EditModalContext);
   const { openInputHandler } = useContext(InputModalContext);
   const [isShowPublisher, setIsShowPublisher] = useState(false);
-  console.log(isShowPublisher, "isp");
 
-  const navigate=useNavigate();
+  const navigate = useNavigate();
+
+  const location = useLocation();
+
+  useEffect(() => {
+    setMainServiceId(location?.state?.mainServiceId);
+    setMainServiceName(location?.state?.mainServiceName);
+  }, [location]);
 
   useEffect(() => {
     fetchDataFromBackend();
@@ -131,16 +134,18 @@ const ServicePage = () => {
     <>
       <ToastContainer />
       <Loader value={loader} />
-      <DashboardPage serviceName={serviceName} id={id}>
+      <DashboardPage
+        serviceName={serviceName}
+        id={id}
+        mainServiceId={mainServiceId}
+        mainServiceName={mainServiceName}
+      >
         {isShowPublisher ? (
           <>
             <TitleHeader title={serviceName} icon="" />
-            
-            <button
-              onClick={openHandler}
-              className={classes.add_btn}
-            >
-              Add Publisher 
+
+            <button onClick={openHandler} className={classes.add_btn}>
+              Add Publisher
               <AddIcon />
             </button>
             {publisherData?.length <= 0 ? (
@@ -174,11 +179,22 @@ const ServicePage = () => {
                             <td className={classes.td}>{data.client}</td>
                             <td className={classes.td}>{data.name}</td>
                             <td className={classes.td}>{data.amount}</td>
-                            <td className={classes.td} style={{ width: "100%" }}>{data.serviceUrl}</td>
-                            <td className={classes.td} style={{ width: "100%" }}>
+                            <td
+                              className={classes.td}
+                              style={{ width: "100%" }}
+                            >
+                              {data.serviceUrl}
+                            </td>
+                            <td
+                              className={classes.td}
+                              style={{ width: "100%" }}
+                            >
                               {data.postbackUrl}
                             </td>
-                            <td className={classes.td} style={{ width: "100%" }}>
+                            <td
+                              className={classes.td}
+                              style={{ width: "100%" }}
+                            >
                               {data.promotionUrl}
                               <IconButton
                                 aria-label="copy"
@@ -189,7 +205,10 @@ const ServicePage = () => {
                                   );
                                 }}
                               >
-                                <ContentCopyIcon sx={{color:"#696CFF"}} fontSize="small" />
+                                <ContentCopyIcon
+                                  sx={{ color: "#696CFF" }}
+                                  fontSize="small"
+                                />
                               </IconButton>
                             </td>
                             <td className={classes.td}>{data.operator}</td>

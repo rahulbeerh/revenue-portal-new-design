@@ -11,22 +11,30 @@ import NewHeader from "../NewComponents/NewHeader";
 import TitleHeader from "../NewComponents/TitleHeader";
 import ThemeComponent from "../NewComponents/ThemeComponent";
 
-const DashboardPage = ({ serviceName, id, children }) => {
+const DashboardPage = ({
+  serviceName,
+  id,
+  mainServiceId,
+  mainServiceName,
+  children,
+}) => {
   const [services, setServices] = useState([]);
   const [filteredServices, setFilteredServices] = useState([]);
   const [mainServices, setMainServices] = useState([]);
   const [loader, setLoader] = useState("block");
   const navigate = useNavigate();
 
+  console.log({ serviceName, id, mainServiceId, mainServiceName });
+
   const [sidebarHide, setSidebarHide] = useState(() =>
-  localStorage.getItem("sidebar")
-    ? JSON.parse(localStorage.getItem("sidebar"))
-    : false
-);
-const sidebarHandler = () => {
-  localStorage.setItem("sidebar", JSON.stringify(!sidebarHide));
-  setSidebarHide(JSON.parse(localStorage.getItem("sidebar")));
-};
+    localStorage.getItem("sidebar")
+      ? JSON.parse(localStorage.getItem("sidebar"))
+      : false
+  );
+  const sidebarHandler = () => {
+    localStorage.setItem("sidebar", JSON.stringify(!sidebarHide));
+    setSidebarHide(JSON.parse(localStorage.getItem("sidebar")));
+  };
 
   useEffect(() => {
     if (localStorage.getItem("userName") == "etho_1234") {
@@ -72,7 +80,10 @@ const sidebarHandler = () => {
   const handleNavigateAndFilterServices = (
     path,
     serviceName,
-    showAddPublisher
+    showAddPublisher,
+    checkMainService,
+    idMainService,
+    nameMainService
   ) => {
     // console.log(serviceName, "siiiiiiiiii");
     setFilteredServices(() =>
@@ -84,7 +95,23 @@ const sidebarHandler = () => {
     } else {
       localStorage.setItem("showAddPublisher", JSON.stringify(false));
     }
-    navigate(path);
+
+    if (checkMainService?.useMainService) {
+      console.log("clicked sub service");
+      navigate(path, {
+        state: {
+          mainServiceId: mainServiceId,
+          mainServiceName: mainServiceName,
+        },
+      });
+    } else {
+      navigate(path, {
+        state: {
+          mainServiceId: idMainService,
+          mainServiceName: nameMainService,
+        },
+      });
+    }
   };
 
   // useEffect(()=>{
@@ -130,67 +157,74 @@ const sidebarHandler = () => {
           <NewHeader service="All Services" highlight={3} />
           <div className={classes.sub_container}>
             <TitleHeader title="Main Services" icon="" />
-              <div className={classes.flex_container}>
-                {mainServices.map((service, i) => {
-                  return (
-                    <div key={i} className={classes.flex_item}>
-                      <Button
-                        className={classes.btn}
-                        // onClick={() => navigate(`/dashboard/${service.serviceName}/${service.id}`)}
-                        onClick={() =>
-                          handleNavigateAndFilterServices(
-                            `/dashboard/${service.serviceName}/${service.id}`,
-                            `${service.serviceName}`,
-                            false
-                          )
-                        }
-                        variant={
-                          id == service.id && serviceName == service.serviceName
-                            ? "contained"
-                            : "outlined"
-                        }
-                        // color="error"
-                        size="medium"
-                      >
-                        {service.serviceName}
-                      </Button>
-                    </div>
-                  );
-                })}
-              </div>
+            <div className={classes.flex_container}>
+              {mainServices.map((service, i) => {
+                return (
+                  <div key={i} className={classes.flex_item}>
+                    <Button
+                      className={classes.btn}
+                      // onClick={() => navigate(`/dashboard/${service.serviceName}/${service.id}`)}
+                      onClick={() =>
+                        handleNavigateAndFilterServices(
+                          `/dashboard/${service.serviceName}/${service.id}`,
+                          `${service.serviceName}`,
+                          false,
+                          { useMainService: false },
+                          service?.id,
+                          service?.serviceName
+                        )
+                      }
+                      variant={
+                        (id == service.id &&
+                          serviceName == service.serviceName) ||
+                        (mainServiceId == service.id &&
+                          mainServiceName == service.serviceName)
+                          ? "contained"
+                          : "outlined"
+                      }
+                      // color="error"
+                      size="medium"
+                    >
+                      {service.serviceName}
+                    </Button>
+                  </div>
+                );
+              })}
+            </div>
 
             {filteredServices.length > 0 && (
               <TitleHeader title="Sub Services" icon="" />
             )}
 
-              <div className={classes.flex_container}>
-                {filteredServices.map((service, i) => {
-                  // console.log(service.id);
-                  return (
-                    <div key={i} className={classes.flex_item}>
-                      <Button
-                        onClick={() =>
-                          handleNavigateAndFilterServices(
-                            `/dashboard/${service.subService}/${service.serviceId}`,
-                            `${service.service}`,
-                            true
-                          )
-                        }
-                        variant={
-                          id == service.serviceId &&
-                          serviceName === service.subService
-                            ? "contained"
-                            : "outlined"
-                        }
-                        // color="error"
-                        size="medium"
-                      >
-                        {service.subService}
-                      </Button>
-                    </div>
-                  );
-                })}
-              </div>
+            <div className={classes.flex_container}>
+              {filteredServices.map((service, i) => {
+                // console.log(service.id);
+                return (
+                  <div key={i} className={classes.flex_item}>
+                    <Button
+                      onClick={() =>
+                        handleNavigateAndFilterServices(
+                          `/dashboard/${service.subService}/${service.serviceId}`,
+                          `${service.service}`,
+                          true,
+                          { useMainService: true }
+                        )
+                      }
+                      variant={
+                        id == service.serviceId &&
+                        serviceName === service.subService
+                          ? "contained"
+                          : "outlined"
+                      }
+                      // color="error"
+                      size="medium"
+                    >
+                      {service.subService}
+                    </Button>
+                  </div>
+                );
+              })}
+            </div>
 
             {children}
           </div>
