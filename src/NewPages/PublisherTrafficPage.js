@@ -16,6 +16,7 @@ import TitleHeader from "../NewComponents/TitleHeader";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import date from "../utils/date";
+import PublisherSubscriptionPage from "./PublisherSubscriptionPage";
 
 const PublisherTrafficPage = () => {
   const navigate = useNavigate();
@@ -336,7 +337,7 @@ const PublisherTrafficPage = () => {
                     <Column field="operator" header="Operator" />
                     <Column field="count" header="Count" />
                     <Column
-                    style={{minWidth:'200px'}}
+                      style={{ minWidth: "200px" }}
                       body={(publisher) => {
                         return (
                           <p>
@@ -354,6 +355,9 @@ const PublisherTrafficPage = () => {
           </div>
         </div>
       </div>
+      {localStorage.getItem("userName") == "h2n" && (
+        <PublisherSubscriptionPage hide={true} />
+      )}
     </>
   );
 };

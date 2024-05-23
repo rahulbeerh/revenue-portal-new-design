@@ -19,7 +19,7 @@ import TitleHeader from "../NewComponents/TitleHeader";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 
-const PublisherSubscriptionPage = () => {
+const PublisherSubscriptionPage = ({ hide }) => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState("block");
   const [startDate, setStartDate] = useState(
@@ -115,16 +115,16 @@ const PublisherSubscriptionPage = () => {
       if (service == "All" || service == "") {
         data = {
           client,
-          startDate:dateStart,
-          endDate:dateEnd,
+          startDate: dateStart,
+          endDate: dateEnd,
           service: "All",
           publisher: publisherName,
         };
       } else {
         data = {
           client,
-          startDate:dateStart,
-          endDate:dateEnd,
+          startDate: dateStart,
+          endDate: dateEnd,
           service: serviceName,
           publisher: publisherName,
         };
@@ -223,7 +223,9 @@ const PublisherSubscriptionPage = () => {
           <NewSidebar highlight={6} sidebarHide={sidebarHide} />
         </div>
         <div className={classes.container}>
-          <NewHeader service="Publisher Subscription" highlight={6} />
+          {hide ? null : (
+            <NewHeader service="Publisher Subscription" highlight={6} />
+          )}
           <div className={classes.sub_container}>
             <form className={classes.form} onSubmit={submitHandler}>
               <div className={classes.service}>
@@ -290,8 +292,8 @@ const PublisherSubscriptionPage = () => {
 
             {data ? (
               <div className={classes.table_container}>
-                  <ThemeComponent>
-                    {/* <DataGrid
+                <ThemeComponent>
+                  {/* <DataGrid
                       rows={data?.map((row, index) => ({
                         ...row,
                         id: index,
@@ -362,72 +364,67 @@ const PublisherSubscriptionPage = () => {
                         },
                       ]}
                     /> */}
-                    <DataTable
-                      value={data}
-                      emptyMessage="No data found"
-                      showGridlines
-                      responsive
-                      scrollable
-                      scrollHeight="500px"
-                      rows={15}
-                      paginator
-                    >
-                      <Column field="partner" header="Partner"  />
-                      <Column field="servicename" header="Service"  />
-                      <Column
-                        field="queue"
-                        header="Queue"
-                        
-                        body={(rowData) =>
-                          rowData.queue === undefined || rowData.queue === null
-                            ? 0
-                            : rowData.queue
-                        }
-                      />
-                      <Column
-                        field="sent"
-                        header="Sent"
-                        
-                        body={(rowData) =>
-                          rowData.sent === undefined || rowData.sent === null
-                            ? 0
-                            : rowData.sent
-                        }
-                      />
-                      <Column
-                        field="skip"
-                        header="Skip"
-                        
-                        body={(rowData) =>
-                          rowData.skip === undefined || rowData.skip === null
-                            ? 0
-                            : rowData.skip
-                        }
-                      />
-                      <Column
-                        field="duplicateRec"
-                        header="Duplicate Record"
-                        
-                        body={(rowData) =>
-                          rowData.duplicateRec === undefined ||
-                          rowData.duplicateRec === null
-                            ? 0
-                            : rowData.duplicateRec
-                        }
-                      />
-                      <Column
-                        field="total"
-                        header="Total"
-                        
-                        body={(rowData) =>
-                          rowData.total === undefined || rowData.total === null
-                            ? 0
-                            : rowData.total
-                        }
-                      />
-                    </DataTable>
-                  </ThemeComponent>
-                </div>
+                  <DataTable
+                    value={data}
+                    emptyMessage="No data found"
+                    showGridlines
+                    responsive
+                    scrollable
+                    scrollHeight="500px"
+                    rows={15}
+                    paginator
+                  >
+                    <Column field="partner" header="Partner" />
+                    <Column field="servicename" header="Service" />
+                    <Column
+                      field="queue"
+                      header="Queue"
+                      body={(rowData) =>
+                        rowData.queue === undefined || rowData.queue === null
+                          ? 0
+                          : rowData.queue
+                      }
+                    />
+                    <Column
+                      field="sent"
+                      header="Sent"
+                      body={(rowData) =>
+                        rowData.sent === undefined || rowData.sent === null
+                          ? 0
+                          : rowData.sent
+                      }
+                    />
+                    <Column
+                      field="skip"
+                      header="Skip"
+                      body={(rowData) =>
+                        rowData.skip === undefined || rowData.skip === null
+                          ? 0
+                          : rowData.skip
+                      }
+                    />
+                    <Column
+                      field="duplicateRec"
+                      header="Duplicate Record"
+                      body={(rowData) =>
+                        rowData.duplicateRec === undefined ||
+                        rowData.duplicateRec === null
+                          ? 0
+                          : rowData.duplicateRec
+                      }
+                    />
+                    <Column
+                      field="total"
+                      header="Total"
+                      body={(rowData) =>
+                        rowData.total === undefined || rowData.total === null
+                          ? 0
+                          : rowData.total
+                      }
+                    />
+                  </DataTable>
+                </ThemeComponent>
+              </div>
             ) : null}
           </div>
         </div>
