@@ -179,7 +179,7 @@ const DailyRevenuePage = () => {
         };
       });
 
-      const dataLimit = dataDateManupulate.slice(0, 31);
+      const dataLimit = dataDateManupulate.slice(0, 33);
       setData(dataLimit.reverse());
 
       const biggestValue = Math.max.apply(
