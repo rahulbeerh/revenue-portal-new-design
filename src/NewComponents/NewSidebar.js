@@ -15,37 +15,42 @@ const NewSidebar = (props) => {
     <div className={classes.sidebar_container}>
       <div className={classes.sidebar_sub_container}>
         {/* <!-- 1 --> */}
-        <div
-          className={classes.tab}
-          style={{
-            color: props.highlight === 1 ? "#696CFF" : "#6B7281",
-          }}
-          onClick={() => {
-            handleNavigate("/dailyRevenue");
-          }}
-        >
-          <i className="fa-solid fa-chart-simple"></i>
-          <span className={`${props.sidebarHide && classes.short}`}>
-            Daily Revenue
-          </span>
-        </div>
+        {!localStorage.getItem("hide_data") && (
+          <div
+            className={classes.tab}
+            style={{
+              color: props.highlight === 1 ? "#696CFF" : "#6B7281",
+            }}
+            onClick={() => {
+              handleNavigate("/dailyRevenue");
+            }}
+          >
+            <i className="fa-solid fa-chart-simple"></i>
+            <span className={`${props.sidebarHide && classes.short}`}>
+              Daily Revenue
+            </span>
+          </div>
+        )}
         {/* <!-- 2 --> */}
-        <div
-          className={classes.tab}
-          style={{
-            color: props.highlight === 2 ? "#696CFF" : "#6B7281",
-          }}
-          onClick={() => {
-            handleNavigate("/monthlyRevenue");
-          }}
-        >
-          <i className="fa-regular fa-chart-bar"></i>
-          <span className={`${props.sidebarHide && classes.short}`}>
-            Monthly Revenue
-          </span>
-        </div>
+        {!localStorage.getItem("hide_data") && (
+          <div
+            className={classes.tab}
+            style={{
+              color: props.highlight === 2 ? "#696CFF" : "#6B7281",
+            }}
+            onClick={() => {
+              handleNavigate("/monthlyRevenue");
+            }}
+          >
+            <i className="fa-regular fa-chart-bar"></i>
+            <span className={`${props.sidebarHide && classes.short}`}>
+              Monthly Revenue
+            </span>
+          </div>
+        )}
 
-        {localStorage.getItem("userName") != "etho_1234" && (
+        {localStorage.getItem("userName") ==
+        "etho_1234" ? null : localStorage.getItem("hide_data") ? null : (
           <div
             className={classes.tab}
             style={{
@@ -62,7 +67,8 @@ const NewSidebar = (props) => {
           </div>
         )}
 
-        {localStorage.getItem("userName") != "etho_1234" && (
+        {localStorage.getItem("userName") ==
+        "etho_1234" ? null : localStorage.getItem("hide_data") ? null : (
           <div
             className={classes.tab}
             style={{

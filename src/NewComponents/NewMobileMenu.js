@@ -10,8 +10,11 @@ const NewMobileMenu = (props) => {
   };
 
   return (
-    <div className={`${classes.mobile_menu_overlay} ${props.mobileMenu && classes.show}`}
-    onClick={()=>props.hideMobileMenuHandler()}
+    <div
+      className={`${classes.mobile_menu_overlay} ${
+        props.mobileMenu && classes.show
+      }`}
+      onClick={() => props.hideMobileMenuHandler()}
     >
       <div
         className={`${classes.mobile_menu_container} ${
@@ -19,36 +22,41 @@ const NewMobileMenu = (props) => {
         }`}
       >
         <div className={classes.mobile_menu_sub_container}>
-          <div
-            className={classes.tab}
-            style={{
-              color: props.highlight === 1 ? "#696CFF" : "#6B7281",
-            }}
-            onClick={() => {
-              handleNavigate("/dailyRevenue");
-            }}
-          >
-            <i className="fa-solid fa-chart-simple"></i>
-            <span className={`${props.sidebarHide && classes.short}`}>
-              Daily Revenue
-            </span>
-          </div>
-          <div
-            className={classes.tab}
-            style={{
-              color: props.highlight === 2 ? "#696CFF" : "#6B7281",
-            }}
-            onClick={() => {
-              handleNavigate("/monthlyRevenue");
-            }}
-          >
-            <i className="fa-regular fa-chart-bar"></i>
-            <span className={`${props.sidebarHide && classes.short}`}>
-              Monthly Revenue
-            </span>
-          </div>
+          {!localStorage.getItem("hide_data") && (
+            <div
+              className={classes.tab}
+              style={{
+                color: props.highlight === 1 ? "#696CFF" : "#6B7281",
+              }}
+              onClick={() => {
+                handleNavigate("/dailyRevenue");
+              }}
+            >
+              <i className="fa-solid fa-chart-simple"></i>
+              <span className={`${props.sidebarHide && classes.short}`}>
+                Daily Revenue
+              </span>
+            </div>
+          )}
+          {!localStorage.getItem("hide_data") && (
+            <div
+              className={classes.tab}
+              style={{
+                color: props.highlight === 2 ? "#696CFF" : "#6B7281",
+              }}
+              onClick={() => {
+                handleNavigate("/monthlyRevenue");
+              }}
+            >
+              <i className="fa-regular fa-chart-bar"></i>
+              <span className={`${props.sidebarHide && classes.short}`}>
+                Monthly Revenue
+              </span>
+            </div>
+          )}
 
-          {localStorage.getItem("userName") != "etho_1234" && (
+          {localStorage.getItem("userName") ==
+          "etho_1234" ? null : localStorage.getItem("hide_data") ? null : (
             <div
               className={classes.tab}
               style={{
@@ -65,7 +73,8 @@ const NewMobileMenu = (props) => {
             </div>
           )}
 
-          {localStorage.getItem("userName") != "etho_1234" && (
+          {localStorage.getItem("userName") ==
+          "etho_1234" ? null : localStorage.getItem("hide_data") ? null : (
             <div
               className={classes.tab}
               style={{

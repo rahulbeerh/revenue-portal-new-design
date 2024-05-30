@@ -52,7 +52,8 @@ const Sidebar = (props) => {
           <span>Monthly Revenue</span>
         </button>
 
-        {localStorage.getItem("userName") != "etho_1234" && (
+        {(localStorage.getItem("userName") != "etho_1234" ||
+          localStorage.getItem("hide_data")) && (
           <button
             className="tablinks"
             style={{
@@ -71,7 +72,8 @@ const Sidebar = (props) => {
           </button>
         )}
 
-        {localStorage.getItem("userName") != "etho_1234" && (
+        {(localStorage.getItem("userName") != "etho_1234" ||
+          localStorage.getItem("hide_data")) && (
           <button
             className="tablinks"
             style={{

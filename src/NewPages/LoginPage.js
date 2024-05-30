@@ -75,6 +75,13 @@ const LoginPage = () => {
       localStorage.setItem("serviceObject", JSON.stringify(e.data.data));
       localStorage.setItem("country", JSON.stringify(e.country));
 
+      if (e?.hide_data) {
+        localStorage.setItem("hide_data", e?.hide_data);
+        navigate("/publisher-traffic");
+        return;
+      }
+
+      localStorage.removeItem("hide_data");
       navigate("/dailyRevenue");
     }
   };
