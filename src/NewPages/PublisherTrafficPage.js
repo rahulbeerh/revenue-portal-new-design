@@ -2,7 +2,11 @@ import React, { useEffect, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import Loader from "../Components/Loader";
 import axios from "axios";
-import { publisherTrafficApi, publisherTrafficServicesApi } from "../Data/Api";
+import {
+  publisherTrafficApi,
+  publisherTrafficServicesApi,
+  searchClickIdTrafficApi,
+} from "../Data/Api";
 import classes from "./DailyRevenuePage.module.css";
 import moment from "moment";
 import { useNavigate } from "react-router-dom";
@@ -17,6 +21,10 @@ import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import date from "../utils/date";
 import PublisherSubscriptionPage from "./PublisherSubscriptionPage";
+import { Button } from "primereact/button";
+import { InputText } from "primereact/inputtext";
+import { Dialog } from "primereact/dialog";
+import Loading from "../Components/Loading";
 
 const PublisherTrafficPage = () => {
   const navigate = useNavigate();
@@ -35,6 +43,11 @@ const PublisherTrafficPage = () => {
   const [publishers, setPublishers] = useState([]);
   const [service, setService] = useState("");
   const [publisher, setPublisher] = useState("");
+
+  const [clickId, setClickId] = useState("");
+  const [searchClickId, setSearchClickId] = useState(false);
+  const [searchResults, setSearchResults] = useState([]);
+  const [searchLoading, setSearchLoading] = useState(false);
 
   const [sidebarHide, setSidebarHide] = useState(() =>
     localStorage.getItem("sidebar")
@@ -106,7 +119,6 @@ const PublisherTrafficPage = () => {
     publisherName
   ) => {
     let data = {};
-    console.log(serviceName, "s");
     if (serviceName == "All" || serviceName == "") {
       data = {
         client: localStorage.getItem("userName"),
@@ -180,6 +192,38 @@ const PublisherTrafficPage = () => {
   const convertEndDate = (utcDate) => {
     setEndDateForCalendar(utcDate);
     setEndDate(moment(new Date(utcDate)).format("yyyy-MM-DD"));
+  };
+
+  const clickIdSearch = async (e) => {
+    e.preventDefault();
+    if (clickId.trim().length <= 0) {
+      return;
+    }
+    try {
+      setSearchClickId(true);
+      setSearchLoading(true);
+      let token = localStorage.getItem("userToken");
+      let headers = { Authorization: "Bearer " + token };
+      const response = await axios.post(
+        searchClickIdTrafficApi,
+        {
+          clickId: clickId,
+        },
+        {
+          headers: headers,
+        }
+      );
+      setSearchResults(response?.data?.data);
+      setSearchLoading(false);
+    } catch (error) {
+      setSearchLoading(false);
+      toast.error(
+        error?.response?.data?.message ||
+          error?.data?.message ||
+          error?.message ||
+          error
+      );
+    }
   };
 
   return (
@@ -274,6 +318,19 @@ const PublisherTrafficPage = () => {
               </button>
             </form>
 
+            <form className={classes.click_id_form} onSubmit={clickIdSearch}>
+              <InputText
+                type="text"
+                value={clickId}
+                onChange={(e) => setClickId(e.target.value)}
+                className="p-inputtext-md"
+                placeholder="Search Click Id"
+              />
+              <button type="submit" className={classes.search_btn}>
+                Search
+              </button>
+            </form>
+
             <TitleHeader
               title="Publisher Traffic"
               icon={<i className="fa-solid fa-bolt" aria-hidden="true"></i>}
@@ -282,45 +339,6 @@ const PublisherTrafficPage = () => {
             {publisherData ? (
               <div className={classes.table_container}>
                 <ThemeComponent>
-                  {/* <DataGrid
-                      rows={publisherData?.map((row, index) => ({
-                        ...row,
-                        id: index,
-                      }))}
-                      getRowId={(row) => row.id}
-                      columns={[
-                        {
-                          field: "partnerid",
-                          sortable: false,
-                          minWidth: 150,
-                          headerName: "Partner Id",
-                        },
-                        {
-                          field: "service",
-                          sortable: false,
-                          minWidth: 150,
-                          headerName: "Service",
-                        },
-                        {
-                          field: "country",
-                          sortable: false,
-                          minWidth: 150,
-                          headerName: "Country",
-                        },
-                        {
-                          field: "operator",
-                          sortable: false,
-                          minWidth: 150,
-                          headerName: "Operator",
-                        },
-                        {
-                          field: "count",
-                          sortable: false,
-                          minWidth: 150,
-                          headerName: "Count",
-                        },
-                      ]}
-                    /> */}
                   <DataTable
                     value={publisherData}
                     emptyMessage="No data found"
@@ -358,6 +376,51 @@ const PublisherTrafficPage = () => {
       {localStorage.getItem("userName") == "h2n" && (
         <PublisherSubscriptionPage hide={true} />
       )}
+
+      <Dialog
+        header="Search Results"
+        visible={searchClickId}
+        maximizable
+        style={{ width: "90%" }}
+        onHide={() => {
+          if (!searchClickId) return;
+          setSearchClickId(false);
+          // setClickId("");
+        }}
+      >
+        <>
+          <div className={classes.modal_content}>
+            {searchLoading ? (
+              <Loading />
+            ) : searchResults.length>0?(
+              <DataTable
+                value={searchResults}
+                emptyMessage="No data found"
+                showGridlines
+                responsive
+                scrollable
+                scrollHeight="500px"
+              >
+                <Column
+                  style={{ minWidth: "150px" }}
+                  body={(data) => {
+                    return (
+                      <p>
+                        {date(data?.date)?.date}, {date(data?.date)?.time}
+                      </p>
+                    );
+                  }}
+                  header="Date-Time"
+                />
+                <Column field="publisher" header="Publisher" />
+                <Column field="service" header="Service" />
+                <Column field="country" header="Country" />
+                <Column field="operator" header="Operator" />
+              </DataTable>
+            ):<p className={classes.text}>No Records Found for : {clickId}</p>}
+          </div>
+        </>
+      </Dialog>
     </>
   );
 };

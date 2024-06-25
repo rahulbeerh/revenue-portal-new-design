@@ -5,6 +5,7 @@ import axios from "axios";
 import {
   publisherSubscriptionApi,
   publisherSubscriptionServicesApi,
+  searchClickIdSubApi,
 } from "../Data/Api";
 import moment, { utc } from "moment";
 import { useNavigate } from "react-router-dom";
@@ -18,6 +19,10 @@ import { Dropdown } from "primereact/dropdown";
 import TitleHeader from "../NewComponents/TitleHeader";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
+import Loading from "../Components/Loading";
+import date from "../utils/date";
+import { Dialog } from "primereact/dialog";
+import { InputText } from "primereact/inputtext";
 
 const PublisherSubscriptionPage = ({ hide }) => {
   const [data, setData] = useState([]);
@@ -36,6 +41,11 @@ const PublisherSubscriptionPage = ({ hide }) => {
   const [publishers, setPublishers] = useState([]);
   const [service, setService] = useState("");
   const [publisher, setPublisher] = useState("");
+
+  const [clickId, setClickId] = useState("");
+  const [searchClickId, setSearchClickId] = useState(false);
+  const [searchResults, setSearchResults] = useState([]);
+  const [searchLoading, setSearchLoading] = useState(false);
 
   const [sidebarHide, setSidebarHide] = useState(() =>
     localStorage.getItem("sidebar")
@@ -189,6 +199,38 @@ const PublisherSubscriptionPage = ({ hide }) => {
     setEndDate(moment(new Date(utcDate)).format("yyyy-MM-DD"));
   };
 
+  const clickIdSearch = async (e) => {
+    e.preventDefault();
+    if (clickId.trim().length <= 0) {
+      return;
+    }
+    try {
+      setSearchClickId(true);
+      setSearchLoading(true);
+      let token = localStorage.getItem("userToken");
+      let headers = { Authorization: "Bearer " + token };
+      const response = await axios.post(
+        searchClickIdSubApi,
+        {
+          clickId: clickId,
+        },
+        {
+          headers: headers,
+        }
+      );
+      setSearchResults(response?.data?.data);
+      setSearchLoading(false);
+    } catch (error) {
+      setSearchLoading(false);
+      toast.error(
+        error?.response?.data?.message ||
+          error?.data?.message ||
+          error?.message ||
+          error
+      );
+    }
+  };
+
   return (
     <>
       <Loader value={loading} />
@@ -278,6 +320,19 @@ const PublisherSubscriptionPage = ({ hide }) => {
                   style={{ width: "100%" }}
                 />
               </div>
+              <button type="submit" className={classes.search_btn}>
+                Search
+              </button>
+            </form>
+
+            <form className={classes.click_id_form} onSubmit={clickIdSearch}>
+              <InputText
+                type="text"
+                value={clickId}
+                onChange={(e) => setClickId(e.target.value)}
+                className="p-inputtext-md"
+                placeholder="Search Click Id"
+              />
               <button type="submit" className={classes.search_btn}>
                 Search
               </button>
@@ -429,6 +484,69 @@ const PublisherSubscriptionPage = ({ hide }) => {
           </div>
         </div>
       </div>
+
+      <Dialog
+        header="Search Results"
+        visible={searchClickId}
+        maximizable
+        style={{ width: "90%" }}
+        onHide={() => {
+          if (!searchClickId) return;
+          setSearchClickId(false);
+          // setClickId("");
+        }}
+      >
+        <>
+          <div className={classes.modal_content}>
+            {searchLoading ? (
+              <Loading />
+            ) : searchResults.length > 0 ? (
+              <DataTable
+                value={searchResults}
+                emptyMessage="No data found"
+                showGridlines
+                responsive
+                scrollable
+                scrollHeight="500px"
+              >
+                <Column
+                  style={{ minWidth: "150px" }}
+                  body={(data) => {
+                    return (
+                      <p>
+                        {date(data?.date)?.date}, {date(data?.date)?.time}
+                      </p>
+                    );
+                  }}
+                  header="Date-Time"
+                />
+                <Column field="publisher" header="Publisher" />
+                <Column field="servicename" header="Service" />
+                <Column
+                  body={(data) => {
+                    return (
+                      <p>
+                        {data?.isPending == 3
+                          ? `Skip`
+                          : data?.isPending == 1
+                          ? `Queue`
+                          : data?.isPending == 2
+                          ? `Sent`
+                          : `Duplicate`}
+                      </p>
+                    );
+                  }}
+                  header="Status"
+                />
+                <Column field="country" header="Country" />
+                <Column field="operator" header="Operator" />
+              </DataTable>
+            ) : (
+              <p className={classes.text}>No Records Found for : {clickId}</p>
+            )}
+          </div>
+        </>
+      </Dialog>
     </>
   );
 };

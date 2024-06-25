@@ -2,6 +2,7 @@
 // const pre=`http://192.168.1.14:4041/`;
 // const pre = `http://192.168.1.21:4041/`;
 // const pre = `http://192.168.1.15:4041/`;
+// const pre=`http://192.168.1.11:4041/`;
 const pre=`/`;
 
 const loginApi = `${pre}open/login`;
@@ -126,3 +127,9 @@ export { deleteProjectByAdminApi };
 
 const fetchClientSubServicesApi = `${pre}secure/fetchClientSubServices`;
 export { fetchClientSubServicesApi };
+
+const searchClickIdTrafficApi=`${pre}secure/searchTrafficByClickId`;
+export {searchClickIdTrafficApi};
+
+const searchClickIdSubApi=`${pre}secure/searchPublisherSubscriptionByClickId`;
+export {searchClickIdSubApi};
