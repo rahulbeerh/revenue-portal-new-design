@@ -23,6 +23,8 @@ import Loading from "../Components/Loading";
 import date from "../utils/date";
 import { Dialog } from "primereact/dialog";
 import { InputText } from "primereact/inputtext";
+import ContentCopyIcon from "@mui/icons-material/ContentCopy";
+import { IconButton } from "@mui/material";
 
 const PublisherSubscriptionPage = ({ hide }) => {
   const [data, setData] = useState([]);
@@ -522,6 +524,99 @@ const PublisherSubscriptionPage = ({ hide }) => {
                 />
                 <Column field="publisher" header="Publisher" />
                 <Column field="servicename" header="Service" />
+                <Column
+                  body={(data) => {
+                    return (
+                      <div
+                        style={{
+                          display: "flex",
+                          justifyContent: "flex-start",
+                          alignItems: "center",
+                          gap: "10px",
+                        }}
+                      >
+                        <p>{data?.clickId?.slice(0, 12)}...</p>
+                        <IconButton
+                          aria-label="copy"
+                          size="small"
+                          onClick={() => {
+                            navigator.clipboard.writeText(data?.clickId);
+                          }}
+                        >
+                          <ContentCopyIcon
+                            sx={{ color: "#696CFF" }}
+                            fontSize="small"
+                          />
+                        </IconButton>
+                      </div>
+                    );
+                  }}
+                  header="Click Id"
+                />
+                <Column
+                  body={(data) => {
+                    return (
+                      <div
+                        style={{
+                          display: "flex",
+                          justifyContent: "flex-start",
+                          alignItems: "center",
+                          gap: "10px",
+                        }}
+                      >
+                        <p>{data?.ext_id?.slice(0, 12)}...</p>
+                        <IconButton
+                          aria-label="copy"
+                          size="small"
+                          onClick={() => {
+                            navigator.clipboard.writeText(data?.ext_id);
+                          }}
+                        >
+                          <ContentCopyIcon
+                            sx={{ color: "#696CFF" }}
+                            fontSize="small"
+                          />
+                        </IconButton>
+                      </div>
+                    );
+                  }}
+                  header="Ext Ref"
+                />
+                <Column
+                  body={(data) => {
+                    return (
+                      <div
+                        style={{
+                          display: "flex",
+                          justifyContent: "flex-start",
+                          alignItems: "center",
+                          gap: "10px",
+                        }}
+                      >
+                        <p>
+                          {data?.partnercallbackUrl
+                            ? `${data?.partnercallbackUrl?.slice(0, 12)}...`
+                            : "Null"}
+                        </p>
+                        <IconButton
+                          aria-label="copy"
+                          size="small"
+                          onClick={() => {
+                            navigator.clipboard.writeText(
+                              data?.partnercallbackUrl
+                            );
+                          }}
+                        >
+                          <ContentCopyIcon
+                            sx={{ color: "#696CFF" }}
+                            fontSize="small"
+                          />
+                        </IconButton>
+                      </div>
+                    );
+                  }}
+                  header="Partner Callback Url"
+                />
                 <Column
                   body={(data) => {
                     return (

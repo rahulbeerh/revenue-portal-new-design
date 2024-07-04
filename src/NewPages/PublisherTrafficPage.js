@@ -25,6 +25,8 @@ import { Button } from "primereact/button";
 import { InputText } from "primereact/inputtext";
 import { Dialog } from "primereact/dialog";
 import Loading from "../Components/Loading";
+import ContentCopyIcon from "@mui/icons-material/ContentCopy";
+import { IconButton } from "@mui/material";
 
 const PublisherTrafficPage = () => {
   const navigate = useNavigate();
@@ -392,7 +394,7 @@ const PublisherTrafficPage = () => {
           <div className={classes.modal_content}>
             {searchLoading ? (
               <Loading />
-            ) : searchResults.length>0?(
+            ) : searchResults.length > 0 ? (
               <DataTable
                 value={searchResults}
                 emptyMessage="No data found"
@@ -414,10 +416,97 @@ const PublisherTrafficPage = () => {
                 />
                 <Column field="publisher" header="Publisher" />
                 <Column field="service" header="Service" />
+                <Column
+                  body={(data) => {
+                    return (
+                      <div
+                        style={{
+                          display: "flex",
+                          justifyContent: "flex-start",
+                          alignItems: "center",
+                          gap: "10px",
+                        }}
+                      >
+                        <p>{data?.url?.slice(0, 12)}...</p>
+                        <IconButton
+                          aria-label="copy"
+                          size="small"
+                          onClick={() => {
+                            navigator.clipboard.writeText(data?.url);
+                          }}
+                        >
+                          <ContentCopyIcon
+                            sx={{ color: "#696CFF" }}
+                            fontSize="small"
+                          />
+                        </IconButton>
+                      </div>
+                    );
+                  }}
+                  header="Postback Url"
+                />
+                <Column 
+                      body={(data) => {
+                        return (
+                          <div
+                            style={{
+                              display: "flex",
+                              justifyContent: "flex-start",
+                              alignItems: "center",
+                              gap: "10px",
+                            }}
+                          >
+                            <p>{data?.refId?.slice(0, 12)}...</p>
+                            <IconButton
+                              aria-label="copy"
+                              size="small"
+                              onClick={() => {
+                                navigator.clipboard.writeText(data?.refId);
+                              }}
+                            >
+                              <ContentCopyIcon
+                                sx={{ color: "#696CFF" }}
+                                fontSize="small"
+                              />
+                            </IconButton>
+                          </div>
+                        );
+                      }}
+                header="Ref Id" />
+                <Column 
+                      body={(data) => {
+                        return (
+                          <div
+                            style={{
+                              display: "flex",
+                              justifyContent: "flex-start",
+                              alignItems: "center",
+                              gap: "10px",
+                            }}
+                          >
+                            <p>{data?.media?.slice(0, 12)}...</p>
+                            <IconButton
+                              aria-label="copy"
+                              size="small"
+                              onClick={() => {
+                                navigator.clipboard.writeText(data?.media);
+                              }}
+                            >
+                              <ContentCopyIcon
+                                sx={{ color: "#696CFF" }}
+                                fontSize="small"
+                              />
+                            </IconButton>
+                          </div>
+                        );
+                      }}
+                header="Media Id" />
                 <Column field="country" header="Country" />
                 <Column field="operator" header="Operator" />
               </DataTable>
-            ):<p className={classes.text}>No Records Found for : {clickId}</p>}
+            ) : (
+              <p className={classes.text}>No Records Found for : {clickId}</p>
+            )}
           </div>
         </>
       </Dialog>
