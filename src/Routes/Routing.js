@@ -1,19 +1,19 @@
 import React from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
-import LoginPage from "../NewPages/LoginPage";
-import DailyRevenuePage from "../NewPages/DailyRevenuePage";
-import MonthlyRevenuePage from "../NewPages/MonthlyRevenuePage";
-import AddCountryAndOperatorPage from "../NewPages/AddCountryAndOperatorPage";
-import PublisherTrafficPage from "../NewPages/PublisherTrafficPage";
-import PublisherSubscriptionPage from "../NewPages/PublisherSubscriptionPage";
-import DashboardPage from "../NewPages/DashboardPage";
-import ServicePage from "../NewPages/ServicePage";
-import AdvertiserPage from "../NewPages/AdvertiserPage";
-import AdvertiserTrafficPage from "../NewPages/AdvertiserTrafficPage";
-import AdvertiserSubscriptionPage from "../NewPages/AdvertiserSubscriptionPage";
-import DailyRevenueAdminPage from "../NewPages/DailyRevenueAdminPage";
-import DashboardAdminPage from "../NewPages/DashboardAdminPage";
-import MonthlyRevenueAdminPage from "../NewPages/MonthlyRevenueAdminPage";
+import LoginPage from "../Pages/LoginPage";
+import DailyRevenuePage from "../Pages/DailyRevenuePage";
+import MonthlyRevenuePage from "../Pages/MonthlyRevenuePage";
+import AddCountryAndOperatorPage from "../Pages/AddCountryAndOperatorPage";
+import PublisherTrafficPage from "../Pages/PublisherTrafficPage";
+import PublisherSubscriptionPage from "../Pages/PublisherSubscriptionPage";
+import DashboardPage from "../Pages/DashboardPage";
+import ServicePage from "../Pages/ServicePage";
+import AdvertiserPage from "../Pages/AdvertiserPage";
+import AdvertiserTrafficPage from "../Pages/AdvertiserTrafficPage";
+import AdvertiserSubscriptionPage from "../Pages/AdvertiserSubscriptionPage";
+import DailyRevenueAdminPage from "../Pages/DailyRevenueAdminPage";
+import DashboardAdminPage from "../Pages/DashboardAdminPage";
+import MonthlyRevenueAdminPage from "../Pages/MonthlyRevenueAdminPage";
 
 const Routing = () => {
   return (
@@ -46,6 +46,8 @@ const Routing = () => {
           element={
             localStorage.getItem("hide_data") ? (
               <Navigate to="/" />
+            ) : localStorage.getItem("userName") == "etho_1234" ? (
+              <Navigate to="/dailyRevenue" />
             ) : (
               <DashboardPage />
             )
@@ -57,6 +59,8 @@ const Routing = () => {
           element={
             localStorage.getItem("hide_data") ? (
               <Navigate to="/" />
+            ) : localStorage.getItem("userName") == "etho_1234" ? (
+              <Navigate to="/dailyRevenue" />
             ) : (
               <ServicePage />
             )
@@ -68,6 +72,8 @@ const Routing = () => {
           element={
             localStorage.getItem("hide_data") ? (
               <Navigate to="/" />
+            ) : localStorage.getItem("userName") == "etho_1234" ? (
+              <Navigate to="/dailyRevenue" />
             ) : (
               <AddCountryAndOperatorPage />
             )
@@ -76,38 +82,90 @@ const Routing = () => {
           exact={true}
         ></Route>
         <Route
-          element={<PublisherTrafficPage />}
+          element={
+            localStorage.getItem("userName") == "etho_1234" ? (
+              <Navigate to="/dailyRevenue" />
+            ) : (
+              <PublisherTrafficPage />
+            )
+          }
           path="/publisher-traffic"
           exact={true}
         ></Route>
         <Route
-          element={<PublisherSubscriptionPage />}
+          element={
+            localStorage.getItem("userName") == "etho_1234" ? (
+              <Navigate to="/dailyRevenue" />
+            ) : (
+              <PublisherSubscriptionPage />
+            )
+          }
           path="/publisher-subscription"
           exact={true}
         ></Route>
-        <Route element={<AdvertiserPage />} path="/advertiser" exact={true} />
         <Route
-          element={<AdvertiserTrafficPage />}
+          element={
+            localStorage.getItem("userName") != "panz" ? (
+              <Navigate to="/" />
+            ) : (
+              <AdvertiserPage />
+            )
+          }
+          path="/advertiser"
+          exact={true}
+        />
+        <Route
+          element={
+            localStorage.getItem("userName") != "panz" ? (
+              <Navigate to="/" />
+            ) : (
+              <AdvertiserTrafficPage />
+            )
+          }
           path="/advertiser-traffic"
           exact={true}
         />
         <Route
-          element={<AdvertiserSubscriptionPage />}
+          element={
+            localStorage.getItem("userName") != "panz" ? (
+              <Navigate to="/" />
+            ) : (
+              <AdvertiserSubscriptionPage />
+            )
+          }
           path="/advertiser-subscription"
           exact={true}
         />
         <Route
-          element={<DailyRevenueAdminPage />}
+          element={
+            localStorage.getItem("userName") != "admin" ? (
+              <Navigate to="/" />
+            ) : (
+              <DailyRevenueAdminPage />
+            )
+          }
           path="/dailyRevenueAdmin"
           exact={true}
         />
         <Route
-          element={<MonthlyRevenueAdminPage />}
+          element={
+            localStorage.getItem("userName") != "admin" ? (
+              <Navigate to="/" />
+            ) : (
+              <MonthlyRevenueAdminPage />
+            )
+          }
           path="/monthlyRevenueAdmin"
           exact={true}
         />
         <Route
-          element={<DashboardAdminPage />}
+          element={
+            localStorage.getItem("userName") != "admin" ? (
+              <Navigate to="/" />
+            ) : (
+              <DashboardAdminPage />
+            )
+          }
           path="/dashboardAdmin"
           exact={true}
         />
