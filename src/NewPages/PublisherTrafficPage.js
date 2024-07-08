@@ -51,6 +51,8 @@ const PublisherTrafficPage = () => {
   const [searchResults, setSearchResults] = useState([]);
   const [searchLoading, setSearchLoading] = useState(false);
 
+  const [isRequestPending, setIsRequestPending] = useState(false);
+
   const [sidebarHide, setSidebarHide] = useState(() =>
     localStorage.getItem("sidebar")
       ? JSON.parse(localStorage.getItem("sidebar"))
@@ -101,16 +103,19 @@ const PublisherTrafficPage = () => {
       setPublisher(newPublisher?.publisher);
 
       // console.log(res);
-      setLoading("none");
+      // setLoading("none");
     } catch (error) {
       // console.log(error);
-      setLoading("none");
+      // setLoading("none");
       toast.error(
         error?.response?.data?.message || error?.message || error?.data?.message
       );
-      setTimeout(() => {
-        navigate("/");
-      }, 1000);
+
+      if (error?.response?.status == 403) {
+        setTimeout(() => {
+          navigate("/");
+        }, 1000);
+      }
     }
   };
   const fetchDataFromBackend = async (
@@ -146,12 +151,16 @@ const PublisherTrafficPage = () => {
 
       let headers = { Authorization: "Bearer " + token };
 
+      setIsRequestPending(true);
+
       const res = await axios.post(publisherTrafficApi, data, {
         headers: headers,
       });
       setPublisherData(res.data.data);
+      setIsRequestPending(false);
       setLoading("none");
     } catch (error) {
+      setIsRequestPending(false);
       setLoading("none");
       toast.error(
         error?.response?.data?.message || error?.message || error?.data?.message
@@ -166,12 +175,13 @@ const PublisherTrafficPage = () => {
 
   useEffect(() => {
     const intervalId = setInterval(() => {
-      fetchDataFromBackend(null, startDate, endDate, service, publisher);
+      if (!document.hidden && !isRequestPending) {
+        fetchDataFromBackend(null, startDate, endDate, service, publisher);
+      }
     }, 10000);
 
-    // Cleanup function to clear the interval when the component is unmounted
     return () => clearInterval(intervalId);
-  }, [startDate, endDate, service, publisher]);
+  }, [startDate, endDate, service, publisher, isRequestPending]);
 
   const submitHandler = async (e) => {
     e.preventDefault();
@@ -445,62 +455,64 @@ const PublisherTrafficPage = () => {
                   }}
                   header="Postback Url"
                 />
-                <Column 
-                      body={(data) => {
-                        return (
-                          <div
-                            style={{
-                              display: "flex",
-                              justifyContent: "flex-start",
-                              alignItems: "center",
-                              gap: "10px",
-                            }}
-                          >
-                            <p>{data?.refId?.slice(0, 12)}...</p>
-                            <IconButton
-                              aria-label="copy"
-                              size="small"
-                              onClick={() => {
-                                navigator.clipboard.writeText(data?.refId);
-                              }}
-                            >
-                              <ContentCopyIcon
-                                sx={{ color: "#696CFF" }}
-                                fontSize="small"
-                              />
-                            </IconButton>
-                          </div>
-                        );
-                      }}
-                header="Ref Id" />
-                <Column 
-                      body={(data) => {
-                        return (
-                          <div
-                            style={{
-                              display: "flex",
-                              justifyContent: "flex-start",
-                              alignItems: "center",
-                              gap: "10px",
-                            }}
-                          >
-                            <p>{data?.media?.slice(0, 12)}...</p>
-                            <IconButton
-                              aria-label="copy"
-                              size="small"
-                              onClick={() => {
-                                navigator.clipboard.writeText(data?.media);
-                              }}
-                            >
-                              <ContentCopyIcon
-                                sx={{ color: "#696CFF" }}
-                                fontSize="small"
-                              />
-                            </IconButton>
-                          </div>
-                        );
-                      }}
-                header="Media Id" />
+                <Column
+                  body={(data) => {
+                    return (
+                      <div
+                        style={{
+                          display: "flex",
+                          justifyContent: "flex-start",
+                          alignItems: "center",
+                          gap: "10px",
+                        }}
+                      >
+                        <p>{data?.refId?.slice(0, 12)}...</p>
+                        <IconButton
+                          aria-label="copy"
+                          size="small"
+                          onClick={() => {
+                            navigator.clipboard.writeText(data?.refId);
+                          }}
+                        >
+                          <ContentCopyIcon
+                            sx={{ color: "#696CFF" }}
+                            fontSize="small"
+                          />
+                        </IconButton>
+                      </div>
+                    );
+                  }}
+                  header="Ref Id"
+                />
+                <Column
+                  body={(data) => {
+                    return (
+                      <div
+                        style={{
+                          display: "flex",
+                          justifyContent: "flex-start",
+                          alignItems: "center",
+                          gap: "10px",
+                        }}
+                      >
+                        <p>{data?.media?.slice(0, 12)}...</p>
+                        <IconButton
+                          aria-label="copy"
+                          size="small"
+                          onClick={() => {
+                            navigator.clipboard.writeText(data?.media);
+                          }}
+                        >
+                          <ContentCopyIcon
+                            sx={{ color: "#696CFF" }}
+                            fontSize="small"
+                          />
+                        </IconButton>
+                      </div>
+                    );
+                  }}
+                  header="Media Id"
+                />
                 <Column field="country" header="Country" />
                 <Column field="operator" header="Operator" />
               </DataTable>

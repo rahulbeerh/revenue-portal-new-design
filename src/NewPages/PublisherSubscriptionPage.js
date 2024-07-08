@@ -49,6 +49,8 @@ const PublisherSubscriptionPage = ({ hide }) => {
   const [searchResults, setSearchResults] = useState([]);
   const [searchLoading, setSearchLoading] = useState(false);
 
+  const [isRequestPending, setIsRequestPending] = useState(false);
+
   const [sidebarHide, setSidebarHide] = useState(() =>
     localStorage.getItem("sidebar")
       ? JSON.parse(localStorage.getItem("sidebar"))
@@ -106,9 +108,9 @@ const PublisherSubscriptionPage = ({ hide }) => {
           error
       );
       setLoading("none");
-      setTimeout(() => {
-        navigate("/");
-      }, 1000);
+      // setTimeout(() => {
+      //   navigate("/");
+      // }, 1000);
     }
   };
 
@@ -145,14 +147,19 @@ const PublisherSubscriptionPage = ({ hide }) => {
         setLoading("block");
       }
       // const data = { client, startDate, endDate };
+
+      setIsRequestPending(true);
+
       const res = await axios.post(publisherSubscriptionApi, data, {
         headers: headers,
       });
       setData(res.data.data);
       setLoading("none");
+      setIsRequestPending(false);
       // console.log(res, "2");
     } catch (error) {
       // console.log(error);
+      setIsRequestPending(false);
       toast.error(
         error?.data?.message ||
           error?.message ||
@@ -160,9 +167,11 @@ const PublisherSubscriptionPage = ({ hide }) => {
           error
       );
       setLoading("none");
-      setTimeout(() => {
-        navigate("/");
-      }, 1000);
+      if (error?.response?.status == 403) {
+        setTimeout(() => {
+          navigate("/");
+        }, 1000);
+      }
     }
   }
 
@@ -173,11 +182,13 @@ const PublisherSubscriptionPage = ({ hide }) => {
 
   useEffect(() => {
     const intervalId = setInterval(() => {
-      fetchDataFromBackend(null, startDate, endDate, service, publisher);
+      if (!document.hidden && !isRequestPending) {
+        fetchDataFromBackend(null, startDate, endDate, service, publisher);
+      }
     }, 10000);
 
     return () => clearInterval(intervalId);
-  }, [startDate, endDate, service, publisher]);
+  }, [startDate, endDate, service, publisher, isRequestPending]);
 
   const submitHandler = async (e) => {
     e.preventDefault();
