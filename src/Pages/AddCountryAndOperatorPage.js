@@ -5,7 +5,6 @@ import axios from "axios";
 import { addCountryAndOperator, fetchCountryAndOperator } from "../Data/Api";
 import Loader from "../NewComponents/Loading-States/Loader";
 import { toast, ToastContainer } from "react-toastify";
-import { useNavigate } from "react-router-dom";
 import NewSidebar from "../NewComponents/Sidebar/NewSidebar";
 import NewHeader from "../NewComponents/Header/NewHeader";
 import { InputText } from "primereact/inputtext";
@@ -13,12 +12,12 @@ import TitleHeader from "../NewComponents/Header/TitleHeader";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 
+// ADD COUNTRY AND OPERATOR PAGE...
 const AddCountryAndOperatorPage = () => {
   const [country, setCountry] = useState("");
   const [operator, setOperator] = useState("");
   const [loader, setLoader] = useState("none");
   const [data, setData] = useState([]);
-  const navigate = useNavigate();
 
   const [sidebarHide, setSidebarHide] = useState(() =>
     localStorage.getItem("sidebar")
@@ -36,6 +35,7 @@ const AddCountryAndOperatorPage = () => {
     fetchDataFromBackend();
   }, []);
 
+  // GET THE DATA OF COUNTRY AND OPERATOR...
   const fetchDataFromBackend = async () => {
     try {
       setLoader("block");
@@ -56,6 +56,7 @@ const AddCountryAndOperatorPage = () => {
     }
   };
 
+  // METHOD TO HANDLE FORM SUBMISSION...
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoader("block");

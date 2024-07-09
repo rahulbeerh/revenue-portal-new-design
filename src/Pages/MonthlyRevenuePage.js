@@ -11,25 +11,22 @@ import TitleHeader from "../NewComponents/Header/TitleHeader";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import ExportMonthlyRevenueToExcel from "../NewComponents/Excel-Sheet-Generation/ExportMonthlyRevenueToExcel";
-import { useNavigate } from "react-router-dom";
 import { TabView, TabPanel } from "primereact/tabview";
 import LineGraph from "../NewComponents/Graphs/LineGraph";
 import BarGraph from "../NewComponents/Graphs/BarGraph";
 import VerticalBarGraph from "../NewComponents/Graphs/VerticalBarGraph";
 
+// MONTHLY REVENUE PAGE...
 const MonthlyRevenuePage = () => {
-  //to start on load
+  // GET THE SERVICES FROM LOCAL-STORAGE...
   useEffect(() => {
     gettingServices();
-    // eslint-disable-next-line
   }, []);
 
   //Hook to store services
   const [services, setServices] = useState([]);
   const [responseService, setResponseService] = useState("");
   const [service, setService] = useState();
-
-  const navigate = useNavigate();
 
   const [sidebarHide, setSidebarHide] = useState(() =>
     localStorage.getItem("sidebar")
@@ -46,13 +43,14 @@ const MonthlyRevenuePage = () => {
     let services = JSON.parse(localStorage.getItem("services"));
     setServices(services);
     setService(services[0]?.serviceName);
+    // GET THE DATA OF 1ST SERVICE
     getDataFromBackend(services[0]?.serviceName);
   };
 
-  //Hook to store dates
+  // MONTH ...
   const [interval, setInterval] = useState("6");
 
-  //Method to get data from Backend
+  // METHOD TO GET THE DATA FROM BACKEND...
   const getDataFromBackend = (service) => {
     let promise = GetSecure(
       `${sendMonthlyDataApi}?interval=${interval}&service=${service}`
@@ -62,16 +60,9 @@ const MonthlyRevenuePage = () => {
     });
   };
 
-  //Hook to store data
   const [data, setData] = useState([]);
-  // console.log(data);
 
-  //Hook to store biggest value
-  const [biggest, setBiggest] = useState(0);
-  const [biggestRenewal, setBiggestRenewal] = useState(0);
-  const [biggestSubscription, setBiggestSubscription] = useState(0);
-
-  //Method to handle response
+  //METHOD TO HANDLE THE RESPONSE...
   const handleDataResponse = (e) => {
     if (e.response === "error") {
       toast.error(e.error?.response?.data?.message || e.error?.message);
@@ -81,8 +72,8 @@ const MonthlyRevenuePage = () => {
       }
     } else {
       setLoader("none");
-      // console.log(e);
-      const dataDateManupulate = e.data.map((dataItem) => {
+      // DATA MANUPULATE AND LIMIT THE DATA...
+      const dataManupulate = e?.data.map((dataItem) => {
         return {
           id: `${dataItem.MONTH}-${dataItem.YEAR}`,
           misDate: `${dataItem.MONTH}-${dataItem.YEAR}`,
@@ -91,34 +82,12 @@ const MonthlyRevenuePage = () => {
           totalRevenue: dataItem.totalRevenue,
         };
       });
-      setData(dataDateManupulate.reverse());
+      setData(dataManupulate.reverse());
       setResponseService(e.serviceName);
-      const biggestValue = Math.max.apply(
-        Math,
-        e.data.map(function (dataItem) {
-          return dataItem.totalRevenue;
-        })
-      );
-      console.log(biggestValue, "bv");
-      setBiggest(biggestValue);
-      const biggestValueRenewal = Math.max.apply(
-        Math,
-        e.data.map(function (dataItem) {
-          return dataItem.renewalsRevenue;
-        })
-      );
-      setBiggestRenewal(biggestValueRenewal);
-      const biggestValueSubscription = Math.max.apply(
-        Math,
-        e.data.map(function (dataItem) {
-          return dataItem.subscriptionRevenue;
-        })
-      );
-      setBiggestSubscription(biggestValueSubscription);
     }
   };
 
-  //Method to handle form submit
+  // FORM SUBMISSION HANDLER...
   const handleFormSubmit = (e) => {
     e.preventDefault();
     setLoader("block");
@@ -128,23 +97,13 @@ const MonthlyRevenuePage = () => {
   //Hook to store loader div state
   const [loader, setLoader] = useState("block");
 
-  //Method to handle service choose
+  // SERVICE CHANGE HANDLER...
   const handleChooseService = (serviceName) => {
-    // console.log("serviceName ",serviceName);
     setService(serviceName);
     getDataFromBackend(serviceName);
   };
 
-  const dataLength = data.length;
-  // console.log(dataLength);
-  let width = 3000;
-  if (dataLength > 10) {
-    width = 1000;
-  }
-  if (dataLength > 0 && dataLength <= 10) {
-    width = 700;
-  }
-
+  // CALCULATION OF THE TOTAL...
   const totalRenewalRevenue = data.reduce(
     (total, dataItem) => total + dataItem.renewalsRevenue,
     0
@@ -166,9 +125,10 @@ const MonthlyRevenuePage = () => {
     totalRevenue: totalRevenue.toFixed(0),
   };
 
+  // TOTAL CALCULATION FINISHED...
+
   const header = <ExportMonthlyRevenueToExcel data={[...data, totals]} />;
 
-  // console.log([...data,totals])
   return (
     <>
       {/* <!-- subscribers-sec --> */}
@@ -273,7 +233,7 @@ const MonthlyRevenuePage = () => {
                 responsive
                 scrollable
                 scrollHeight="500px"
-                rows={15}
+                rows={40}
                 paginator
                 header={header}
               >

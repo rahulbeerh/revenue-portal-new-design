@@ -25,3 +25,7 @@ button{
 .p-chart{
     cursor: pointer;
 }
+
+/* .p-datatable tbody tr:last-child{
+    background: #F8F9FA !important;
+} */

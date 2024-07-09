@@ -9,10 +9,13 @@ import classes from "./LoginPage.module.css";
 import LoginAnimation from "../Animations/LoginAnimation.json";
 import Lottie from "lottie-react";
 
+// LOGIN PAGE FOR LOGGING IN THE CLIENT AND ADMIN...
 const LoginPage = () => {
   const navigate = useNavigate();
   const [credentials, setCredentials] = useState({});
   const [inputType, setInputType] = useState("password");
+
+  // PASSWORD'S EYE ICON CLICK HANDLER...
   const changeInputType = () => {
     if (inputType === "password") {
       setInputType("text");
@@ -21,9 +24,11 @@ const LoginPage = () => {
     }
   };
 
+  // FORM SUBMISSION HANDLER...
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // IF THE USERNAME ENTERED BY USER IS "admin" THAN HIT ADMIN LOGIN API
     if (credentials.username === "admin") {
       try {
         setLoader("block");
@@ -45,7 +50,9 @@ const LoginPage = () => {
             error?.data?.data?.message
         );
       }
-    } else {
+    } 
+    // ELSE HIT CLIENT LOGIN API
+    else {
       setLoader("block");
       hitOnBackend();
     }
@@ -75,12 +82,13 @@ const LoginPage = () => {
       localStorage.setItem("serviceObject", JSON.stringify(e.data.data));
       localStorage.setItem("country", JSON.stringify(e.country));
 
+      // FROM CLIENT API RESPONSE , IF WE GET "hide_data" , THAN ONLY SHOW PUBLISHER TRAFFIC AND PUBLISHER SUBSCRIPTION DATA.. 
       if (e?.hide_data) {
         localStorage.setItem("hide_data", e?.hide_data);
         navigate("/publisher-traffic");
         return;
       }
-
+      // ELSE NAVIGATE THE USER TO "dailyRevenue" PAGE
       localStorage.removeItem("hide_data");
       navigate("/dailyRevenue");
     }
@@ -160,77 +168,6 @@ const LoginPage = () => {
           </div>
         </div>
       </div>
-      {/* <section className="login-sec">
-        <div className="login-heading">
-          <h2>Revenue Portal</h2>
-        </div>
-        <div className="login-box">
-          <div className="login-inner-logo">
-            <img src={logo} alt="logo" />
-          </div>
-          <form onSubmit={handleSubmit}>
-            <div className="login-form">
-              <div className="form">
-                <div className="succe-massge">
-                  <p>Welcome User</p>
-                </div>
-                <div className="user">
-                  <span className="icon-u">
-                    <i className="fa fa-user" aria-hidden="true"></i>
-                  </span>
-                  <span>
-                    <input
-                      type="text"
-                      placeholder="Username"
-                      name="username"
-                      required
-                      autoComplete="off"
-                      onChange={(e) =>
-                        setCredentials({
-                          ...credentials,
-                          username: e.target.value,
-                        })
-                      }
-                    />
-                  </span>
-                </div>
-                <div className="password" style={{ position: "relative" }}>
-                  <span className="icon-l">
-                    <i className="fa fa-lock" aria-hidden="true"></i>
-                  </span>
-                  <span>
-                    <input
-                      type={inputType}
-                      placeholder="Password"
-                      name="password"
-                      required
-                      style={{zIndex:"1"}}
-                      autoComplete="off"
-                      onChange={(e) =>
-                        setCredentials({
-                          ...credentials,
-                          password: e.target.value,
-                        })
-                      }
-                    />
-                  </span>
-                  <span className="icon-l-2" onClick={changeInputType}>
-                    <i className="fa fa-eye" aria-hidden="true"></i>
-                  </span>
-                </div>
-                <div className="submit-btn">
-                  <button type="submit">
-                    <span>
-                      <i className="fa fa-sign-in" aria-hidden="true"></i>
-                    </span>{" "}
-                    <span>Login</span>
-                  </button>
-                </div>
-              </div>
-            </div>
-          </form>
-        </div>
-      </section> */}
     </>
   );
 };

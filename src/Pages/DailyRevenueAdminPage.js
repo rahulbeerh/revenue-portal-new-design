@@ -8,10 +8,8 @@ import {
 import PostSecure from "../Request/PostSecure";
 import { toast, ToastContainer } from "react-toastify";
 import Loader from "../NewComponents/Loading-States/Loader";
-import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import classes from "./DailyRevenuePage.module.css";
-import NewHeader from "../NewComponents/Header/NewHeader";
 import { Calendar } from "primereact/calendar";
 import { Dropdown } from "primereact/dropdown";
 import TitleHeader from "../NewComponents/Header/TitleHeader";
@@ -27,7 +25,6 @@ import BarGraph from "../NewComponents/Graphs/BarGraph";
 import VerticalBarGraph from "../NewComponents/Graphs/VerticalBarGraph";
 
 const DailyRevenueAdminPage = () => {
-  const navigate = useNavigate();
   const [countries, setCountries] = useState([]);
   const [country, setCountry] = useState("");
   const [clients, setClients] = useState([]);
@@ -87,17 +84,9 @@ const DailyRevenueAdminPage = () => {
           headers: headers,
         }
       );
-      // console.log("client services api",res);
-      // let servicesArray = [];
-      // res.data.data.map((service) => {
-      //   return servicesArray.push(service.serviceName);
-      // });
-      // localStorage.setItem("services", JSON.stringify(servicesArray));
       localStorage.setItem("services", JSON.stringify(res?.data?.data));
       gettingServices(countryName);
-      // setLoader("none");
     } catch (error) {
-      // console.log(error);
       setLoader("none");
       toast.error(
         error?.data?.message || error?.message || error?.data?.data?.message
@@ -115,8 +104,6 @@ const DailyRevenueAdminPage = () => {
     let filteredServices = services2.filter(
       (data) => data?.country == countryName
     );
-    // console.log(filteredServices);
-    // setServices(services2);
     setServices(filteredServices);
     getDataFromBackend(filteredServices[0]?.serviceName, services2);
   };
@@ -134,8 +121,6 @@ const DailyRevenueAdminPage = () => {
 
   const [service, setService] = useState("");
   const [responseService, setResponseService] = useState("");
-
-  // console.log(service);
 
   const fetchSubServices = async (serviceid) => {
     try {
@@ -169,12 +154,10 @@ const DailyRevenueAdminPage = () => {
   //Method to get data from Backend
   const getDataFromBackend = async (service2, allServices) => {
     setService(service2);
-    console.log(service2, "s2");
     const serviceid = allServices.filter(
       (data) => data?.serviceName == service2
     );
 
-    console.log(serviceid, "sii");
     if (serviceid.length > 0) {
       const subServiceValue = await fetchSubServices(serviceid[0]?.id);
       let data = {
@@ -215,16 +198,13 @@ const DailyRevenueAdminPage = () => {
 
   //Method to handle response
   const handleDataResponse = (e) => {
-    // console.log(e);
     if (e.response === "error") {
       setLoader("none");
       toast.error(e.error?.response?.data?.message || e.error?.message);
       throw new Error("Token Expired , Please Login!");
     } else {
       setLoader("none");
-      // console.log("Backend e", e);
       const dataFromBackend = e.data;
-      // console.log("DataFromBackend", dataFromBackend);
       const dataDateManupulate = dataFromBackend.map((dataItem) => {
         return {
           id: dataItem?.id,
@@ -250,7 +230,6 @@ const DailyRevenueAdminPage = () => {
           return dataItem.totalRevenue;
         })
       );
-      // console.log(biggest);
       setResponseService(e.service);
       setBiggest(biggestValue);
       const biggestValueRenewal = Math.max.apply(
@@ -267,7 +246,6 @@ const DailyRevenueAdminPage = () => {
         })
       );
       setBiggestSubscription(biggestValueSubscription);
-      // console.log(biggest);
     }
   };
 
@@ -343,7 +321,6 @@ const DailyRevenueAdminPage = () => {
     const countries_variables = clients_variable?.filter(
       (data) => data?.username == username
     );
-    console.log(countries_variables, "cvvvv");
     setCountries(countries_variables[0]?.countries);
     setCountry(countries_variables[0]?.countries[0]);
     setClientForDropdown(client);
@@ -534,7 +511,7 @@ const DailyRevenueAdminPage = () => {
                 responsive
                 scrollable
                 scrollHeight="500px"
-                rows={16}
+                rows={40}
                 paginator
                 header={header}
               >

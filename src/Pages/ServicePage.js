@@ -22,6 +22,7 @@ import { PublisherModalContext } from "../Context/Publisher-Modal-Context/Publis
 import PublisherDummyHitModal from "../NewComponents/Publisher-Form-Modals/PublisherDummyHitModal";
 import { PublisherDummyHitModalContext } from "../Context/Publisher-Modal-Context/PublisherDummyHitModalContext";
 
+// SERVICE PAGE (ADD NETWORK PAGE...)
 const ServicePage = () => {
   const [publisherData, setPublisherData] = useState();
   const [loader, setLoader] = useState("block");
@@ -33,20 +34,21 @@ const ServicePage = () => {
   const { openInputHandler } = useContext(PublisherDummyHitModalContext);
   const [isShowPublisher, setIsShowPublisher] = useState(false);
 
-  const navigate = useNavigate();
-
   const location = useLocation();
 
+  // GET THE MAIN SERVICE ID AND NAME FROM LOCATION STATES GOT FROM DASHBOARD PAGE...
   useEffect(() => {
     setMainServiceId(location?.state?.mainServiceId);
     setMainServiceName(location?.state?.mainServiceName);
   }, [location]);
 
+  // GET THE PUBLISHER DATA OF THAT SUB-SERVICE...
   useEffect(() => {
     fetchDataFromBackend();
     setIsShowPublisher(JSON.parse(localStorage.getItem("showAddPublisher")));
   }, [serviceName, id]);
 
+  // METHOD TO GET THE PUBLISHER DATA OF SUB-SERVICE..
   const fetchDataFromBackend = async () => {
     setLoader("block");
     let token = localStorage.getItem("userToken");
@@ -58,7 +60,6 @@ const ServicePage = () => {
         "",
         { headers: headers }
       );
-      console.log(response.data.data, "data 7126879");
       setPublisherData(response.data.data);
       setLoader("none");
     } catch (error) {
@@ -69,6 +70,7 @@ const ServicePage = () => {
     }
   };
 
+  // METHOD TO HANDLE DELETE...
   const handleDelete = async ({ id, name }) => {
     if (window.confirm(`Are you sure you want to delete publisher ${name}`)) {
       let token = localStorage.getItem("userToken");
@@ -86,6 +88,7 @@ const ServicePage = () => {
     }
   };
 
+  // METHOD TO HANDLE ENABLE/DISABLE CHANGE...
   const handleChange = async (id, status) => {
     const data = { id, status: status == 1 ? 0 : 1 };
     try {
@@ -102,33 +105,6 @@ const ServicePage = () => {
       );
     }
   };
-
-  useEffect(() => {
-    const handleBeforeUnload = () => {
-      // Store some information in local storage
-      localStorage.setItem("pageRefreshed", "true");
-    };
-
-    // Listen for the beforeunload event
-    window.addEventListener("beforeunload", handleBeforeUnload);
-
-    // Cleanup the event listener when the component unmounts
-    return () => {
-      window.removeEventListener("beforeunload", handleBeforeUnload);
-    };
-  }, []);
-
-  useEffect(() => {
-    // Check if the page was refreshed
-    const pageRefreshed = localStorage.getItem("pageRefreshed");
-    if (pageRefreshed === "true") {
-      // Redirect the user to the desired page on page refresh
-      window.location.replace("/dashboard");
-    }
-
-    // Cleanup local storage
-    localStorage.removeItem("pageRefreshed");
-  }, []);
 
   return (
     <>

@@ -5,7 +5,6 @@ import classes from "./Graph.module.css";
 export default function LineGraph({ data }) {
   const [chartData, setChartData] = useState({});
   const [chartOptions, setChartOptions] = useState({});
-  console.log(data, "datamain");
 
   useEffect(() => {
     const documentStyle = getComputedStyle(document.documentElement);

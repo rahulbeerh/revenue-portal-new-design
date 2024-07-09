@@ -107,7 +107,6 @@ function ChildModal({ openChildModal, closeChildModal,getPublishers}) {
       toast.success("Publisher added successfully!");
       handleClose();
     } catch (error) {
-      console.log(error);
       toast.error(
       error?.response?.data?.message || error?.message || error?.data?.message 
       );
@@ -190,7 +189,6 @@ const AdvertiserFormModal = (props) => {
         headers: headers,
       });
       setPublisherOptions(res?.data?.result);
-      // console.log(res,'res');
     } catch (error) {
       toast.error(error?.message || error?.data?.message);
     }
@@ -226,7 +224,6 @@ const AdvertiserFormModal = (props) => {
     setCountry(event.target.value);
     //hit api to fetch OPerators
   };
-  // console.log(country, "2");
 
   const handlePublisherChange = async (event) => {
     setPublisher(event.target.value);
@@ -234,7 +231,6 @@ const AdvertiserFormModal = (props) => {
 
   useEffect(() => {
     if (country) {
-      // console.log(country); // This will log the updated state.
       getOperatorOptionsFromBackend();
       setOperator("");
     }
@@ -250,15 +246,11 @@ const AdvertiserFormModal = (props) => {
       const response = await axios.post(fetchOperatorApi, data, {
         headers: headers,
       });
-      // console.log(response, "3");
       setOperatorOptions(response.data.data);
-      // setLoading("none");
     } catch (error) {
       toast.error(
         error?.data?.message || error?.message || error?.response?.data?.message
       );
-      // setLoading("none");
-      // console.log(error);
     }
   }
 
@@ -331,7 +323,6 @@ const AdvertiserFormModal = (props) => {
       // serviceUrl.includes("sub_aff_id=<")
       serviceUrl.includes("<CLICK_ID>")
     ) {
-      // console.log("true");
       // let index = serviceUrl.indexOf("ext_ref=<");
 
       // let index2 = serviceUrl?.indexOf("&bmgfy_transid=<");
@@ -361,7 +352,6 @@ const AdvertiserFormModal = (props) => {
       // const stringCheck6 = string6.includes("CLICK_ID");
       // const stringCheck7 = string7.includes("CLICK_ID");
 
-      // console.log(stringCheck);
 
       // if (
       //   !stringCheck ||
@@ -387,7 +377,6 @@ const AdvertiserFormModal = (props) => {
 
       sendDataToBackend();
     } else {
-      // console.log("error");
       setServiceUrlError(true);
       toast.error("Wrong Url");
     }

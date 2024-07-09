@@ -9,7 +9,6 @@ import {
 } from "../Data/Api";
 import classes from "./DailyRevenuePage.module.css";
 import moment from "moment";
-import { useNavigate } from "react-router-dom";
 import NewSidebar from "../NewComponents/Sidebar/NewSidebar";
 import NewHeader from "../NewComponents/Header/NewHeader";
 import { Dropdown } from "primereact/dropdown";
@@ -19,15 +18,14 @@ import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import date from "../utils/date";
 import PublisherSubscriptionPage from "./PublisherSubscriptionPage";
-import { Button } from "primereact/button";
 import { InputText } from "primereact/inputtext";
 import { Dialog } from "primereact/dialog";
 import Loading from "../NewComponents/Loading-States/Loading";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import { IconButton } from "@mui/material";
 
+// PUBLISHER TRAFFIC PAGE...
 const PublisherTrafficPage = () => {
-  const navigate = useNavigate();
   const [loading, setLoading] = useState("block");
   const [publisherData, setPublisherData] = useState([]);
   const [startDate, setStartDate] = useState(
@@ -61,6 +59,7 @@ const PublisherTrafficPage = () => {
     setSidebarHide(JSON.parse(localStorage.getItem("sidebar")));
   };
 
+  // FETCH THE PUBLISHER TRAFFIC SERVICES AND PUBLISHER DATA..
   const fetchPublisherTrafficServices = async () => {
     const data = {
       client: localStorage.getItem("userName"),
@@ -77,15 +76,16 @@ const PublisherTrafficPage = () => {
       setServices(res?.data?.services);
       setPublishers(res?.data?.publisher);
 
+      // ADD NEW OPTION IN DROPDOWN WITH SERVICE AS "ALL"
       let newService = { service: "All" };
 
       setServices((prevServices) => {
-        // Inserting the new service at the first index
         return [newService, ...prevServices];
       });
 
       setService(newService?.service);
 
+      // SAME DO WITH PUBLISHER...
       let newPublisher = { publisher: "All" };
       setPublishers((prevPublishers) => {
         // Inserting the new service at the first index
@@ -94,11 +94,7 @@ const PublisherTrafficPage = () => {
 
       setPublisher(newPublisher?.publisher);
 
-      // console.log(res);
-      // setLoading("none");
     } catch (error) {
-      // console.log(error);
-      // setLoading("none");
       toast.error(
         error?.response?.data?.message || error?.message || error?.data?.message
       );
@@ -161,11 +157,13 @@ const PublisherTrafficPage = () => {
     }
   };
 
+  // FETCH SERVICES AND PUBLISHER DATA AND THAN FETCH DATA OF THE "ALL" SERVICE AND PUBLISHER INITIALLY...
   useEffect(() => {
     fetchPublisherTrafficServices();
     fetchDataFromBackend(true, startDate, endDate, service, publisher);
   }, []);
 
+  // REFETCH THE DATA AFTER EVERY 10 SECONDS...
   useEffect(() => {
     const intervalId = setInterval(() => {
       if (!document.hidden && !isRequestPending) {
@@ -176,19 +174,23 @@ const PublisherTrafficPage = () => {
     return () => clearInterval(intervalId);
   }, [startDate, endDate, service, publisher, isRequestPending]);
 
+  // FORM SUBMISSION HANDLER...
   const submitHandler = async (e) => {
     e.preventDefault();
     fetchDataFromBackend(true, startDate, endDate, service, publisher);
   };
 
+  // METHOD TO HANDLE SERVICE CHANGE...
   const handleServiceChange = (service) => {
     setService(service);
   };
 
+  // METHOD TO HANDLE PUBLISHER CHANGE...
   const handlePublisherChange = (publisher) => {
     setPublisher(publisher);
   };
 
+  // DATE CONVERTION FUNCTIONS..
   const convertStartDate = (utcDate) => {
     setStartDateForCalendar(utcDate);
     setStartDate(moment(new Date(utcDate)).format("yyyy-MM-DD"));
@@ -199,6 +201,7 @@ const PublisherTrafficPage = () => {
     setEndDate(moment(new Date(utcDate)).format("yyyy-MM-DD"));
   };
 
+  // CLICKID SEARCH HANDLER..
   const clickIdSearch = async (e) => {
     e.preventDefault();
     if (clickId.trim().length <= 0) {

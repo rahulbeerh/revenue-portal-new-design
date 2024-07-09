@@ -63,16 +63,13 @@ const MonthlyRevenueAdminPage = () => {
           headers: headers,
         }
       );
-      // console.log("client services api",res);
       let servicesArray = [];
       res.data.data.map((service) => {
         return servicesArray.push(service.serviceName);
       });
       localStorage.setItem("services", JSON.stringify(servicesArray));
       gettingServices();
-      // setLoader("none");
     } catch (error) {
-      // console.log(error);
       setLoader("none");
       toast.error(
         error?.data?.message || error?.message || error?.data?.data?.message
@@ -107,7 +104,6 @@ const MonthlyRevenueAdminPage = () => {
 
   //Hook to store data
   const [data, setData] = useState([]);
-  // console.log(data);
 
   //Hook to store biggest value
   const [biggest, setBiggest] = useState(0);
@@ -124,7 +120,6 @@ const MonthlyRevenueAdminPage = () => {
       }
     } else {
       setLoader("none");
-      // console.log(e);
       const dataDateManupulate = e.data.map((dataItem) => {
         return {
           id: `${dataItem.MONTH}-${dataItem.YEAR}`,
@@ -172,7 +167,6 @@ const MonthlyRevenueAdminPage = () => {
 
   //Method to handle service choose
   const handleChooseService = (serviceName) => {
-    // console.log("serviceName ",serviceName);
     setService(serviceName);
     getDataFromBackend(serviceName);
   };
@@ -183,7 +177,6 @@ const MonthlyRevenueAdminPage = () => {
   };
 
   const dataLength = data.length;
-  // console.log(dataLength);
   let width = 3000;
   if (dataLength > 10) {
     width = 1000;
@@ -215,7 +208,6 @@ const MonthlyRevenueAdminPage = () => {
 
   const header = <ExportMonthlyRevenueToExcel data={[...data, totals]} />;
 
-  // console.log([...data,totals])
   return (
     <>
       <Loader value={loader} />
@@ -330,7 +322,7 @@ const MonthlyRevenueAdminPage = () => {
                 responsive
                 scrollable
                 scrollHeight="500px"
-                rows={15}
+                rows={40}
                 paginator
                 header={header}
               >

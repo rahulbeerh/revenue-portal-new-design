@@ -25,9 +25,6 @@ const AdvertiserDummyHitModal = () => {
     const [url, setUrl] = useState("");
     const [loading, setLoading] = useState(false);
 
-    console.log({postbackUrl,client:partnerName,service:service})
-
-
     const submitHandler=(e)=>{
         e.preventDefault();
         if (url.trim().length > 0) {

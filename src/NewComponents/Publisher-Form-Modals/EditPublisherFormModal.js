@@ -79,7 +79,6 @@ const EditPublisherFormModal = (props) => {
   const [service, setService] = useState("");
   const [skip, setSkip] = useState(0);
   const [dailyCap, setDailyCap] = useState("");
-  //   console.log(id);
 
   const [loading, setLoading] = useState("block");
 
@@ -127,7 +126,6 @@ const EditPublisherFormModal = (props) => {
         const response = await axios.post(fetchCountryApi, data, {
           headers: headers,
         });
-        // console.log(response, "1");
         setCountryOptions(response.data.data);
         setLoading("none");
       } catch (error) {
@@ -137,7 +135,6 @@ const EditPublisherFormModal = (props) => {
             error?.response?.data?.message
         );
         setLoading("none");
-        // console.log(error);
       }
     }
     getCountryOptionsFromBackend();
@@ -183,8 +180,6 @@ const EditPublisherFormModal = (props) => {
       // const string5 = serviceUrl?.substring(index5 + 9, indexLast - 1);
 
       // const checkLastCharacter = serviceUrl.substring(-1).includes(">");
-      // console.log(checkLastCharacter);
-      // console.log(serviceUrl.substring(-1));
 
       // const stringCheck = string.includes("CLICK_ID");
 
@@ -192,8 +187,6 @@ const EditPublisherFormModal = (props) => {
       // const stringCheck3 = string3.includes("CLICK_ID");
       // const stringCheck4 = string4.includes("CLICK_ID");
       // const stringCheck5 = string5.includes("CLICK_ID");
-
-      // console.log(stringCheck);
 
       if (
         // !stringCheck ||
@@ -207,7 +200,6 @@ const EditPublisherFormModal = (props) => {
       ) {
         setServiceUrlError(true);
         setPostbackUrlError(false);
-        // console.log("kj");
         toast.error("Wrong Url");
         return;
       }
@@ -225,7 +217,6 @@ const EditPublisherFormModal = (props) => {
         skip,
         dailyCap,
       };
-      // console.log(data);
       let token = localStorage.getItem("userToken");
       let headers = { Authorization: "Bearer " + token };
       try {
@@ -236,16 +227,13 @@ const EditPublisherFormModal = (props) => {
 
         setServiceUrlError(false);
         setPostbackUrlError(false);
-        // console.log(response);
         closeEditHandler();
         props.fetchDataFromBackend();
       } catch (error) {
-        // console.log(error);
         toast.error(error);
         closeEditHandler();
       }
     } else {
-      // console.log("error");
       setServiceUrlError(true);
       setPostbackUrlError(false);
       toast.error("Wrong Url");
@@ -256,18 +244,15 @@ const EditPublisherFormModal = (props) => {
     setCountry(event.target.value);
     //hit api to fetch OPerators
   };
-  // console.log(country, "2");
 
   useEffect(() => {
     if (country) {
-      // console.log(country); // This will log the updated state.
       getOperatorOptionsFromBackend();
     }
   }, [country]);
 
   async function getOperatorOptionsFromBackend() {
     try {
-      // setLoading("block");
       const client = localStorage.getItem("userName");
       const data = { client, country };
       let token = localStorage.getItem("userToken");
@@ -275,15 +260,11 @@ const EditPublisherFormModal = (props) => {
       const response = await axios.post(fetchOperatorApi, data, {
         headers: headers,
       });
-      // console.log(response, "3");
       setOperatorOptions(response.data.data);
-      // setLoading("none");
     } catch (error) {
       toast.error(
         error?.data?.message || error?.message || error?.response?.data?.message
       );
-      // setLoading("none");
-      // console.log(error);
     }
   }
 

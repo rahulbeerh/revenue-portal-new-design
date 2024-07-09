@@ -110,7 +110,6 @@ function ChildModal({ openChildModal, closeChildModal, getPublishers }) {
       toast.success("Publisher added successfully!");
       handleClose();
     } catch (error) {
-      console.log(error);
       toast.error(
         error?.response?.data?.message || error?.message || error?.data?.message
       );
@@ -195,7 +194,6 @@ const EditAdvertiserFormModal = (props) => {
         headers: headers,
       });
       setPublisherOptions(res?.data?.result);
-      // console.log(res,'res');
     } catch (error) {
       toast.error(error?.message || error?.data?.message);
     }
@@ -317,8 +315,6 @@ const EditAdvertiserFormModal = (props) => {
       // const string7 = serviceUrl?.substring(index7 + 9, indexLast - 1);
 
       // const checkLastCharacter = serviceUrl.substring(-1).includes(">");
-      // console.log(checkLastCharacter);
-      // console.log(serviceUrl.substring(-1));
 
       // const stringCheck = string.includes("CLICK_ID");
 
@@ -329,7 +325,6 @@ const EditAdvertiserFormModal = (props) => {
       // const stringCheck6 = string6.includes("CLICK_ID");
       // const stringCheck7 = string7.includes("CLICK_ID");
 
-      // console.log(stringCheck);
 
       // if (
       //   !stringCheck ||
@@ -355,7 +350,6 @@ const EditAdvertiserFormModal = (props) => {
 
       sendDataToBackend();
     } else {
-      // console.log("error");
       setServiceUrlError(true);
       toast.error("Wrong Url");
     }

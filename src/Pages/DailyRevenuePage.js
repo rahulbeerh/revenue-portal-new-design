@@ -4,7 +4,6 @@ import { fetchClientSubServicesApi, sendDataApi } from "../Data/Api";
 import PostSecure from "../Request/PostSecure";
 import { toast, ToastContainer } from "react-toastify";
 import Loader from "../NewComponents/Loading-States/Loader";
-import { useNavigate } from "react-router-dom";
 import NewHeader from "../NewComponents/Header/NewHeader";
 import NewSidebar from "../NewComponents/Sidebar/NewSidebar";
 import classes from "./DailyRevenuePage.module.css";
@@ -20,8 +19,10 @@ import LineGraph from "../NewComponents/Graphs/LineGraph";
 import BarGraph from "../NewComponents/Graphs/BarGraph";
 import VerticalBarGraph from "../NewComponents/Graphs/VerticalBarGraph";
 
+// DAILY REVENUE PAGE....
 const DailyRevenuePage = () => {
-  const navigate = useNavigate();
+  
+  // FIRST GET THE SERVICES FROM LOCAL-STORAGE...
   useEffect(() => {
     gettingServices();
   }, []);
@@ -61,22 +62,22 @@ const DailyRevenuePage = () => {
   const [biggestSubscription, setBiggestSubscription] = useState(0);
   const [tabIndex, setTabIndex] = useState(0);
 
-  const dt = useRef(null);
-
+  // GET THE SERVICES FROM THE LOCAL-STORAGE...
   const gettingServices = () => {
     let services2 = JSON.parse(localStorage.getItem("services"));
     let countries2 = JSON.parse(localStorage.getItem("country"));
-    console.log(services2, "s2");
-    console.log(countries2, "c2");
     let filteredServices = services2.filter(
       (service) => service?.country == countries2[0]?.country
     );
     setCountry(countries2[0]?.country);
     setServices(filteredServices);
     setCountries(countries2);
+
+    // GET THE DATA OF 1'ST SERVICE....
     getDataFromBackend(filteredServices[0]?.serviceName, services2);
   };
 
+  // FUNCTION FOR GETTING THE SUB-SERVICES OF THE MAIN SERVICE...
   const fetchSubServices = async (serviceid) => {
     try {
       let token = localStorage.getItem("userToken");
@@ -108,14 +109,15 @@ const DailyRevenuePage = () => {
 
   const getDataFromBackend = async (service2, servicesAll) => {
     setService(service2);
+
+    // TAKE OUT THE SERVICE ID FROM THAT SERVICE...
     const serviceid = servicesAll.filter(
       (data) => data?.serviceName == service2
     );
-    // setServiceId(() =>
-    //   services.filter((data) => data?.serviceName == service2)
-    // );
 
     if (serviceid.length > 0) {
+
+      // GET THE 1'ST SUB-SERVICE OF THAT SERVICE THROUGH THIS API... 
       const subServiceValue = await fetchSubServices(serviceid[0]?.id);
       let data = {
         from: dates.from,
@@ -124,6 +126,7 @@ const DailyRevenuePage = () => {
         subServiceName: subServiceValue,
       };
 
+      // HIT THE API TO GET THE DATA OF SERVICE'S SUB-SERVICE...
       let promise = PostSecure(sendDataApi, data);
       promise
         .then((e) => {
@@ -152,6 +155,7 @@ const DailyRevenuePage = () => {
 
   const [data, setData] = useState([]);
 
+  // HANDLING THE RESPONSE FROM THE API
   const handleDataResponse = (e) => {
     if (e.response === "error") {
       setLoader("none");
@@ -161,8 +165,10 @@ const DailyRevenuePage = () => {
       }
     } else {
       setLoader("none");
-      const dataFromBackend = e.data;
-      const dataDateManupulate = dataFromBackend.map((dataItem) => {
+
+      // GETTING THE DATA AND MANUPULATING SOME DATA AND LIMITING THE DATA TO 33 LIMIT
+      const dataFromBackend = e?.data;
+      const dataManupulate = dataFromBackend.map((dataItem) => {
         return {
           id: dataItem?.id,
           misDate: dataItem?.misDate.substring(0, 10),
@@ -178,62 +184,23 @@ const DailyRevenuePage = () => {
         };
       });
 
-      const dataLimit = dataDateManupulate.slice(0, 33);
+      const dataLimit = dataManupulate.slice(0, 33);
       setData(dataLimit.reverse());
-
-      const biggestValue = Math.max.apply(
-        Math,
-        dataLimit.map(function (dataItem) {
-          return dataItem.totalRevenue;
-        })
-      );
       setResponseService(e.service);
-      setBiggest(biggestValue);
-      const biggestValueRenewal = Math.max.apply(
-        Math,
-        dataLimit.map(function (dataItem) {
-          return dataItem.renewalsRevenue;
-        })
-      );
-      setBiggestRenewal(biggestValueRenewal);
-      const biggestValueSubscription = Math.max.apply(
-        Math,
-        dataLimit.map(function (dataItem) {
-          return dataItem.subscriptionRevenue;
-        })
-      );
-      setBiggestSubscription(biggestValueSubscription);
     }
   };
 
-  //Method to handle form submit
+  // FORM SUBMISSION HANDLER...
   const handleFormSubmit = (e) => {
     e.preventDefault();
     setLoader("block");
     getDataFromBackend2(subService);
-    // getDataFromBackend(service);
   };
 
   //Hook to store loader div state
   const [loader, setLoader] = useState("block");
 
-  const dataLength = data.length;
-  let width = 3000;
-  if (dataLength > 25) {
-    width = 3000;
-  }
-  if (dataLength > 17 && dataLength <= 25) {
-    width = 2200;
-  }
-  if (dataLength > 10 && dataLength <= 17) {
-    width = 1800;
-  }
-  if (dataLength >= 5 && dataLength <= 10) {
-    width = 1100;
-  }
-  if (dataLength > 0 && dataLength < 5) {
-    width = 500;
-  }
+  // CALCULATING THE TOTALS.....
 
   const monthlyTotalSubscriptions = data.reduce(
     (total, dataItem) => total + dataItem.subscriptions,
@@ -266,8 +233,10 @@ const DailyRevenuePage = () => {
     totalRevenue: monthlyTotalRevenue.toFixed(0),
   };
 
+  // TOTAL CALCULATION FINISHED HERE...
+
+  // COUNTRY CHANGE HANDLER...
   const handleCountryChange = (selectedCountry) => {
-    console.log(selectedCountry, "sccc");
     setCountry(selectedCountry);
     let servicesAll = JSON.parse(localStorage.getItem("services"));
     let filteredServices = servicesAll.filter(
@@ -277,14 +246,17 @@ const DailyRevenuePage = () => {
     getDataFromBackend(filteredServices[0]?.serviceName, servicesAll);
   };
 
+  // SERVICE CHANGE HANDLER...
   const handleServiceChange = (selectedService) => {
     getDataFromBackend(selectedService, services);
   };
 
+  // SUB-SERVICE CHANGE HANDLER....
   const handleSubServiceChange = (selectedSubService) => {
     getDataFromBackend2(selectedSubService);
   };
 
+  // CONVERT DATE FUNCTIONS...
   const convertStartDate = (utcDate) => {
     setStartDateForCalendar(utcDate);
     setDates({
@@ -298,6 +270,7 @@ const DailyRevenuePage = () => {
     setDates({ ...dates, to: moment(new Date(utcDate)).format("yyyy-MM-DD") });
   };
 
+  // TAB CHANGE HANDLER...
   const handleTabChanged = (indexValue) => {
     setTabIndex(indexValue);
   };
@@ -444,7 +417,7 @@ const DailyRevenuePage = () => {
                 responsive
                 scrollable
                 scrollHeight="500px"
-                rows={16}
+                rows={40}
                 paginator
                 header={header}
               >

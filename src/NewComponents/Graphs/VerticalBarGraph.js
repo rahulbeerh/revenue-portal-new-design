@@ -38,8 +38,8 @@ export default function VerticalBarGraph({ data }) {
     };
     const options = {
       indexAxis: "y",
-      maintainAspectRatio: true,
-      aspectRatio: 0.8,
+      maintainAspectRatio: false,
+      aspectRatio: 0.3,
       plugins: {
         legend: {
           labels: {

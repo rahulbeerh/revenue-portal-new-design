@@ -76,15 +76,12 @@ const PublisherFormModal = ({ serviceName, id, fetchDataFromBackend }) => {
   const [skip, setSkip] = useState(0);
   const [dailyCap, setDailyCap] = useState("");
 
-  console.log(dailyCap, "d");
-
   const [serviceUrlError, setServiceUrlError] = useState(false);
   const [postbackUrlError, setPostbackUrlError] = useState(false);
 
   const [countryOptions, setCountryOptions] = useState([]);
   const [operatorOptions, setOperatorOptions] = useState([]);
   const [loading, setLoading] = useState("block");
-  // console.log({ serviceUrlError, postbackUrlError });
 
   useEffect(() => {
     let client = localStorage.getItem("userName");
@@ -104,7 +101,6 @@ const PublisherFormModal = ({ serviceName, id, fetchDataFromBackend }) => {
         const response = await axios.post(fetchCountryApi, data, {
           headers: headers,
         });
-        // console.log(response, "1");
         setCountryOptions(response.data.data);
         setLoading("none");
       } catch (error) {
@@ -114,13 +110,10 @@ const PublisherFormModal = ({ serviceName, id, fetchDataFromBackend }) => {
             error?.response?.data?.message
         );
         setLoading("none");
-        // console.log(error);
       }
     }
     getCountryOptionsFromBackend();
   }, [serviceName]);
-
-  // console.log({client,name,url,operator,country,service});
 
   const countrySelectHandler = (e) => {
     e.preventDefault();
@@ -129,7 +122,6 @@ const PublisherFormModal = ({ serviceName, id, fetchDataFromBackend }) => {
 
   const submitHandler = async (e) => {
     e.preventDefault();
-    // console.log({ service, name, country, url });
     if (
       client.trim().length === 0 ||
       name.trim().length === 0 ||
@@ -145,7 +137,6 @@ const PublisherFormModal = ({ serviceName, id, fetchDataFromBackend }) => {
     if (
       serviceUrl.includes("<CLICK_ID>") 
     ) {
-      // console.log("true");
       // let index = serviceUrl.indexOf("ext_ref=<");
 
       // let index2 = serviceUrl?.indexOf("&bmgfy_transid=<");
@@ -169,14 +160,11 @@ const PublisherFormModal = ({ serviceName, id, fetchDataFromBackend }) => {
       // const stringCheck4 = string4.includes("CLICK_ID");
       // const stringCheck5 = string5.includes("CLICK_ID");
 
-      // console.log(stringCheck);
-
       if (
        !serviceUrl.includes("<CLICK_ID>")
       ) {
         setServiceUrlError(true);
         setPostbackUrlError(false);
-        // console.log("kj");
         toast.error("Wrong Url");
         return;
       }
@@ -194,7 +182,6 @@ const PublisherFormModal = ({ serviceName, id, fetchDataFromBackend }) => {
         skip,
         dailyCap,
       };
-      // console.log(data);
       let token = localStorage.getItem("userToken");
       let headers = { Authorization: "Bearer " + token };
       try {
@@ -214,13 +201,11 @@ const PublisherFormModal = ({ serviceName, id, fetchDataFromBackend }) => {
 
         setServiceUrlError(false);
         setPostbackUrlError(false);
-        // console.log(response);
         closeHandler();
         fetchDataFromBackend();
         setLoading("none");
         toast.success("Publisher Added successfully");
       } catch (error) {
-        // console.log(error);
         setLoading("none");
         toast.error(error);
         closeHandler();
@@ -232,7 +217,6 @@ const PublisherFormModal = ({ serviceName, id, fetchDataFromBackend }) => {
       //   setServiceUrlError(false);
       // }
     } else {
-      // console.log("error");
       setServiceUrlError(true);
       setPostbackUrlError(false);
       toast.error("Wrong Url");
@@ -243,11 +227,9 @@ const PublisherFormModal = ({ serviceName, id, fetchDataFromBackend }) => {
     setCountry(event.target.value);
     //hit api to fetch OPerators
   };
-  // console.log(country, "2");
 
   useEffect(() => {
     if (country) {
-      // console.log(country); // This will log the updated state.
       getOperatorOptionsFromBackend();
       setOperator("");
     }
@@ -263,15 +245,12 @@ const PublisherFormModal = ({ serviceName, id, fetchDataFromBackend }) => {
       const response = await axios.post(fetchOperatorApi, data, {
         headers: headers,
       });
-      // console.log(response, "3");
       setOperatorOptions(response.data.data);
       // setLoading("none");
     } catch (error) {
       toast.error(
         error?.data?.message || error?.message || error?.response?.data?.message
       );
-      // setLoading("none");
-      // console.log(error);
     }
   }
 

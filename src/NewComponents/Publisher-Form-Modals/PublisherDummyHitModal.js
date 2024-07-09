@@ -27,7 +27,6 @@ const PublisherDummyHitModal = ({ fetchDataFromBackend }) => {
     useContext(PublisherDummyHitModalContext);
   const [url, setUrl] = useState("");
   const [loading, setLoading] = useState(false);
-  //   console.log({postbackUrl,service,partnerName});
   const submitHandler = async (e) => {
     e.preventDefault();
     if (url.trim().length > 0) {

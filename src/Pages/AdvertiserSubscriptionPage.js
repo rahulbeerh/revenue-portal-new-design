@@ -46,7 +46,6 @@ const AdvertiserSubscriptionPage = () => {
     setSidebarHide(JSON.parse(localStorage.getItem("sidebar")));
   };
 
-  console.log(client, "client");
   const fetchAdvertiserClients = async () => {
     const data = {
       client: localStorage.getItem("userName"),
@@ -111,7 +110,6 @@ const AdvertiserSubscriptionPage = () => {
       const res = await axios.post(advertiserSubscriptionApi, data, {
         headers: headers,
       });
-      console.log(res, "res");
       setData(res?.data?.result);
       setLoading("none");
     } catch (error) {

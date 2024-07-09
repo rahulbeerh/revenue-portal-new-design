@@ -10,6 +10,7 @@ import NewSidebar from "../NewComponents/Sidebar/NewSidebar";
 import NewHeader from "../NewComponents/Header/NewHeader";
 import TitleHeader from "../NewComponents/Header/TitleHeader";
 
+// DASHBOARD PAGE (ADD NETWORKS PAGE)
 const DashboardPage = ({
   serviceName,
   id,
@@ -23,8 +24,6 @@ const DashboardPage = ({
   const [loader, setLoader] = useState("block");
   const navigate = useNavigate();
 
-  console.log({ serviceName, id, mainServiceId, mainServiceName });
-
   const [sidebarHide, setSidebarHide] = useState(() =>
     localStorage.getItem("sidebar")
       ? JSON.parse(localStorage.getItem("sidebar"))
@@ -35,6 +34,7 @@ const DashboardPage = ({
     setSidebarHide(JSON.parse(localStorage.getItem("sidebar")));
   };
 
+  // GET THE SERVICES DATA ....
   useEffect(() => {
     const fetchDataFromBackend = async () => {
       setLoader("block");
@@ -44,7 +44,6 @@ const DashboardPage = ({
         const response = await axios.post(fetchAllServices, "", {
           headers: headers,
         });
-        console.log(response.data, "subservice response");
         setLoader("none");
         setServices(response.data.data);
         setFilteredServices(() =>
@@ -68,6 +67,7 @@ const DashboardPage = ({
     localStorage.setItem("showAddPublisher", false);
   }, []);
 
+  // FUNCTION TO HANDLE SERVICE AND SUB-SERVICE CLICK 
   const handleNavigateAndFilterServices = (
     path,
     serviceName,
@@ -76,7 +76,6 @@ const DashboardPage = ({
     idMainService,
     nameMainService
   ) => {
-    // console.log(serviceName, "siiiiiiiiii");
     setFilteredServices(() =>
       services.filter((service) => service?.service == serviceName)
     );
@@ -88,7 +87,6 @@ const DashboardPage = ({
     }
 
     if (checkMainService?.useMainService) {
-      console.log("clicked sub service");
       navigate(path, {
         state: {
           mainServiceId: mainServiceId,
@@ -183,7 +181,6 @@ const DashboardPage = ({
 
             <div className={classes.flex_container}>
               {filteredServices.map((service, i) => {
-                // console.log(service.id);
                 return (
                   <div key={i} className={classes.flex_item}>
                     <Button

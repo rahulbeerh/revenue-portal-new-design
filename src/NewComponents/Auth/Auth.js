@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 
+// AUTH COMPONENT , IT WILL CHECK IF THE CLIENT IS AUTHORIZED TO VISIT THE PAGE OR NOT...
 const Auth = ({ children, admin, conditionApply, condition }) => {
-  const navigate = useNavigate();
   const [auth, setAuth] = useState(false);
 
+  // CHECK IF THE TOKEN IS THERE OR IF THE CONDITION IS MATCHED OR NOT , THROW ERRORS , ELSE setAuth(true)
   useEffect(() => {
     let token = localStorage.getItem("userToken");
     if (!token || token == null || token == undefined || token == "") {

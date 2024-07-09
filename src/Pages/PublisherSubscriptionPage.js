@@ -7,8 +7,7 @@ import {
   publisherSubscriptionServicesApi,
   searchClickIdSubApi,
 } from "../Data/Api";
-import moment, { utc } from "moment";
-import { useNavigate } from "react-router-dom";
+import moment from "moment";
 import classes from "./DailyRevenuePage.module.css";
 import NewSidebar from "../NewComponents/Sidebar/NewSidebar";
 import NewHeader from "../NewComponents/Header/NewHeader";
@@ -24,6 +23,7 @@ import { InputText } from "primereact/inputtext";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import { IconButton } from "@mui/material";
 
+// PUBLISHER SUBSCRIPTION PAGE..
 const PublisherSubscriptionPage = ({ hide }) => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState("block");
@@ -59,8 +59,7 @@ const PublisherSubscriptionPage = ({ hide }) => {
     setSidebarHide(JSON.parse(localStorage.getItem("sidebar")));
   };
 
-  const navigate = useNavigate();
-
+  // FETCH SERVICES AND PUBLISHER AND INSERT "ALL" AS FIRST OPTION IN THESE TWO DATA ... 
   const fetchServices = async () => {
     try {
       setLoading("block");
@@ -92,7 +91,6 @@ const PublisherSubscriptionPage = ({ hide }) => {
 
       setLoading("none");
     } catch (error) {
-      // console.log(error);
       toast.error(
         error?.data?.message ||
           error?.message ||
@@ -104,12 +102,10 @@ const PublisherSubscriptionPage = ({ hide }) => {
       if (error?.response?.status == 403) {
         throw new Error("Token Expired , Please Login!");
       }
-      // setTimeout(() => {
-      //   navigate("/");
-      // }, 1000);
     }
   };
 
+  // METHOD TO GET THE DATA ....
   async function fetchDataFromBackend(
     showLoading,
     dateStart,
@@ -152,9 +148,7 @@ const PublisherSubscriptionPage = ({ hide }) => {
       setData(res.data.data);
       setLoading("none");
       setIsRequestPending(false);
-      // console.log(res, "2");
     } catch (error) {
-      // console.log(error);
       setIsRequestPending(false);
       toast.error(
         error?.data?.message ||
@@ -169,11 +163,13 @@ const PublisherSubscriptionPage = ({ hide }) => {
     }
   }
 
+  // GET THE SERVICES AND DATA INITIALLY..
   useEffect(() => {
     fetchServices();
     fetchDataFromBackend(true, startDate, endDate, service, publisher);
   }, []);
 
+  // METHOD TO GET THE UPDATED DATA AFTER EVERY 10 SECONDS...
   useEffect(() => {
     const intervalId = setInterval(() => {
       if (!document.hidden && !isRequestPending) {
@@ -184,18 +180,23 @@ const PublisherSubscriptionPage = ({ hide }) => {
     return () => clearInterval(intervalId);
   }, [startDate, endDate, service, publisher, isRequestPending]);
 
+  // METHOD TO HANDLE FORM SUBMISSION...
   const submitHandler = async (e) => {
     e.preventDefault();
     fetchDataFromBackend(true, startDate, endDate, service, publisher);
   };
+
+  // METHOD TO HANDLE SERVICE CHANGE...
   const handleServiceChange = (service) => {
     setService(service);
   };
 
+  // METHOD TO HANDLE PUBLISHER CHANGE...
   const handlePublisherChange = (publisher) => {
     setPublisher(publisher);
   };
 
+  // DATE CONVERSION METHODS...
   const convertStartDate = (utcDate) => {
     setStartDateForCalendar(utcDate);
     setStartDate(moment(new Date(utcDate)).format("yyyy-MM-DD"));
@@ -206,6 +207,7 @@ const PublisherSubscriptionPage = ({ hide }) => {
     setEndDate(moment(new Date(utcDate)).format("yyyy-MM-DD"));
   };
 
+  // CLICKID SEARCH HANDLER..
   const clickIdSearch = async (e) => {
     e.preventDefault();
     if (clickId.trim().length <= 0) {

@@ -110,7 +110,6 @@ const AdvertiserTrafficPage = () => {
       const res = await axios.post(advertiserTrafficApi, data, {
         headers: headers,
       });
-      console.log(res, "res");
       setTraffic(res.data.result);
       setLoading("none");
     } catch (error) {
@@ -155,9 +154,6 @@ const AdvertiserTrafficPage = () => {
     setEndDateForCalendar(utcDate);
     setEndDate(moment(new Date(utcDate)).format("yyyy-MM-DD"));
   };
-
-  console.log(client, "c");
-  console.log(service, "s");
 
   return (
     <>

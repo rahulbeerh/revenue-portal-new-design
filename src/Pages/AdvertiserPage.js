@@ -20,7 +20,6 @@ import {
 } from "../Data/Api";
 import EditAdvertiserFormModal from "../NewComponents/Advertiser-Form-Modals/EditAdvertiserFormModal";
 import { EditAdvertiserContext } from "../Context/Advertiser-Modal-Context/EditAdvertiserContext";
-import { useNavigate } from "react-router-dom";
 import SendIcon from "@mui/icons-material/Send";
 import AdvertiserDummyHitModal from "../NewComponents/Advertiser-Form-Modals/AdvertiserDummyHitModal";
 import { AdvertiserDummyHitContext } from "../Context/Advertiser-Modal-Context/AdvertiserDummyHitContext";
@@ -40,7 +39,6 @@ const AdvertiserPage = () => {
   const [filteredData, setFilteredData] = useState([]);
   const [client, setClient] = useState("");
   const [service, setService] = useState("");
-  const navigate = useNavigate();
 
   const [sidebarHide, setSidebarHide] = useState(() =>
   localStorage.getItem("sidebar")
@@ -123,7 +121,6 @@ const sidebarHandler = () => {
 
   const handleClientChange = (e) => {
     setClient(() => e.target.value);
-    console.log(client, "cl");
 
     if (client.length > 0) {
       setService("");

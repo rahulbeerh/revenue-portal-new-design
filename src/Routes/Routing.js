@@ -2,7 +2,6 @@ import React from "react";
 import {
   createBrowserRouter,
   RouterProvider,
-  Navigate,
 } from "react-router-dom";
 import LoginPage from "../Pages/LoginPage";
 import DailyRevenuePage from "../Pages/DailyRevenuePage";
@@ -19,8 +18,9 @@ import DailyRevenueAdminPage from "../Pages/DailyRevenueAdminPage";
 import DashboardAdminPage from "../Pages/DashboardAdminPage";
 import MonthlyRevenueAdminPage from "../Pages/MonthlyRevenueAdminPage";
 import ErrorBoundary from "../Pages/ErrorBoundary";
-import Auth from "../NewComponents/Auth/Auth";
+import Auth from "../NewComponents/Auth/Auth"; 
 
+// DEFINING THE ROUTES OF THE PAGES....
 const router = createBrowserRouter([
   {
     path: "/",

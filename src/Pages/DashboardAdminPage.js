@@ -37,7 +37,6 @@ const DashboardAdminPage = () => {
 
   const handleDateChange = (date) => {
     setSelectedDate(date);
-    console.log(date);
     setMonth(date.getMonth() + 1);
     setYear(date.getFullYear());
     getDataFromBackend(client);
@@ -75,7 +74,6 @@ const DashboardAdminPage = () => {
       setData(res?.data?.data);
       setLoader("none");
     } catch (error) {
-      console.log(error, "e");
       setLoader("none");
       toast.error(
         error?.response?.data?.message || error?.data?.message || error?.message

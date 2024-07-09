@@ -93,9 +93,7 @@ const ExportDailyRevenueAdmin = ({ data, handleTabChanged, tabIndex }) => {
         J: totalRevenue,
       });
     });
-    // console.log(table);
     const finalData = [...table];
-    // console.log(finalData);
 
     //creating workbook
     const wb = XLSX.utils.book_new();
