@@ -1,5 +1,4 @@
 import React, { useContext, useState, useEffect } from "react";
-import { ModalContext } from "../../Context/ModalContext";
 import {
   TextField,
   Button,
@@ -17,6 +16,7 @@ import { toast, ToastContainer } from "react-toastify";
 import Loader from "../Loading-States/Loader";
 import Loading from "../Loading-States/Loading";
 import classes from "./PublisherFormModal.module.css";
+import { PublisherModalContext } from "../../Context/Publisher-Modal-Context/PublisherModalContext";
 
 const marks = [
   {
@@ -64,8 +64,7 @@ const style = {
 };
 
 const PublisherFormModal = ({ serviceName, id, fetchDataFromBackend }) => {
-  console.log({ serviceName, id });
-  const { open, closeHandler } = useContext(ModalContext);
+  const { open, closeHandler } = useContext(PublisherModalContext);
   const [client, setClient] = useState("");
   const [name, setName] = useState("");
   const [amount,setAmount]=useState("");

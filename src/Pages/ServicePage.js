@@ -3,7 +3,6 @@ import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { Button, Switch, FormControlLabel, IconButton } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import classes from "./ServicePage.module.css";
-import { ModalContext } from "../Context/ModalContext";
 import PublisherFormModal from "../NewComponents/Publisher-Form-Modals/PublisherFormModal";
 import axios from "axios";
 import {
@@ -13,14 +12,15 @@ import {
 } from "../Data/Api";
 import { toast, ToastContainer } from "react-toastify";
 import EditPublisherFormModal from "../NewComponents/Publisher-Form-Modals/EditPublisherFormModal";
-import { EditModalContext } from "../Context/EditModalContext";
+import { EditPublisherModalContext } from "../Context/Publisher-Modal-Context/EditPublisherModalContext";
 import Loader from "../NewComponents/Loading-States/Loader";
 import SendIcon from "@mui/icons-material/Send";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
-import InputModal from "../NewComponents/Publisher-Form-Modals/DummyHitModal";
-import { InputModalContext } from "../Context/InputModalContext";
 import DashboardPage from "./DashboardPage";
 import TitleHeader from "../NewComponents/Header/TitleHeader";
+import { PublisherModalContext } from "../Context/Publisher-Modal-Context/PublisherModalContext";
+import PublisherDummyHitModal from "../NewComponents/Publisher-Form-Modals/PublisherDummyHitModal";
+import { PublisherDummyHitModalContext } from "../Context/Publisher-Modal-Context/PublisherDummyHitModalContext";
 
 const ServicePage = () => {
   const [publisherData, setPublisherData] = useState();
@@ -28,9 +28,9 @@ const ServicePage = () => {
   const { serviceName, id } = useParams();
   const [mainServiceId, setMainServiceId] = useState("");
   const [mainServiceName, setMainServiceName] = useState("");
-  const { openHandler } = useContext(ModalContext);
-  const { openEditHandler } = useContext(EditModalContext);
-  const { openInputHandler } = useContext(InputModalContext);
+  const { openHandler } = useContext(PublisherModalContext);
+  const { openEditHandler } = useContext(EditPublisherModalContext);
+  const { openInputHandler } = useContext(PublisherDummyHitModalContext);
   const [isShowPublisher, setIsShowPublisher] = useState(false);
 
   const navigate = useNavigate();
@@ -279,7 +279,7 @@ const ServicePage = () => {
               fetchDataFromBackend={fetchDataFromBackend}
             />
             <EditPublisherFormModal fetchDataFromBackend={fetchDataFromBackend} />
-            <InputModal fetchDataFromBackend={fetchDataFromBackend} />
+            <PublisherDummyHitModal fetchDataFromBackend={fetchDataFromBackend} />
           </>
         ) : null}
       </DashboardPage>

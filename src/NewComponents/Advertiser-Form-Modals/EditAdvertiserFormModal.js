@@ -1,5 +1,5 @@
 import React, { useContext, useState, useEffect } from "react";
-import { EditModalContext } from "../../Context/EditModalContext";
+import { EditModalContext } from "../../Context/Publisher-Modal-Context/EditPublisherModalContext";
 import {
   TextField,
   Button,
@@ -24,7 +24,7 @@ import {
 } from "../../Data/Api";
 import { toast, ToastContainer } from "react-toastify";
 import Loader from "../Loading-States/Loader";
-import { EditAdvertiserContext } from "../../Context/EditAdvertiserContext";
+import { EditAdvertiserContext } from "../../Context/Advertiser-Modal-Context/EditAdvertiserContext";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 
 const marks = [

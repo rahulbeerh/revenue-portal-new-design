@@ -1,5 +1,4 @@
 import React, { useContext, useState, useEffect } from "react";
-import { ModalContext } from "../../Context/ModalContext";
 import {
   TextField,
   Button,
@@ -15,7 +14,7 @@ import {
 import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
 import Loading from "../Loading-States/Loading";
-import { AdvertiserModalContext } from "../../Context/AdvertiserModalContext";
+import { AdvertiserModalContext } from "../../Context/Advertiser-Modal-Context/AdvertiserModalContext";
 import {
   addPublisherInAdvertiser,
   advertiserApi,

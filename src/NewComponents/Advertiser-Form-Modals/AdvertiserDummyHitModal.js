@@ -1,7 +1,7 @@
 import { Box, Button, Modal, TextField } from "@mui/material";
 import React, { useContext, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
-import { AdvertiserDummyHitContext } from "../../Context/AdvertiserDummyHitContext";
+import { AdvertiserDummyHitContext } from "../../Context/Advertiser-Modal-Context/AdvertiserDummyHitContext";
 import axios from "axios";
 import { advertiserDummyHit } from "../../Data/Api";
 import Loading from "../Loading-States/Loading";

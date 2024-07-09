@@ -1,5 +1,5 @@
-const pre=`https://reports.visiontrek.in/`;
-// const pre=`/`;
+// const pre=`https://reports.visiontrek.in/`;
+const pre=`/`;
 
 const loginApi = `${pre}open/login`;
 export { loginApi };

@@ -7,7 +7,7 @@ import {
   Tooltip,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
-import { AdvertiserModalContext } from "../Context/AdvertiserModalContext";
+import { AdvertiserModalContext } from "../Context/Advertiser-Modal-Context/AdvertiserModalContext";
 import AdvertiserFormModal from "../NewComponents/Advertiser-Form-Modals/AdvertiserFormModal";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import { ToastContainer, toast } from "react-toastify";
@@ -19,11 +19,11 @@ import {
   deleteAdvertiser,
 } from "../Data/Api";
 import EditAdvertiserFormModal from "../NewComponents/Advertiser-Form-Modals/EditAdvertiserFormModal";
-import { EditAdvertiserContext } from "../Context/EditAdvertiserContext";
+import { EditAdvertiserContext } from "../Context/Advertiser-Modal-Context/EditAdvertiserContext";
 import { useNavigate } from "react-router-dom";
 import SendIcon from "@mui/icons-material/Send";
 import AdvertiserDummyHitModal from "../NewComponents/Advertiser-Form-Modals/AdvertiserDummyHitModal";
-import { AdvertiserDummyHitContext } from "../Context/AdvertiserDummyHitContext";
+import { AdvertiserDummyHitContext } from "../Context/Advertiser-Modal-Context/AdvertiserDummyHitContext";
 import InfoIcon from "@mui/icons-material/Info";
 import classes from "./AdvertiserPage.module.css";
 import NewHeader from "../NewComponents/Header/NewHeader";

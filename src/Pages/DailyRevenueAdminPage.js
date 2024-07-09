@@ -24,6 +24,9 @@ import ExportDailyRevenueAdmin from "../NewComponents/Excel-Sheet-Generation/Exp
 import { Button } from "primereact/button";
 import NewLineGraph2 from "../NewComponents/Graphs/NewLineGraph2";
 import { TabView, TabPanel } from "primereact/tabview";
+import LineGraph from "../NewComponents/Graphs/LineGraph";
+import BarGraph from "../NewComponents/Graphs/BarGraph";
+import VerticalBarGraph from "../NewComponents/Graphs/VerticalBarGraph";
 
 const DailyRevenueAdminPage = () => {
   const navigate = useNavigate();
@@ -507,32 +510,14 @@ const DailyRevenueAdminPage = () => {
             <TitleHeader title="Revenue" icon="" />
 
             <TabView style={{ width: "100%"}} scrollable>
-              <TabPanel header="Chart">
-                <NewLineGraph data={data} width={width} biggest={biggest} />
+            <TabPanel header="Chart">
+                <LineGraph data={data} />
               </TabPanel>
-              <TabPanel header="Renewal Revenue Chart">
-                <NewLineGraph2
-                  index={1}
-                  data={data}
-                  width={width}
-                  biggest={biggestRenewal}
-                />
+              <TabPanel header="Bar Chart">
+                <BarGraph data={data} />
               </TabPanel>
-              <TabPanel header="Subscription Revenue Chart">
-                <NewLineGraph2
-                  index={2}
-                  data={data}
-                  width={width}
-                  biggest={biggestSubscription}
-                />
-              </TabPanel>
-              <TabPanel header="Total Revenue Chart">
-                <NewLineGraph2
-                  index={3}
-                  data={data}
-                  width={width}
-                  biggest={biggest}
-                />
+              <TabPanel header="Vertical Bar Chart">
+                <VerticalBarGraph data={data} />
               </TabPanel>
             </TabView>
 

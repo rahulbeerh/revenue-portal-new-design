@@ -1,5 +1,5 @@
 import React, { useContext, useState, useEffect } from "react";
-import { EditModalContext } from "../../Context/EditModalContext";
+import { EditPublisherModalContext } from "../../Context/Publisher-Modal-Context/EditPublisherModalContext";
 import {
   TextField,
   Button,
@@ -68,7 +68,7 @@ const style = {
 };
 
 const EditPublisherFormModal = (props) => {
-  const { openEdit, closeEditHandler, id } = useContext(EditModalContext);
+  const { openEdit, closeEditHandler, id } = useContext(EditPublisherModalContext);
   const [client, setClient] = useState("");
   const [name, setName] = useState("");
   const [amount, setAmount] = useState("");

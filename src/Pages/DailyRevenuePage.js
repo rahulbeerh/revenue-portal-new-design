@@ -20,6 +20,9 @@ import NewLineGraph2 from "../NewComponents/Graphs/NewLineGraph2";
 import NewComposedGraph from "../NewComponents/Graphs/NewComposedGraph";
 import NewBarChart from "../NewComponents/Graphs/NewBarChart";
 import { TabView, TabPanel } from "primereact/tabview";
+import LineGraph from "../NewComponents/Graphs/LineGraph";
+import BarGraph from "../NewComponents/Graphs/BarGraph";
+import VerticalBarGraph from "../NewComponents/Graphs/VerticalBarGraph";
 
 const DailyRevenuePage = () => {
   const navigate = useNavigate();
@@ -426,31 +429,13 @@ const DailyRevenuePage = () => {
 
             <TabView style={{ width: "100%"}} scrollable>
               <TabPanel header="Chart">
-                <NewLineGraph data={data} width={width} biggest={biggest} />
+                <LineGraph data={data} />
               </TabPanel>
-              <TabPanel header="Renewal Revenue Chart">
-                <NewLineGraph2
-                  index={1}
-                  data={data}
-                  width={width}
-                  biggest={biggestRenewal}
-                />
+              <TabPanel header="Bar Chart">
+                <BarGraph data={data} />
               </TabPanel>
-              <TabPanel header="Subscription Revenue Chart">
-                <NewLineGraph2
-                  index={2}
-                  data={data}
-                  width={width}
-                  biggest={biggestSubscription}
-                />
-              </TabPanel>
-              <TabPanel header="Total Revenue Chart">
-                <NewLineGraph2
-                  index={3}
-                  data={data}
-                  width={width}
-                  biggest={biggest}
-                />
+              <TabPanel header="Vertical Bar Chart">
+                <VerticalBarGraph data={data} />
               </TabPanel>
             </TabView>
             <div className={classes.table_container}>
