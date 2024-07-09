@@ -70,9 +70,9 @@ const AdvertiserSubscriptionPage = () => {
       toast.error(
         error?.response?.data?.message || error?.message || error?.data?.message
       );
-      setTimeout(() => {
-        navigate("/");
-      }, 1000);
+      if (error?.response?.status == 403) {
+        throw new Error("Token Expired , Please Login!");
+      }
     }
   };
 
@@ -169,7 +169,7 @@ const AdvertiserSubscriptionPage = () => {
             }`}
           >
             <img
-              src="/assets/images/logo.png"
+              src="/assets/images/logo1.png"
               alt="Revenue portal"
               className={classes.sidebar_logo}
             />
@@ -255,45 +255,45 @@ const AdvertiserSubscriptionPage = () => {
 
             {data ? (
               <div className={classes.table_container}>
-                  <DataTable
-                    value={data}
-                    emptyMessage="No data found"
-                    showGridlines
-                    responsive
-                    scrollable
-                    scrollHeight="500px"
-                    rows={15}
-                    paginator
-                  >
-                    <Column field="clientName" header="Client" />
-                    <Column field="serviceName" header="Service" />
-                    <Column field="publisher" header="Publisher" />
-                    <Column
-                      field="queue"
-                      header="Queue"
-                      body={(rowData) => rowData.queue || 0}
-                    />
-                    <Column
-                      field="sent"
-                      header="Sent"
-                      body={(rowData) => rowData.sent || 0}
-                    />
-                    <Column
-                      field="skip"
-                      header="Skip"
-                      body={(rowData) => rowData.skip || 0}
-                    />
-                    <Column
-                      field="duplicateRec"
-                      header="Duplicate Record"
-                      body={(rowData) => rowData.duplicateRec || 0}
-                    />
-                    <Column
-                      field="total"
-                      header="Total"
-                      body={(rowData) => rowData.total || 0}
-                    />
-                  </DataTable>
+                <DataTable
+                  value={data}
+                  emptyMessage="No data found"
+                  showGridlines
+                  responsive
+                  scrollable
+                  scrollHeight="500px"
+                  rows={15}
+                  paginator
+                >
+                  <Column field="clientName" header="Client" />
+                  <Column field="serviceName" header="Service" />
+                  <Column field="publisher" header="Publisher" />
+                  <Column
+                    field="queue"
+                    header="Queue"
+                    body={(rowData) => rowData.queue || 0}
+                  />
+                  <Column
+                    field="sent"
+                    header="Sent"
+                    body={(rowData) => rowData.sent || 0}
+                  />
+                  <Column
+                    field="skip"
+                    header="Skip"
+                    body={(rowData) => rowData.skip || 0}
+                  />
+                  <Column
+                    field="duplicateRec"
+                    header="Duplicate Record"
+                    body={(rowData) => rowData.duplicateRec || 0}
+                  />
+                  <Column
+                    field="total"
+                    header="Total"
+                    body={(rowData) => rowData.total || 0}
+                  />
+                </DataTable>
               </div>
             ) : null}
           </div>

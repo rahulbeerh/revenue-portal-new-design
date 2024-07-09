@@ -1,5 +1,9 @@
 import React from "react";
-import { Routes, Route, Navigate } from "react-router-dom";
+import {
+  createBrowserRouter,
+  RouterProvider,
+  Navigate,
+} from "react-router-dom";
 import LoginPage from "../Pages/LoginPage";
 import DailyRevenuePage from "../Pages/DailyRevenuePage";
 import MonthlyRevenuePage from "../Pages/MonthlyRevenuePage";
@@ -14,163 +18,169 @@ import AdvertiserSubscriptionPage from "../Pages/AdvertiserSubscriptionPage";
 import DailyRevenueAdminPage from "../Pages/DailyRevenueAdminPage";
 import DashboardAdminPage from "../Pages/DashboardAdminPage";
 import MonthlyRevenueAdminPage from "../Pages/MonthlyRevenueAdminPage";
+import ErrorBoundary from "../Pages/ErrorBoundary";
+import Auth from "../NewComponents/Auth/Auth";
+
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <LoginPage />,
+    errorElement: <ErrorBoundary />,
+  },
+  {
+    path: "/dailyRevenue",
+    element: (
+      <Auth conditionApply={true} condition={localStorage.getItem("hide_data")}>
+        <DailyRevenuePage />
+      </Auth>
+    ),
+    errorElement: <ErrorBoundary />,
+  },
+  {
+    path: "/monthlyRevenue",
+    element: (
+      <Auth conditionApply={true} condition={localStorage.getItem("hide_data")}>
+        <MonthlyRevenuePage />
+      </Auth>
+    ),
+    errorElement: <ErrorBoundary />,
+  },
+  {
+    path: "/dashboard",
+    element: (
+      <Auth
+      conditionApply={true}
+        condition={
+          localStorage.getItem("hide_data") ||
+          localStorage.getItem("userName") == "etho_1234"
+        }
+      >
+        <DashboardPage />
+      </Auth>
+    ),
+    errorElement: <ErrorBoundary />,
+  },
+  {
+    path: "/dashboard/:serviceName/:id",
+    element: (
+      <Auth
+      conditionApply={true}
+        condition={
+          localStorage.getItem("hide_data") ||
+          localStorage.getItem("userName") == "etho_1234"
+        }
+      >
+        <ServicePage />
+      </Auth>
+    ),
+    errorElement: <ErrorBoundary />,
+  },
+  {
+    path: "/add-country-and-add-operator",
+    element: (
+      <Auth
+      conditionApply={true}
+        condition={
+          localStorage.getItem("hide_data") ||
+          localStorage.getItem("userName") == "etho_1234"
+        }
+      >
+        <AddCountryAndOperatorPage />
+      </Auth>
+    ),
+    errorElement: <ErrorBoundary />,
+  },
+  {
+    path: "/publisher-traffic",
+    element: (
+      <Auth
+        conditionApply={true}
+        condition={localStorage.getItem("userName") == "etho_1234"}
+      >
+        <PublisherTrafficPage />
+      </Auth>
+    ),
+    errorElement: <ErrorBoundary />,
+  },
+  {
+    path: "/publisher-subscription",
+    element: (
+      <Auth
+        conditionApply={true}
+        condition={localStorage.getItem("userName") == "etho_1234"}
+      >
+        <PublisherSubscriptionPage />
+      </Auth>
+    ),
+    errorElement: <ErrorBoundary />,
+  },
+  {
+    path: "/advertiser",
+    element: (
+      <Auth
+        conditionApply={true}
+        condition={localStorage.getItem("userName") != "panz"}
+      >
+        <AdvertiserPage />
+      </Auth>
+    ),
+    errorElement: <ErrorBoundary />,
+  },
+  {
+    path: "/advertiser-traffic",
+    element: (
+      <Auth
+        conditionApply={true}
+        condition={localStorage.getItem("userName") != "panz"}
+      >
+        <AdvertiserTrafficPage />
+      </Auth>
+    ),
+    errorElement: <ErrorBoundary />,
+  },
+  {
+    path: "/advertiser-subscription",
+    element: (
+      <Auth
+        conditionApply={true}
+        condition={localStorage.getItem("userName") != "panz"}
+      >
+        <AdvertiserSubscriptionPage />
+      </Auth>
+    ),
+    errorElement: <ErrorBoundary />,
+  },
+  {
+    path: "/dailyRevenueAdmin",
+    element: (
+      <Auth admin={true}>
+        <DailyRevenueAdminPage />
+      </Auth>
+    ),
+    errorElement: <ErrorBoundary />,
+  },
+  {
+    path: "/monthlyRevenueAdmin",
+    element: (
+      <Auth admin={true}>
+        <MonthlyRevenueAdminPage />
+      </Auth>
+    ),
+    errorElement: <ErrorBoundary />,
+  },
+  {
+    path: "/dashboardAdmin",
+    element: (
+      <Auth admin={true}>
+        <DashboardAdminPage />
+      </Auth>
+    ),
+    errorElement: <ErrorBoundary />,
+  },
+]);
 
 const Routing = () => {
-  return (
-    <>
-      <Routes>
-        <Route element={<LoginPage />} path="/" exact={true}></Route>
-        <Route
-          element={
-            localStorage.getItem("hide_data") ? (
-              <Navigate to="/" />
-            ) : (
-              <DailyRevenuePage />
-            )
-          }
-          path="/dailyRevenue"
-          exact={true}
-        ></Route>
-        <Route
-          element={
-            localStorage.getItem("hide_data") ? (
-              <Navigate to="/" />
-            ) : (
-              <MonthlyRevenuePage />
-            )
-          }
-          path="/monthlyRevenue"
-          exact={true}
-        ></Route>
-        <Route
-          element={
-            localStorage.getItem("hide_data") ? (
-              <Navigate to="/" />
-            ) : localStorage.getItem("userName") == "etho_1234" ? (
-              <Navigate to="/dailyRevenue" />
-            ) : (
-              <DashboardPage />
-            )
-          }
-          path="/dashboard"
-          exact={true}
-        ></Route>
-        <Route
-          element={
-            localStorage.getItem("hide_data") ? (
-              <Navigate to="/" />
-            ) : localStorage.getItem("userName") == "etho_1234" ? (
-              <Navigate to="/dailyRevenue" />
-            ) : (
-              <ServicePage />
-            )
-          }
-          path="/dashboard/:serviceName/:id"
-          exact={true}
-        ></Route>
-        <Route
-          element={
-            localStorage.getItem("hide_data") ? (
-              <Navigate to="/" />
-            ) : localStorage.getItem("userName") == "etho_1234" ? (
-              <Navigate to="/dailyRevenue" />
-            ) : (
-              <AddCountryAndOperatorPage />
-            )
-          }
-          path="/add-country-and-add-operator"
-          exact={true}
-        ></Route>
-        <Route
-          element={
-            localStorage.getItem("userName") == "etho_1234" ? (
-              <Navigate to="/dailyRevenue" />
-            ) : (
-              <PublisherTrafficPage />
-            )
-          }
-          path="/publisher-traffic"
-          exact={true}
-        ></Route>
-        <Route
-          element={
-            localStorage.getItem("userName") == "etho_1234" ? (
-              <Navigate to="/dailyRevenue" />
-            ) : (
-              <PublisherSubscriptionPage />
-            )
-          }
-          path="/publisher-subscription"
-          exact={true}
-        ></Route>
-        <Route
-          element={
-            localStorage.getItem("userName") != "panz" ? (
-              <Navigate to="/" />
-            ) : (
-              <AdvertiserPage />
-            )
-          }
-          path="/advertiser"
-          exact={true}
-        />
-        <Route
-          element={
-            localStorage.getItem("userName") != "panz" ? (
-              <Navigate to="/" />
-            ) : (
-              <AdvertiserTrafficPage />
-            )
-          }
-          path="/advertiser-traffic"
-          exact={true}
-        />
-        <Route
-          element={
-            localStorage.getItem("userName") != "panz" ? (
-              <Navigate to="/" />
-            ) : (
-              <AdvertiserSubscriptionPage />
-            )
-          }
-          path="/advertiser-subscription"
-          exact={true}
-        />
-        <Route
-          element={
-            localStorage.getItem("userName") != "admin" ? (
-              <Navigate to="/" />
-            ) : (
-              <DailyRevenueAdminPage />
-            )
-          }
-          path="/dailyRevenueAdmin"
-          exact={true}
-        />
-        <Route
-          element={
-            localStorage.getItem("userName") != "admin" ? (
-              <Navigate to="/" />
-            ) : (
-              <MonthlyRevenueAdminPage />
-            )
-          }
-          path="/monthlyRevenueAdmin"
-          exact={true}
-        />
-        <Route
-          element={
-            localStorage.getItem("userName") != "admin" ? (
-              <Navigate to="/" />
-            ) : (
-              <DashboardAdminPage />
-            )
-          }
-          path="/dashboardAdmin"
-          exact={true}
-        />
-      </Routes>
-    </>
-  );
+  return <RouterProvider router={router} />;
 };
+
 export default Routing;

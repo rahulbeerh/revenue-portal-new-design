@@ -7,7 +7,7 @@ const NewMobileMenuAdmin = (props) => {
 
   const handleNavigate = (route) => {
     navigate(route);
-    props.hideMobileMenuHandler(); 
+    props.hideMobileMenuHandler();
   };
 
   const menuItems = [
@@ -42,15 +42,23 @@ const NewMobileMenuAdmin = (props) => {
         className={`${classes.mobile_menu_container} ${
           props.mobileMenu && classes.show
         }`}
-        onClick={(e) => e.stopPropagation()} 
+        onClick={(e) => e.stopPropagation()}
       >
         <div className={classes.mobile_menu_sub_container}>
+          <div className={classes.logo_center}>
+            <img
+              src="/assets/images/logo1.png"
+              alt="Revenue portal"
+              className={classes.logo}
+            />
+          </div>
           {menuItems.map((item, index) => (
             <div
               key={index}
               className={classes.tab}
               style={{
-                color: props.highlight === item.highlight ? "#696CFF" : "#6B7281",
+                color:
+                  props.highlight === item.highlight ? "#696CFF" : "#6B7281",
               }}
               onClick={() => handleNavigate(item.route)}
             >

@@ -2,7 +2,6 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
-import { BrowserRouter } from "react-router-dom";
 import PublisherDummyHitModalContextProvider from "./Context/Publisher-Modal-Context/PublisherDummyHitModalContext";
 import PublisherModalContextProvider from "./Context/Publisher-Modal-Context/PublisherModalContext";
 import EditPublisherModalContextProvider from "./Context/Publisher-Modal-Context/EditPublisherModalContext";
@@ -17,7 +16,6 @@ import "./index.css";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
-  <BrowserRouter>
     <AdvertiserDummyHitProvider>
       <PublisherDummyHitModalContextProvider>
         <EditPublisherModalContextProvider>
@@ -33,7 +31,6 @@ root.render(
         </EditPublisherModalContextProvider>
       </PublisherDummyHitModalContextProvider>
     </AdvertiserDummyHitProvider>
-  </BrowserRouter>
 );
 
 reportWebVitals();

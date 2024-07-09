@@ -100,6 +100,10 @@ const PublisherSubscriptionPage = ({ hide }) => {
           error
       );
       setLoading("none");
+
+      if (error?.response?.status == 403) {
+        throw new Error("Token Expired , Please Login!");
+      }
       // setTimeout(() => {
       //   navigate("/");
       // }, 1000);
@@ -160,9 +164,7 @@ const PublisherSubscriptionPage = ({ hide }) => {
       );
       setLoading("none");
       if (error?.response?.status == 403) {
-        setTimeout(() => {
-          navigate("/");
-        }, 1000);
+        throw new Error("Token Expired , Please Login!");
       }
     }
   }
@@ -248,7 +250,7 @@ const PublisherSubscriptionPage = ({ hide }) => {
             }`}
           >
             <img
-              src="/assets/images/logo.png"
+              src="/assets/images/logo1.png"
               alt="Revenue portal"
               className={classes.sidebar_logo}
             />
@@ -352,65 +354,65 @@ const PublisherSubscriptionPage = ({ hide }) => {
 
             {data ? (
               <div className={classes.table_container}>
-                  <DataTable
-                    value={data}
-                    emptyMessage="No data found"
-                    showGridlines
-                    responsive
-                    scrollable
-                    scrollHeight="500px"
-                    rows={15}
-                    paginator
-                  >
-                    <Column field="partner" header="Partner" />
-                    <Column field="servicename" header="Service" />
-                    <Column
-                      field="queue"
-                      header="Queue"
-                      body={(rowData) =>
-                        rowData.queue === undefined || rowData.queue === null
-                          ? 0
-                          : rowData.queue
-                      }
-                    />
-                    <Column
-                      field="sent"
-                      header="Sent"
-                      body={(rowData) =>
-                        rowData.sent === undefined || rowData.sent === null
-                          ? 0
-                          : rowData.sent
-                      }
-                    />
-                    <Column
-                      field="skip"
-                      header="Skip"
-                      body={(rowData) =>
-                        rowData.skip === undefined || rowData.skip === null
-                          ? 0
-                          : rowData.skip
-                      }
-                    />
-                    <Column
-                      field="duplicateRec"
-                      header="Duplicate Record"
-                      body={(rowData) =>
-                        rowData.duplicateRec === undefined ||
-                        rowData.duplicateRec === null
-                          ? 0
-                          : rowData.duplicateRec
-                      }
-                    />
-                    <Column
-                      field="total"
-                      header="Total"
-                      body={(rowData) =>
-                        rowData.total === undefined || rowData.total === null
-                          ? 0
-                          : rowData.total
-                      }
-                    />
-                  </DataTable>
+                <DataTable
+                  value={data}
+                  emptyMessage="No data found"
+                  showGridlines
+                  responsive
+                  scrollable
+                  scrollHeight="500px"
+                  rows={15}
+                  paginator
+                >
+                  <Column field="partner" header="Partner" />
+                  <Column field="servicename" header="Service" />
+                  <Column
+                    field="queue"
+                    header="Queue"
+                    body={(rowData) =>
+                      rowData.queue === undefined || rowData.queue === null
+                        ? 0
+                        : rowData.queue
+                    }
+                  />
+                  <Column
+                    field="sent"
+                    header="Sent"
+                    body={(rowData) =>
+                      rowData.sent === undefined || rowData.sent === null
+                        ? 0
+                        : rowData.sent
+                    }
+                  />
+                  <Column
+                    field="skip"
+                    header="Skip"
+                    body={(rowData) =>
+                      rowData.skip === undefined || rowData.skip === null
+                        ? 0
+                        : rowData.skip
+                    }
+                  />
+                  <Column
+                    field="duplicateRec"
+                    header="Duplicate Record"
+                    body={(rowData) =>
+                      rowData.duplicateRec === undefined ||
+                      rowData.duplicateRec === null
+                        ? 0
+                        : rowData.duplicateRec
+                    }
+                  />
+                  <Column
+                    field="total"
+                    header="Total"
+                    body={(rowData) =>
+                      rowData.total === undefined || rowData.total === null
+                        ? 0
+                        : rowData.total
+                    }
+                  />
+                </DataTable>
               </div>
             ) : null}
           </div>

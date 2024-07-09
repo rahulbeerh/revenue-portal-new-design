@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Chart } from "primereact/chart";
-import classes from "./NewLineGraph.module.css";
+import classes from "./Graph.module.css";
 
 export default function VerticalBarGraph({ data }) {
   const [chartData, setChartData] = useState({});
@@ -47,21 +47,25 @@ export default function VerticalBarGraph({ data }) {
           },
         },
 
-        // tooltip: {
-        //   callbacks: {
-        //     label: function (tooltipItem) {
-        //       const index = tooltipItem.dataIndex;
-        //       const totalRevenue = data[index]?.totalRevenue || 0;
-        //       const renewalRevenue = data[index]?.renewalsRevenue || 0;
-        //       const subscriptionRevenue = data[index]?.subscriptionRevenue || 0;
-        //       return [
-        //         `Total Revenue: ${totalRevenue}`,
-        //         `Renewal Revenue: ${renewalRevenue}`,
-        //         `Subscription Revenue: ${subscriptionRevenue}`,
-        //       ];
-        //     },
-        //   },
-        // },
+        tooltip: {
+          displayColors: false,
+          mode:"index",
+          intersect:true,
+          // callbacks: {
+          //   label: function (tooltipItem) {
+          //     const index = tooltipItem.dataIndex;
+          //     const totalRevenue = data[index]?.totalRevenue || 0;
+          //     const renewalRevenue = data[index]?.renewalsRevenue || 0;
+          //     const subscriptionRevenue = data[index]?.subscriptionRevenue || 0;
+
+          //     const labels = [];
+          //     labels.push(`Total Revenue: ${totalRevenue}`);
+          //     labels.push(`Renewal Revenue: ${renewalRevenue}`);
+          //     labels.push(`Subscription Revenue: ${subscriptionRevenue}`);
+          //     return labels;
+          //   },
+          // },
+        },
       },
       scales: {
         x: {
@@ -93,7 +97,7 @@ export default function VerticalBarGraph({ data }) {
   }, [data]);
 
   return (
-    <div className={classes.graph_container_2}>
+    <div className={classes.graph_container}>
       <div className={classes.info_container}>
         <p>Click the below buttons for data filtering in graph.</p>
       </div>

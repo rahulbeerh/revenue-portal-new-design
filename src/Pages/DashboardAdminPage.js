@@ -23,7 +23,7 @@ const DashboardAdminPage = () => {
   const [data, setData] = useState([]);
   const [selectedDate, setSelectedDate] = useState(new Date());
 
-  const navigate=useNavigate();
+  const navigate = useNavigate();
 
   const [sidebarHide, setSidebarHide] = useState(() =>
     localStorage.getItem("sidebar")
@@ -75,13 +75,14 @@ const DashboardAdminPage = () => {
       setData(res?.data?.data);
       setLoader("none");
     } catch (error) {
+      console.log(error, "e");
       setLoader("none");
       toast.error(
         error?.response?.data?.message || error?.data?.message || error?.message
       );
-      setTimeout(() => {
-        navigate("/");
-      }, 1000);
+      if (error?.response?.status == 403) {
+        throw new Error("Token Expired , Please Login!");
+      }
     }
   };
 
@@ -97,7 +98,7 @@ const DashboardAdminPage = () => {
             }`}
           >
             <img
-              src="/assets/images/logo.png"
+              src="/assets/images/logo1.png"
               alt="Revenue portal"
               className={classes.sidebar_logo}
             />
@@ -151,32 +152,32 @@ const DashboardAdminPage = () => {
             <TitleHeader title="All Services Montly Revenue" />
             <div className={classes.table_container}>
               {/* <div className={classes.table_sub_container}> */}
-                <DataTable
-                  value={data.map((dataItem, i) => ({
-                    id: i,
-                    service: dataItem.service,
-                    month: `${dataItem.MONTH}-${dataItem.YEAR}`,
-                    renewalsRevenue: dataItem?.renewalsRevenue || 0,
-                    subscriptionRevenue: dataItem?.subscriptionRevenue || 0,
-                    totalRevenue: dataItem?.totalRevenue || 0,
-                  }))}
-                  emptyMessage="No data found"
-                  showGridlines
-                  responsive
-                  scrollable
-                  scrollHeight="500px" 
-                  rows={15} 
-                  paginator
-                >
-                  <Column field="service" header="Service" />
-                  <Column field="month" header="Month" />
-                  <Column field="renewalsRevenue" header="Renewals Revenue" />
-                  <Column
-                    field="subscriptionRevenue"
-                    header="Subscription Revenue"
-                  />
-                  <Column field="totalRevenue" header="Total Revenue" />
-                </DataTable>
+              <DataTable
+                value={data.map((dataItem, i) => ({
+                  id: i,
+                  service: dataItem.service,
+                  month: `${dataItem.MONTH}-${dataItem.YEAR}`,
+                  renewalsRevenue: dataItem?.renewalsRevenue || 0,
+                  subscriptionRevenue: dataItem?.subscriptionRevenue || 0,
+                  totalRevenue: dataItem?.totalRevenue || 0,
+                }))}
+                emptyMessage="No data found"
+                showGridlines
+                responsive
+                scrollable
+                scrollHeight="500px"
+                rows={15}
+                paginator
+              >
+                <Column field="service" header="Service" />
+                <Column field="month" header="Month" />
+                <Column field="renewalsRevenue" header="Renewals Revenue" />
+                <Column
+                  field="subscriptionRevenue"
+                  header="Subscription Revenue"
+                />
+                <Column field="totalRevenue" header="Total Revenue" />
+              </DataTable>
               {/* </div> */}
             </div>
           </div>

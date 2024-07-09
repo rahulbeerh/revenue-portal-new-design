@@ -8,7 +8,6 @@ import { useNavigate } from "react-router-dom";
 import NewHeader from "../NewComponents/Header/NewHeader";
 import NewSidebar from "../NewComponents/Sidebar/NewSidebar";
 import classes from "./DailyRevenuePage.module.css";
-import NewLineGraph from "../NewComponents/Graphs/NewLineGraph";
 import { Dropdown } from "primereact/dropdown";
 import { Calendar } from "primereact/calendar";
 import TitleHeader from "../NewComponents/Header/TitleHeader";
@@ -16,9 +15,6 @@ import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import ExportDailyRevenueToExcel from "../NewComponents/Excel-Sheet-Generation/ExportDailyRevenueToExcel";
 import axios from "axios";
-import NewLineGraph2 from "../NewComponents/Graphs/NewLineGraph2";
-import NewComposedGraph from "../NewComponents/Graphs/NewComposedGraph";
-import NewBarChart from "../NewComponents/Graphs/NewBarChart";
 import { TabView, TabPanel } from "primereact/tabview";
 import LineGraph from "../NewComponents/Graphs/LineGraph";
 import BarGraph from "../NewComponents/Graphs/BarGraph";
@@ -104,7 +100,9 @@ const DailyRevenuePage = () => {
           error?.message ||
           error
       );
-      navigate("/");
+      if (error?.response?.status == 403) {
+        throw new Error("Token Expired , Please Login!");
+      }
     }
   };
 
@@ -156,11 +154,11 @@ const DailyRevenuePage = () => {
 
   const handleDataResponse = (e) => {
     if (e.response === "error") {
-      toast.error(e.error?.response?.data?.message || e.error?.message);
-      setTimeout(() => {
-        navigate("/");
-      }, 1000);
       setLoader("none");
+      toast.error(e.error?.response?.data?.message || e.error?.message);
+      if (e?.error?.response?.status == 403) {
+        throw new Error("Token Expired , Please Login!");
+      }
     } else {
       setLoader("none");
       const dataFromBackend = e.data;
@@ -324,7 +322,7 @@ const DailyRevenuePage = () => {
             }`}
           >
             <img
-              src="/assets/images/logo.png"
+              src="/assets/images/logo1.png"
               alt="Revenue portal"
               className={classes.sidebar_logo}
             />
@@ -427,12 +425,12 @@ const DailyRevenuePage = () => {
               icon={<i className="fa-solid fa-chart-simple"></i>}
             />
 
-            <TabView style={{ width: "100%"}} scrollable>
-              <TabPanel header="Chart">
-                <LineGraph data={data} />
-              </TabPanel>
+            <TabView style={{ width: "100%" }} scrollable>
               <TabPanel header="Bar Chart">
                 <BarGraph data={data} />
+              </TabPanel>
+              <TabPanel header="Line Chart">
+                <LineGraph data={data} />
               </TabPanel>
               <TabPanel header="Vertical Bar Chart">
                 <VerticalBarGraph data={data} />

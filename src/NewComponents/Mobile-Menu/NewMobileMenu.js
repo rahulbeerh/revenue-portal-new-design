@@ -7,7 +7,7 @@ const NewMobileMenu = (props) => {
 
   const handleNavigate = (route) => {
     navigate(route);
-    props.hideMobileMenuHandler(); 
+    props.hideMobileMenuHandler();
   };
 
   const menuItems = [
@@ -26,14 +26,18 @@ const NewMobileMenu = (props) => {
       text: "Monthly Revenue",
     },
     {
-      condition: localStorage.getItem("userName") !== "etho_1234" && !localStorage.getItem("hide_data"),
+      condition:
+        localStorage.getItem("userName") !== "etho_1234" &&
+        !localStorage.getItem("hide_data"),
       route: "/dashboard",
       highlight: 3,
       icon: "fa-solid fa-wifi",
       text: "Add Networks",
     },
     {
-      condition: localStorage.getItem("userName") !== "etho_1234" && !localStorage.getItem("hide_data"),
+      condition:
+        localStorage.getItem("userName") !== "etho_1234" &&
+        !localStorage.getItem("hide_data"),
       route: "/add-country-and-add-operator",
       highlight: 4,
       icon: "fa-solid fa-globe",
@@ -87,26 +91,38 @@ const NewMobileMenu = (props) => {
         className={`${classes.mobile_menu_container} ${
           props.mobileMenu && classes.show
         }`}
-        onClick={(e) => e.stopPropagation()} 
+        onClick={(e) => e.stopPropagation()}
       >
         <div className={classes.mobile_menu_sub_container}>
-          {menuItems.map((item, index) => (
-            item.condition && (
-              <div
-                key={index}
-                className={classes.tab}
-                style={{
-                  color: props.highlight === item.highlight ? "#696CFF" : "#6B7281",
-                }}
-                onClick={() => handleNavigate(item.route)}
-              >
-                <i className={item.icon}></i>
-                <span className={`${props.sidebarHide && classes.short}`}>
-                  {item.text}
-                </span>
-              </div>
-            )
-          ))}
+          <div className={classes.logo_center}>
+            <img
+              src="/assets/images/logo1.png"
+              alt="Revenue portal"
+              className={classes.logo}
+            />
+          </div>
+
+          {menuItems.map(
+            (item, index) =>
+              item.condition && (
+                <div
+                  key={index}
+                  className={classes.tab}
+                  style={{
+                    color:
+                      props.highlight === item.highlight
+                        ? "#696CFF"
+                        : "#6B7281",
+                  }}
+                  onClick={() => handleNavigate(item.route)}
+                >
+                  <i className={item.icon}></i>
+                  <span className={`${props.sidebarHide && classes.short}`}>
+                    {item.text}
+                  </span>
+                </div>
+              )
+          )}
         </div>
       </div>
     </div>

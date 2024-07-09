@@ -49,10 +49,10 @@ const AddCountryAndOperatorPage = () => {
       setLoader("none");
     } catch (error) {
       setLoader("none");
-      setTimeout(() => {
-        navigate("/");
-      }, 1000);
       toast.error(error || error?.data?.message || error?.message);
+      if (error?.response?.status == 403) {
+        throw new Error("Token Expired , Please Login!");
+      }
     }
   };
 
@@ -105,7 +105,7 @@ const AddCountryAndOperatorPage = () => {
             }`}
           >
             <img
-              src="/assets/images/logo.png"
+              src="/assets/images/logo1.png"
               alt="Revenue portal"
               className={classes.sidebar_logo}
             />

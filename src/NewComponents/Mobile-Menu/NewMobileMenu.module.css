@@ -50,8 +50,8 @@
 
     .mobile_menu_sub_container{
         position: absolute;
-        top: 35%;
-        transform: translateY(-35%);
+        top: 15%;
+        transform: translateY(-15%);
         display: flex;
         justify-content: center;
         align-items: flex-start;
@@ -60,6 +60,17 @@
         max-width: 15rem;
         padding: 0rem 1.5rem 0 1.5rem;
     }
+    .logo_center{
+        width: 100%;
+        display: grid;
+        place-content: center;
+    }
+    .logo{
+        width: 60px;
+        height: auto;
+        object-fit: contain;
+    }
+
     .tab{
         width: 100%;
         display: flex;

@@ -63,9 +63,9 @@ const ServicePage = () => {
       setLoader("none");
     } catch (error) {
       toast.error(error);
-      setTimeout(() => {
-        navigate("/");
-      }, 1000);
+      if (error?.response?.status == 403) {
+        throw new Error("Token Expired , Please Login!");
+      }
     }
   };
 
@@ -278,8 +278,12 @@ const ServicePage = () => {
               id={id}
               fetchDataFromBackend={fetchDataFromBackend}
             />
-            <EditPublisherFormModal fetchDataFromBackend={fetchDataFromBackend} />
-            <PublisherDummyHitModal fetchDataFromBackend={fetchDataFromBackend} />
+            <EditPublisherFormModal
+              fetchDataFromBackend={fetchDataFromBackend}
+            />
+            <PublisherDummyHitModal
+              fetchDataFromBackend={fetchDataFromBackend}
+            />
           </>
         ) : null}
       </DashboardPage>

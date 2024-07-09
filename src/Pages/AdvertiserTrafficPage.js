@@ -69,9 +69,9 @@ const AdvertiserTrafficPage = () => {
       toast.error(
         error?.response?.data?.message || error?.message || error?.data?.message
       );
-      setTimeout(() => {
-        navigate("/");
-      }, 1000);
+      if (error?.response?.status == 403) {
+        throw new Error("Token Expired , Please Login!");
+      }
     }
   };
 
@@ -171,7 +171,7 @@ const AdvertiserTrafficPage = () => {
             }`}
           >
             <img
-              src="/assets/images/logo.png"
+              src="/assets/images/logo1.png"
               alt="Revenue portal"
               className={classes.sidebar_logo}
             />
@@ -258,24 +258,24 @@ const AdvertiserTrafficPage = () => {
 
             {traffic ? (
               <div className={classes.table_container}>
-                    <DataTable
-                      value={traffic}
-                      emptyMessage="No data found"
-                      showGridlines
-                      responsive
-                      scrollable
-                      scrollHeight="500px"
-                      rows={15}
-                      paginator
-                    >
-                      <Column field="clientName" header="Client"  />
-                      <Column field="serviceName" header="Service"  />
-                      <Column field="publisher" header="Publisher"  />
-                      <Column field="country" header="Country"  />
-                      <Column field="operator" header="Operator"  />
-                      <Column field="COUNT" header="Count"  />
-                    </DataTable>
-                </div>
+                <DataTable
+                  value={traffic}
+                  emptyMessage="No data found"
+                  showGridlines
+                  responsive
+                  scrollable
+                  scrollHeight="500px"
+                  rows={15}
+                  paginator
+                >
+                  <Column field="clientName" header="Client" />
+                  <Column field="serviceName" header="Service" />
+                  <Column field="publisher" header="Publisher" />
+                  <Column field="country" header="Country" />
+                  <Column field="operator" header="Operator" />
+                  <Column field="COUNT" header="Count" />
+                </DataTable>
+              </div>
             ) : null}
           </div>
         </div>

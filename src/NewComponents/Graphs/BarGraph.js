@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Chart } from "primereact/chart";
-import classes from "./NewLineGraph.module.css";
+import classes from "./Graph.module.css";
 
 export default function BarGraph({ data }) {
   const [chartData, setChartData] = useState({});
@@ -13,29 +13,36 @@ export default function BarGraph({ data }) {
       "--text-color-secondary"
     );
     const surfaceBorder = documentStyle.getPropertyValue("--surface-border");
+
+    const totalRevenueColor = documentStyle.getPropertyValue("--red-500");
+    const renewalRevenueColor = documentStyle.getPropertyValue("--blue-500");
+    const subscriptionRevenueColor =
+      documentStyle.getPropertyValue("--green-500");
+
     const graphData = {
       labels: [...data.map((dataItem) => dataItem?.misDate)],
       datasets: [
         {
           label: "Total Revenue",
           data: [...data.map((dataItem) => dataItem?.totalRevenue)],
-          backgroundColor: documentStyle.getPropertyValue("--red-500"),
-          borderColor: documentStyle.getPropertyValue("--red-500"),
+          backgroundColor: totalRevenueColor,
+          borderColor: totalRevenueColor,
         },
         {
           label: "Renewal Revenue",
           data: [...data.map((dataItem) => dataItem?.renewalsRevenue)],
-          backgroundColor: documentStyle.getPropertyValue("--blue-500"),
-          borderColor: documentStyle.getPropertyValue("--blue-500"),
+          backgroundColor: renewalRevenueColor,
+          borderColor: renewalRevenueColor,
         },
         {
           label: "Subscription Revenue",
           data: [...data.map((dataItem) => dataItem?.subscriptionRevenue)],
-          backgroundColor: documentStyle.getPropertyValue("--green-500"),
-          borderColor: documentStyle.getPropertyValue("--green-500"),
+          backgroundColor: subscriptionRevenueColor,
+          borderColor: subscriptionRevenueColor,
         },
       ],
     };
+
     const options = {
       maintainAspectRatio: false,
       aspectRatio: 0.9,
@@ -44,6 +51,25 @@ export default function BarGraph({ data }) {
           labels: {
             fontColor: textColor,
           },
+        },
+        tooltip: {
+          displayColors: false,
+          mode: 'index',
+          intersect: false,
+          // callbacks: {
+          //   label: function (tooltipItem) {
+          //     const index = tooltipItem.dataIndex;
+          //     const totalRevenue = data[index]?.totalRevenue || 0;
+          //     const renewalRevenue = data[index]?.renewalsRevenue || 0;
+          //     const subscriptionRevenue = data[index]?.subscriptionRevenue || 0;
+
+          //     const labels = [];
+          //     labels.push(`Total Revenue: ${totalRevenue}`);
+          //     labels.push(`Renewal Revenue: ${renewalRevenue}`);
+          //     labels.push(`Subscription Revenue: ${subscriptionRevenue}`);
+          //     return labels;
+          //   },
+          // },
         },
       },
       scales: {
@@ -76,9 +102,9 @@ export default function BarGraph({ data }) {
   }, [data]);
 
   return (
-    <div className={classes.graph_container_2}>
-       <div className={classes.info_container}>
-       <p>Click the below buttons for data filtering in graph.</p>
+    <div className={classes.graph_container}>
+      <div className={classes.info_container}>
+        <p>Click the below buttons for data filtering in graph.</p>
       </div>
       <Chart type="bar" data={chartData} options={chartOptions} />
     </div>

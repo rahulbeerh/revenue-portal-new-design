@@ -15,14 +15,12 @@ import NewHeader from "../NewComponents/Header/NewHeader";
 import { Calendar } from "primereact/calendar";
 import { Dropdown } from "primereact/dropdown";
 import TitleHeader from "../NewComponents/Header/TitleHeader";
-import NewLineGraph from "../NewComponents/Graphs/NewLineGraph";
 import NewSidebarAdmin from "../NewComponents/Sidebar/NewSidebarAdmin";
 import NewHeaderAdmin from "../NewComponents/Header/NewHeaderAdmin";
 import { Column } from "primereact/column";
 import { DataTable } from "primereact/datatable";
 import ExportDailyRevenueAdmin from "../NewComponents/Excel-Sheet-Generation/ExportDailyRevenueAdmin";
 import { Button } from "primereact/button";
-import NewLineGraph2 from "../NewComponents/Graphs/NewLineGraph2";
 import { TabView, TabPanel } from "primereact/tabview";
 import LineGraph from "../NewComponents/Graphs/LineGraph";
 import BarGraph from "../NewComponents/Graphs/BarGraph";
@@ -104,6 +102,10 @@ const DailyRevenueAdminPage = () => {
       toast.error(
         error?.data?.message || error?.message || error?.data?.data?.message
       );
+
+      if (error?.response?.status == 403) {
+        throw new Error("Token Expired , Please Login!");
+      }
     }
   }
 
@@ -158,7 +160,9 @@ const DailyRevenueAdminPage = () => {
           error?.message ||
           error
       );
-      navigate("/");
+      if (error?.response?.status == 403) {
+        throw new Error("Token Expired , Please Login!");
+      }
     }
   };
 
@@ -213,11 +217,9 @@ const DailyRevenueAdminPage = () => {
   const handleDataResponse = (e) => {
     // console.log(e);
     if (e.response === "error") {
-      toast.error(e.error?.response?.data?.message || e.error?.message);
-      setTimeout(() => {
-        navigate("/");
-      }, 1000);
       setLoader("none");
+      toast.error(e.error?.response?.data?.message || e.error?.message);
+      throw new Error("Token Expired , Please Login!");
     } else {
       setLoader("none");
       // console.log("Backend e", e);
@@ -401,8 +403,8 @@ const DailyRevenueAdminPage = () => {
               sidebarHide && classes.short
             }`}
           >
-            <img
-              src="/assets/images/logo.png"
+             <img
+              src="/assets/images/logo1.png"
               alt="Revenue portal"
               className={classes.sidebar_logo}
             />
@@ -509,12 +511,12 @@ const DailyRevenueAdminPage = () => {
 
             <TitleHeader title="Revenue" icon="" />
 
-            <TabView style={{ width: "100%"}} scrollable>
-            <TabPanel header="Chart">
-                <LineGraph data={data} />
-              </TabPanel>
+            <TabView style={{ width: "100%" }} scrollable>
               <TabPanel header="Bar Chart">
                 <BarGraph data={data} />
+              </TabPanel>
+              <TabPanel header="Line Chart">
+                <LineGraph data={data} />
               </TabPanel>
               <TabPanel header="Vertical Bar Chart">
                 <VerticalBarGraph data={data} />
@@ -525,106 +527,106 @@ const DailyRevenueAdminPage = () => {
 
             <div className={classes.table_container}>
               {/* <div className={classes.table_sub_container}> */}
-                <DataTable
-                  value={[...data, totals]}
-                  emptyMessage="No data found"
-                  showGridlines
-                  responsive
-                  scrollable
-                  scrollHeight="500px"
-                  rows={16}
-                  paginator
-                  header={header}
-                >
-                  <Column field="misDate" header="Date" />
-                  {(tabIndex == 0 || tabIndex == 1) && (
-                    <Column
-                      field="totalBase"
-                      header="Total Subscription"
-                      body={(rowData) =>
-                        rowData?.totalBase ? rowData?.totalBase : 0
-                      }
-                    />
-                  )}
-                  {(tabIndex == 0 || tabIndex == 1) && (
-                    <Column
-                      field="totalActiveBase"
-                      header="Active Subscription"
-                      body={(rowData) =>
-                        rowData?.totalActiveBase ? rowData?.totalActiveBase : 0
-                      }
-                    />
-                  )}
-                  {(tabIndex == 0 || tabIndex == 1) && (
-                    <Column
-                      field="subscriptions"
-                      header="Paid Subscriptions"
-                      body={(rowData) =>
-                        rowData?.subscriptions ? rowData?.subscriptions : 0
-                      }
-                    />
-                  )}
-                  {(tabIndex == 0 || tabIndex == 2) && (
-                    <Column
-                      field="unsubscriptions"
-                      header="Unsubscriptions"
-                      body={(rowData) =>
-                        rowData?.unsubscriptions ? rowData?.unsubscriptions : 0
-                      }
-                    />
-                  )}
-                  {(tabIndex == 0 || tabIndex == 3) && (
-                    <Column
-                      field="renewals"
-                      header="Renewals Count"
-                      body={(rowData) =>
-                        rowData?.renewals ? rowData?.renewals : 0
-                      }
-                    />
-                  )}
-                  {(tabIndex == 0 || tabIndex == 3 || tabIndex == 4) && (
-                    <Column
-                      field="renewalsRevenue"
-                      header="Renewal Revenue"
-                      body={(rowData) =>
-                        rowData?.renewalsRevenue ? rowData?.renewalsRevenue : 0
-                      }
-                    />
-                  )}
-                  {(tabIndex == 0 || tabIndex == 1 || tabIndex == 4) && (
-                    <Column
-                      field="subscriptionRevenue"
-                      header="Subscription Revenue"
-                      body={(rowData) =>
-                        rowData?.subscriptionRevenue
-                          ? rowData?.subscriptionRevenue
-                          : 0
-                      }
-                    />
-                  )}
-                  {(tabIndex == 0 || tabIndex == 4) && (
-                    <Column
-                      field="totalRevenue"
-                      // header="Total Revenue"
-                      header="Daily Revenue"
-                      body={(rowData) =>
-                        rowData?.totalRevenue ? rowData?.totalRevenue : 0
-                      }
-                    />
-                  )}
-                  {(tabIndex == 0 || tabIndex == 4) && (
-                    <Column
-                      field="totalRevenueAccumulated"
-                      // header="Total Revenue"
-                      header="Total Revenue"
-                      body={(rowData) =>
-                        rowData?.totalRevenueAccumulated
-                          ? rowData?.totalRevenueAccumulated
-                          : 0
-                      }
-                    />
-                  )}
-                </DataTable>
+              <DataTable
+                value={[...data, totals]}
+                emptyMessage="No data found"
+                showGridlines
+                responsive
+                scrollable
+                scrollHeight="500px"
+                rows={16}
+                paginator
+                header={header}
+              >
+                <Column field="misDate" header="Date" />
+                {(tabIndex == 0 || tabIndex == 1) && (
+                  <Column
+                    field="totalBase"
+                    header="Total Subscription"
+                    body={(rowData) =>
+                      rowData?.totalBase ? rowData?.totalBase : 0
+                    }
+                  />
+                )}
+                {(tabIndex == 0 || tabIndex == 1) && (
+                  <Column
+                    field="totalActiveBase"
+                    header="Active Subscription"
+                    body={(rowData) =>
+                      rowData?.totalActiveBase ? rowData?.totalActiveBase : 0
+                    }
+                  />
+                )}
+                {(tabIndex == 0 || tabIndex == 1) && (
+                  <Column
+                    field="subscriptions"
+                    header="Paid Subscriptions"
+                    body={(rowData) =>
+                      rowData?.subscriptions ? rowData?.subscriptions : 0
+                    }
+                  />
+                )}
+                {(tabIndex == 0 || tabIndex == 2) && (
+                  <Column
+                    field="unsubscriptions"
+                    header="Unsubscriptions"
+                    body={(rowData) =>
+                      rowData?.unsubscriptions ? rowData?.unsubscriptions : 0
+                    }
+                  />
+                )}
+                {(tabIndex == 0 || tabIndex == 3) && (
+                  <Column
+                    field="renewals"
+                    header="Renewals Count"
+                    body={(rowData) =>
+                      rowData?.renewals ? rowData?.renewals : 0
+                    }
+                  />
+                )}
+                {(tabIndex == 0 || tabIndex == 3 || tabIndex == 4) && (
+                  <Column
+                    field="renewalsRevenue"
+                    header="Renewal Revenue"
+                    body={(rowData) =>
+                      rowData?.renewalsRevenue ? rowData?.renewalsRevenue : 0
+                    }
+                  />
+                )}
+                {(tabIndex == 0 || tabIndex == 1 || tabIndex == 4) && (
+                  <Column
+                    field="subscriptionRevenue"
+                    header="Subscription Revenue"
+                    body={(rowData) =>
+                      rowData?.subscriptionRevenue
+                        ? rowData?.subscriptionRevenue
+                        : 0
+                    }
+                  />
+                )}
+                {(tabIndex == 0 || tabIndex == 4) && (
+                  <Column
+                    field="totalRevenue"
+                    // header="Total Revenue"
+                    header="Daily Revenue"
+                    body={(rowData) =>
+                      rowData?.totalRevenue ? rowData?.totalRevenue : 0
+                    }
+                  />
+                )}
+                {(tabIndex == 0 || tabIndex == 4) && (
+                  <Column
+                    field="totalRevenueAccumulated"
+                    // header="Total Revenue"
+                    header="Total Revenue"
+                    body={(rowData) =>
+                      rowData?.totalRevenueAccumulated
+                        ? rowData?.totalRevenueAccumulated
+                        : 0
+                    }
+                  />
+                )}
+              </DataTable>
               {/* </div> */}
             </div>
           </div>

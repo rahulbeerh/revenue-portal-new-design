@@ -104,9 +104,7 @@ const PublisherTrafficPage = () => {
       );
 
       if (error?.response?.status == 403) {
-        setTimeout(() => {
-          navigate("/");
-        }, 1000);
+        throw new Error("Token Expired , Please Login!");
       }
     }
   };
@@ -157,6 +155,9 @@ const PublisherTrafficPage = () => {
       toast.error(
         error?.response?.data?.message || error?.message || error?.data?.message
       );
+      if (error?.response?.status == 403) {
+        throw new Error("Token Expired , Please Login!");
+      }
     }
   };
 
@@ -242,7 +243,7 @@ const PublisherTrafficPage = () => {
             }`}
           >
             <img
-              src="/assets/images/logo.png"
+              src="/assets/images/logo1.png"
               alt="Revenue portal"
               className={classes.sidebar_logo}
             />
@@ -342,34 +343,34 @@ const PublisherTrafficPage = () => {
 
             {publisherData ? (
               <div className={classes.table_container}>
-                  <DataTable
-                    value={publisherData}
-                    emptyMessage="No data found"
-                    showGridlines
-                    responsive
-                    scrollable
-                    scrollHeight="500px"
-                    rows={15}
-                    paginator
-                  >
-                    <Column field="partnerid" header="Partner Id" />
-                    <Column field="service" header="Service" />
-                    <Column field="country" header="Country" />
-                    <Column field="operator" header="Operator" />
-                    <Column field="count" header="Count" />
-                    <Column
-                      style={{ minWidth: "200px" }}
-                      body={(publisher) => {
-                        return (
-                          <p>
-                            {date(publisher?.latest_date)?.date},{" "}
-                            {date(publisher?.latest_date)?.time}
-                          </p>
-                        );
-                      }}
-                      header="Last Traffic Date-Time"
-                    />
-                  </DataTable>
+                <DataTable
+                  value={publisherData}
+                  emptyMessage="No data found"
+                  showGridlines
+                  responsive
+                  scrollable
+                  scrollHeight="500px"
+                  rows={15}
+                  paginator
+                >
+                  <Column field="partnerid" header="Partner Id" />
+                  <Column field="service" header="Service" />
+                  <Column field="country" header="Country" />
+                  <Column field="operator" header="Operator" />
+                  <Column field="count" header="Count" />
+                  <Column
+                    style={{ minWidth: "200px" }}
+                    body={(publisher) => {
+                      return (
+                        <p>
+                          {date(publisher?.latest_date)?.date},{" "}
+                          {date(publisher?.latest_date)?.time}
+                        </p>
+                      );
+                    }}
+                    header="Last Traffic Date-Time"
+                  />
+                </DataTable>
               </div>
             ) : null}
           </div>

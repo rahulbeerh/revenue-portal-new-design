@@ -58,9 +58,10 @@ const DashboardPage = ({
       } catch (error) {
         toast.error(error.message);
         setLoader("none");
-        setTimeout(() => {
-          navigate("/");
-        }, 1000);
+
+        if (error?.response?.status == 403) {
+          throw new Error("Token Expired , Please Login!");
+        }
       }
     };
     fetchDataFromBackend();
@@ -116,7 +117,7 @@ const DashboardPage = ({
             }`}
           >
             <img
-              src="/assets/images/logo.png"
+              src="/assets/images/logo1.png"
               alt="Revenue portal"
               className={classes.sidebar_logo}
             />

@@ -71,9 +71,9 @@ const sidebarHandler = () => {
         error?.data?.message || error?.response?.data?.message || error?.message
       );
       setLoading("none");
-      setTimeout(() => {
-        navigate("/");
-      }, 1000);
+      if (error?.response?.status == 403) {
+        throw new Error("Token Expired , Please Login!");
+      }
     }
   };
 
@@ -162,8 +162,8 @@ const sidebarHandler = () => {
               sidebarHide && classes.short
             }`}
           >
-            <img
-              src="/assets/images/logo.png"
+             <img
+              src="/assets/images/logo1.png"
               alt="Revenue portal"
               className={classes.sidebar_logo}
             />

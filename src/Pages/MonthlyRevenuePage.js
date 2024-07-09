@@ -3,16 +3,9 @@ import { sendMonthlyDataApi } from "../Data/Api";
 import { toast, ToastContainer } from "react-toastify";
 import GetSecure from "../Request/GetSecure";
 import Loader from "../NewComponents/Loading-States/Loader";
-import {
-  DataGrid,
-  GridToolbarContainer,
-  GridToolbarExport,
-} from "@mui/x-data-grid";
-// import ExportToExcel from "../Components/ExportToExcel";
 import classes from "./DailyRevenuePage.module.css";
 import NewSidebar from "../NewComponents/Sidebar/NewSidebar";
 import NewHeader from "../NewComponents/Header/NewHeader";
-import NewLineGraph from "../NewComponents/Graphs/NewLineGraph";
 import { Dropdown } from "primereact/dropdown";
 import TitleHeader from "../NewComponents/Header/TitleHeader";
 import { DataTable } from "primereact/datatable";
@@ -20,7 +13,6 @@ import { Column } from "primereact/column";
 import ExportMonthlyRevenueToExcel from "../NewComponents/Excel-Sheet-Generation/ExportMonthlyRevenueToExcel";
 import { useNavigate } from "react-router-dom";
 import { TabView, TabPanel } from "primereact/tabview";
-import NewLineGraph2 from "../NewComponents/Graphs/NewLineGraph2";
 import LineGraph from "../NewComponents/Graphs/LineGraph";
 import BarGraph from "../NewComponents/Graphs/BarGraph";
 import VerticalBarGraph from "../NewComponents/Graphs/VerticalBarGraph";
@@ -84,9 +76,9 @@ const MonthlyRevenuePage = () => {
     if (e.response === "error") {
       toast.error(e.error?.response?.data?.message || e.error?.message);
       setLoader("none");
-      setTimeout(() => {
-        navigate("/");
-      }, 1000);
+      if (e?.error?.response?.status == 403) {
+        throw new Error("Token Expired , Please Login!");
+      }
     } else {
       setLoader("none");
       // console.log(e);
@@ -107,7 +99,7 @@ const MonthlyRevenuePage = () => {
           return dataItem.totalRevenue;
         })
       );
-      console.log(biggestValue,'bv');
+      console.log(biggestValue, "bv");
       setBiggest(biggestValue);
       const biggestValueRenewal = Math.max.apply(
         Math,
@@ -190,7 +182,7 @@ const MonthlyRevenuePage = () => {
             }`}
           >
             <img
-              src="/assets/images/logo.png"
+              src="/assets/images/logo1.png"
               alt="Revenue portal"
               className={classes.sidebar_logo}
             />
@@ -261,11 +253,11 @@ const MonthlyRevenuePage = () => {
             />
 
             <TabView style={{ width: "100%" }} scrollable>
-            <TabPanel header="Chart">
-                <LineGraph data={data} />
-              </TabPanel>
               <TabPanel header="Bar Chart">
                 <BarGraph data={data} />
+              </TabPanel>
+              <TabPanel header="Line Chart">
+                <LineGraph data={data} />
               </TabPanel>
               <TabPanel header="Vertical Bar Chart">
                 <VerticalBarGraph data={data} />
@@ -274,25 +266,25 @@ const MonthlyRevenuePage = () => {
 
             {/* <div style={{ height: 600, width: "100%"}}> */}
             <div className={classes.table_container}>
-                <DataTable
-                  value={[...data, totals]}
-                  emptyMessage="No data found"
-                  showGridlines
-                  responsive
-                  scrollable
-                  scrollHeight="500px"
-                  rows={15}
-                  paginator
-                  header={header}
-                >
-                  <Column field="misDate" header="Date" />
-                  <Column field="renewalsRevenue" header="Renewals Revenue" />
-                  <Column
-                    field="subscriptionRevenue"
-                    header="Subscription Revenue"
-                  />
-                  <Column field="totalRevenue" header="Total Revenue" />
-                </DataTable>
+              <DataTable
+                value={[...data, totals]}
+                emptyMessage="No data found"
+                showGridlines
+                responsive
+                scrollable
+                scrollHeight="500px"
+                rows={15}
+                paginator
+                header={header}
+              >
+                <Column field="misDate" header="Date" />
+                <Column field="renewalsRevenue" header="Renewals Revenue" />
+                <Column
+                  field="subscriptionRevenue"
+                  header="Subscription Revenue"
+                />
+                <Column field="totalRevenue" header="Total Revenue" />
+              </DataTable>
             </div>
           </div>
         </div>

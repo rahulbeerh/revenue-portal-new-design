@@ -7,7 +7,6 @@ import axios from "axios";
 import { fetchClientServices } from "../Data/Api";
 import { useNavigate } from "react-router-dom";
 import TitleHeader from "../NewComponents/Header/TitleHeader";
-import NewLineGraph from "../NewComponents/Graphs/NewLineGraph";
 import classes from "./DailyRevenuePage.module.css";
 import NewSidebarAdmin from "../NewComponents/Sidebar/NewSidebarAdmin";
 import NewHeader from "../NewComponents/Header/NewHeader";
@@ -17,7 +16,6 @@ import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import ExportMonthlyRevenueToExcel from "../NewComponents/Excel-Sheet-Generation/ExportMonthlyRevenueToExcel";
 import { TabView, TabPanel } from "primereact/tabview";
-import NewLineGraph2 from "../NewComponents/Graphs/NewLineGraph2";
 import LineGraph from "../NewComponents/Graphs/LineGraph";
 import BarGraph from "../NewComponents/Graphs/BarGraph";
 import VerticalBarGraph from "../NewComponents/Graphs/VerticalBarGraph";
@@ -79,6 +77,10 @@ const MonthlyRevenueAdminPage = () => {
       toast.error(
         error?.data?.message || error?.message || error?.data?.data?.message
       );
+
+      if (error?.response?.status == 403) {
+        throw new Error("Token Expired , Please Login!");
+      }
     }
   }
 
@@ -117,9 +119,9 @@ const MonthlyRevenueAdminPage = () => {
     if (e.response === "error") {
       toast.error(e.error?.response?.data?.message || e.error?.message);
       setLoader("none");
-      setTimeout(() => {
-        navigate("/");
-      }, 1000);
+      if (e?.error?.response?.status == 403) {
+        throw new Error("Token Expired , Please Login!");
+      }
     } else {
       setLoader("none");
       // console.log(e);
@@ -211,9 +213,7 @@ const MonthlyRevenueAdminPage = () => {
     totalRevenue: totalRevenue,
   };
 
-  const header = (
-    <ExportMonthlyRevenueToExcel data={[...data,totals]}/>
-  );
+  const header = <ExportMonthlyRevenueToExcel data={[...data, totals]} />;
 
   // console.log([...data,totals])
   return (
@@ -228,7 +228,7 @@ const MonthlyRevenueAdminPage = () => {
             }`}
           >
             <img
-              src="/assets/images/logo.png"
+              src="/assets/images/logo1.png"
               alt="Revenue portal"
               className={classes.sidebar_logo}
             />
@@ -267,7 +267,6 @@ const MonthlyRevenueAdminPage = () => {
               </div>
 
               <div className={classes.service}>
-              
                 <Dropdown
                   value={service}
                   onChange={(e) => handleChooseService(e.value)}
@@ -281,7 +280,6 @@ const MonthlyRevenueAdminPage = () => {
               </div>
 
               <div className={classes.start_date}>
-               
                 <Dropdown
                   id="interval"
                   value={interval}
@@ -313,11 +311,11 @@ const MonthlyRevenueAdminPage = () => {
             <TitleHeader title="Monthly Revenue" icon="" />
 
             <TabView style={{ width: "100%" }} scrollable>
-            <TabPanel header="Chart">
-                <LineGraph data={data} />
-              </TabPanel>
               <TabPanel header="Bar Chart">
                 <BarGraph data={data} />
+              </TabPanel>
+              <TabPanel header="Line Chart">
+                <LineGraph data={data} />
               </TabPanel>
               <TabPanel header="Vertical Bar Chart">
                 <VerticalBarGraph data={data} />
@@ -325,26 +323,26 @@ const MonthlyRevenueAdminPage = () => {
             </TabView>
 
             <div className={classes.table_container}>
-                  <DataTable
-                    value={[...data, totals]}
-                    emptyMessage="No data found"
-                    showGridlines
-                    responsive
-                    scrollable
-                    scrollHeight="500px" 
-                    rows={15} 
-                    paginator
-                    header={header}
-                  >
-                    <Column field="misDate" header="Date" />
-                    <Column field="renewalsRevenue" header="Renewals Revenue" />
-                    <Column
-                      field="subscriptionRevenue"
-                      header="Subscription Revenue"
-                    />
-                    <Column field="totalRevenue" header="Total Revenue" />
-                  </DataTable>
-              </div>
+              <DataTable
+                value={[...data, totals]}
+                emptyMessage="No data found"
+                showGridlines
+                responsive
+                scrollable
+                scrollHeight="500px"
+                rows={15}
+                paginator
+                header={header}
+              >
+                <Column field="misDate" header="Date" />
+                <Column field="renewalsRevenue" header="Renewals Revenue" />
+                <Column
+                  field="subscriptionRevenue"
+                  header="Subscription Revenue"
+                />
+                <Column field="totalRevenue" header="Total Revenue" />
+              </DataTable>
+            </div>
           </div>
         </div>
       </div>
