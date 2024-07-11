@@ -221,9 +221,11 @@ const EditAdvertiserFormModal = (props) => {
         setLoading("none");
       }
     }
-    getPublishers();
-    getCountryOptionsFromBackend();
-  }, [id]);
+    if (openEdit) {
+      getPublishers();
+      getCountryOptionsFromBackend();
+    }
+  }, [id, openEdit]);
 
   useEffect(() => {
     if (data[0]?.country && data[0]?.operator) {
@@ -324,7 +326,6 @@ const EditAdvertiserFormModal = (props) => {
       // const stringCheck5 = string5.includes("CLICK_ID");
       // const stringCheck6 = string6.includes("CLICK_ID");
       // const stringCheck7 = string7.includes("CLICK_ID");
-
 
       // if (
       //   !stringCheck ||

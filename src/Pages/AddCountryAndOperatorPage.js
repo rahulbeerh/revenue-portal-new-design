@@ -49,9 +49,23 @@ const AddCountryAndOperatorPage = () => {
       setLoader("none");
     } catch (error) {
       setLoader("none");
-      toast.error(error || error?.data?.message || error?.message);
       if (error?.response?.status == 403) {
-        throw new Error("Token Expired , Please Login!");
+        toast.error(
+          error?.response?.data?.message ||
+            error?.data?.message ||
+            error?.message ||
+            error
+        );
+        setTimeout(() => {
+          window.location.href = "/";
+        }, 1500);
+      } else {
+        toast.error(
+          error?.response?.data?.message ||
+            error?.data?.message ||
+            error?.message ||
+            error
+        );
       }
     }
   };
@@ -84,13 +98,25 @@ const AddCountryAndOperatorPage = () => {
       toast.success("Country and Operator Added Successfully");
       fetchDataFromBackend();
     } catch (error) {
-      toast.error(
-        error?.response?.data?.message ||
-          error ||
-          error?.data?.message ||
-          error?.message
-      );
       setLoader("none");
+      if (error?.response?.status == 403) {
+        toast.error(
+          error?.response?.data?.message ||
+            error?.data?.message ||
+            error?.message ||
+            error
+        );
+        setTimeout(() => {
+          window.location.href = "/";
+        }, 1500);
+      } else {
+        toast.error(
+          error?.response?.data?.message ||
+            error?.data?.message ||
+            error?.message ||
+            error
+        );
+      }
     }
   };
 

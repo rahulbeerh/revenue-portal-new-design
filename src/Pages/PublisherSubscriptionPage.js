@@ -59,7 +59,7 @@ const PublisherSubscriptionPage = ({ hide }) => {
     setSidebarHide(JSON.parse(localStorage.getItem("sidebar")));
   };
 
-  // FETCH SERVICES AND PUBLISHER AND INSERT "ALL" AS FIRST OPTION IN THESE TWO DATA ... 
+  // FETCH SERVICES AND PUBLISHER AND INSERT "ALL" AS FIRST OPTION IN THESE TWO DATA ...
   const fetchServices = async () => {
     try {
       setLoading("block");
@@ -91,16 +91,16 @@ const PublisherSubscriptionPage = ({ hide }) => {
 
       setLoading("none");
     } catch (error) {
-      toast.error(
-        error?.data?.message ||
-          error?.message ||
-          error?.response?.data?.message ||
-          error
-      );
       setLoading("none");
-
       if (error?.response?.status == 403) {
-        throw new Error("Token Expired , Please Login!");
+        return;
+      } else {
+        toast.error(
+          error?.response?.data?.message ||
+            error?.data?.message ||
+            error?.message ||
+            error
+        );
       }
     }
   };
@@ -150,15 +150,24 @@ const PublisherSubscriptionPage = ({ hide }) => {
       setIsRequestPending(false);
     } catch (error) {
       setIsRequestPending(false);
-      toast.error(
-        error?.data?.message ||
-          error?.message ||
-          error?.response?.data?.message ||
-          error
-      );
       setLoading("none");
       if (error?.response?.status == 403) {
-        throw new Error("Token Expired , Please Login!");
+        toast.error(
+          error?.response?.data?.message ||
+            error?.data?.message ||
+            error?.message ||
+            error
+        );
+        setTimeout(() => {
+          window.location.href = "/";
+        }, 1500);
+      } else {
+        toast.error(
+          error?.response?.data?.message ||
+            error?.data?.message ||
+            error?.message ||
+            error
+        );
       }
     }
   }

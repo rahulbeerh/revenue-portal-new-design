@@ -15,7 +15,6 @@ const PostSecure=async(url,request)=>{
             sendResponse=response.data;
         },
         (error)=>{
-            // console.log("error ",error);
             // sendResponse={"response":"3"};
             sendResponse={"response":"error","error":error};
         }

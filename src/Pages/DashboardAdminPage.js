@@ -75,11 +75,23 @@ const DashboardAdminPage = () => {
       setLoader("none");
     } catch (error) {
       setLoader("none");
-      toast.error(
-        error?.response?.data?.message || error?.data?.message || error?.message
-      );
       if (error?.response?.status == 403) {
-        throw new Error("Token Expired , Please Login!");
+        toast.error(
+          error?.response?.data?.message ||
+            error?.data?.message ||
+            error?.message ||
+            error
+        );
+        setTimeout(() => {
+          window.location.href = "/";
+        }, 1500);
+      } else {
+        toast.error(
+          error?.response?.data?.message ||
+            error?.data?.message ||
+            error?.message ||
+            error
+        );
       }
     }
   };

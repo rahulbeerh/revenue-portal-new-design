@@ -41,14 +41,14 @@ const AdvertiserPage = () => {
   const [service, setService] = useState("");
 
   const [sidebarHide, setSidebarHide] = useState(() =>
-  localStorage.getItem("sidebar")
-    ? JSON.parse(localStorage.getItem("sidebar"))
-    : false
-);
-const sidebarHandler = () => {
-  localStorage.setItem("sidebar", JSON.stringify(!sidebarHide));
-  setSidebarHide(JSON.parse(localStorage.getItem("sidebar")));
-};
+    localStorage.getItem("sidebar")
+      ? JSON.parse(localStorage.getItem("sidebar"))
+      : false
+  );
+  const sidebarHandler = () => {
+    localStorage.setItem("sidebar", JSON.stringify(!sidebarHide));
+    setSidebarHide(JSON.parse(localStorage.getItem("sidebar")));
+  };
 
   const fetchDataFromBackend = async () => {
     try {
@@ -65,12 +65,23 @@ const sidebarHandler = () => {
       setFilteredData(response?.data?.result);
       setLoading("none");
     } catch (error) {
-      toast.error(
-        error?.data?.message || error?.response?.data?.message || error?.message
-      );
-      setLoading("none");
       if (error?.response?.status == 403) {
-        throw new Error("Token Expired , Please Login!");
+        toast.error(
+          error?.response?.data?.message ||
+            error?.data?.message ||
+            error?.message ||
+            error
+        );
+        setTimeout(() => {
+          window.location.href = "/";
+        }, 1500);
+      } else {
+        toast.error(
+          error?.response?.data?.message ||
+            error?.data?.message ||
+            error?.message ||
+            error
+        );
       }
     }
   };
@@ -159,7 +170,7 @@ const sidebarHandler = () => {
               sidebarHide && classes.short
             }`}
           >
-             <img
+            <img
               src="/assets/images/logo1.png"
               alt="Revenue portal"
               className={classes.sidebar_logo}
@@ -246,17 +257,34 @@ const sidebarHandler = () => {
                       {filteredData.map((dataItem) => {
                         return (
                           <tr key={dataItem?.id}>
-                            <td className={classes.td}>{dataItem?.client_name}</td>
-                            <td className={classes.td}>{dataItem?.publisherName}</td>
-                            <td className={classes.td}>{dataItem?.serviceName}</td>
-                            <td className={classes.td}>{dataItem?.amount_per_sub}</td>
-                            <td className={classes.td} style={{ width: "100%" }}>
+                            <td className={classes.td}>
+                              {dataItem?.client_name}
+                            </td>
+                            <td className={classes.td}>
+                              {dataItem?.publisherName}
+                            </td>
+                            <td className={classes.td}>
+                              {dataItem?.serviceName}
+                            </td>
+                            <td className={classes.td}>
+                              {dataItem?.amount_per_sub}
+                            </td>
+                            <td
+                              className={classes.td}
+                              style={{ width: "100%" }}
+                            >
                               {dataItem?.service_url}
                             </td>
-                            <td className={classes.td} style={{ width: "100%" }}>
+                            <td
+                              className={classes.td}
+                              style={{ width: "100%" }}
+                            >
                               {dataItem?.postback_url}
                             </td>
-                            <td className={classes.td} style={{ width: "100%" }}>
+                            <td
+                              className={classes.td}
+                              style={{ width: "100%" }}
+                            >
                               {dataItem?.postbackForClient}
                               <IconButton
                                 aria-label="copy"
@@ -267,10 +295,16 @@ const sidebarHandler = () => {
                                   );
                                 }}
                               >
-                                <ContentCopyIcon sx={{color:"#696CFF"}} fontSize="small" />
+                                <ContentCopyIcon
+                                  sx={{ color: "#696CFF" }}
+                                  fontSize="small"
+                                />
                               </IconButton>
                             </td>
-                            <td className={classes.td} style={{ width: "100%" }}>
+                            <td
+                              className={classes.td}
+                              style={{ width: "100%" }}
+                            >
                               {dataItem?.promotion_url}
                               <IconButton
                                 aria-label="copy"
@@ -281,7 +315,10 @@ const sidebarHandler = () => {
                                   );
                                 }}
                               >
-                                <ContentCopyIcon sx={{color:"#696CFF"}} fontSize="small" />
+                                <ContentCopyIcon
+                                  sx={{ color: "#696CFF" }}
+                                  fontSize="small"
+                                />
                               </IconButton>
                             </td>
                             <td className={classes.td}>{dataItem?.operator}</td>

@@ -83,7 +83,7 @@ const childStyle = {
   p: 4,
 };
 
-function ChildModal({ openChildModal, closeChildModal,getPublishers}) {
+function ChildModal({ openChildModal, closeChildModal, getPublishers }) {
   const [publisher, setPublisher] = useState("");
   const handleClose = () => {
     closeChildModal();
@@ -108,7 +108,7 @@ function ChildModal({ openChildModal, closeChildModal,getPublishers}) {
       handleClose();
     } catch (error) {
       toast.error(
-      error?.response?.data?.message || error?.message || error?.data?.message 
+        error?.response?.data?.message || error?.message || error?.data?.message
       );
     }
   };
@@ -216,8 +216,10 @@ const AdvertiserFormModal = (props) => {
         setLoading(false);
       }
     }
-    getPublishers();
-    getCountryOptionsFromBackend();
+    if (open) {
+      getPublishers();
+      getCountryOptionsFromBackend();
+    }
   }, [open]);
 
   const handleChange = async (event) => {
@@ -351,7 +353,6 @@ const AdvertiserFormModal = (props) => {
       // const stringCheck5 = string5.includes("CLICK_ID");
       // const stringCheck6 = string6.includes("CLICK_ID");
       // const stringCheck7 = string7.includes("CLICK_ID");
-
 
       // if (
       //   !stringCheck ||

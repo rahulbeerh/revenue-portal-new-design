@@ -93,14 +93,16 @@ const PublisherTrafficPage = () => {
       });
 
       setPublisher(newPublisher?.publisher);
-
     } catch (error) {
-      toast.error(
-        error?.response?.data?.message || error?.message || error?.data?.message
-      );
-
       if (error?.response?.status == 403) {
-        throw new Error("Token Expired , Please Login!");
+        return;
+      } else {
+        toast.error(
+          error?.response?.data?.message ||
+            error?.data?.message ||
+            error?.message ||
+            error
+        );
       }
     }
   };
@@ -148,11 +150,22 @@ const PublisherTrafficPage = () => {
     } catch (error) {
       setIsRequestPending(false);
       setLoading("none");
-      toast.error(
-        error?.response?.data?.message || error?.message || error?.data?.message
-      );
+
       if (error?.response?.status == 403) {
-        throw new Error("Token Expired , Please Login!");
+        toast.error(
+          error?.response?.data?.message ||
+            error?.message ||
+            error?.data?.message
+        );
+        setTimeout(() => {
+          window.location.href = "/";
+        }, 1500);
+      } else {
+        toast.error(
+          error?.response?.data?.message ||
+            error?.message ||
+            error?.data?.message
+        );
       }
     }
   };

@@ -65,10 +65,14 @@ const MonthlyRevenuePage = () => {
   //METHOD TO HANDLE THE RESPONSE...
   const handleDataResponse = (e) => {
     if (e.response === "error") {
-      toast.error(e.error?.response?.data?.message || e.error?.message);
       setLoader("none");
       if (e?.error?.response?.status == 403) {
-        throw new Error("Token Expired , Please Login!");
+        toast.error(e.error?.response?.data?.message || e.error?.message);
+        setTimeout(() => {
+          window.location.href = "/";
+        }, 1500);
+      } else {
+        toast.error(e.error?.response?.data?.message || e.error?.message);
       }
     } else {
       setLoader("none");

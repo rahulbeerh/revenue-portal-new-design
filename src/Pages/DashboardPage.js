@@ -55,11 +55,24 @@ const DashboardPage = ({
         let main_services = JSON.parse(localStorage.getItem("serviceObject"));
         setMainServices(main_services);
       } catch (error) {
-        toast.error(error.message);
         setLoader("none");
-
         if (error?.response?.status == 403) {
-          throw new Error("Token Expired , Please Login!");
+          toast.error(
+            error?.response?.data?.message ||
+              error?.data?.message ||
+              error?.message ||
+              error
+          );
+          setTimeout(() => {
+            window.location.href = "/";
+          }, 1500);
+        } else {
+          toast.error(
+            error?.response?.data?.message ||
+              error?.data?.message ||
+              error?.message ||
+              error
+          );
         }
       }
     };
@@ -67,7 +80,7 @@ const DashboardPage = ({
     localStorage.setItem("showAddPublisher", false);
   }, []);
 
-  // FUNCTION TO HANDLE SERVICE AND SUB-SERVICE CLICK 
+  // FUNCTION TO HANDLE SERVICE AND SUB-SERVICE CLICK
   const handleNavigateAndFilterServices = (
     path,
     serviceName,

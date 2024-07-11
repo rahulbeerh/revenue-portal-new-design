@@ -176,6 +176,7 @@ const router = createBrowserRouter([
       </Auth>
     ),
     errorElement: <ErrorBoundary />,
+    
   },
 ]);
 

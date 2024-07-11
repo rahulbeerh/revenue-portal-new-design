@@ -71,12 +71,23 @@ const MonthlyRevenueAdminPage = () => {
       gettingServices();
     } catch (error) {
       setLoader("none");
-      toast.error(
-        error?.data?.message || error?.message || error?.data?.data?.message
-      );
-
       if (error?.response?.status == 403) {
-        throw new Error("Token Expired , Please Login!");
+        toast.error(
+          error?.response?.data?.message ||
+            error?.data?.message ||
+            error?.message ||
+            error
+        );
+        setTimeout(() => {
+          window.location.href = "/";
+        }, 1500);
+      } else {
+        toast.error(
+          error?.response?.data?.message ||
+            error?.data?.message ||
+            error?.message ||
+            error
+        );
       }
     }
   }
@@ -113,10 +124,14 @@ const MonthlyRevenueAdminPage = () => {
   //Method to handle response
   const handleDataResponse = (e) => {
     if (e.response === "error") {
-      toast.error(e.error?.response?.data?.message || e.error?.message);
       setLoader("none");
       if (e?.error?.response?.status == 403) {
-        throw new Error("Token Expired , Please Login!");
+        toast.error(e.error?.response?.data?.message || e.error?.message);
+        setTimeout(() => {
+          window.location.href = "/";
+        }, 1500);
+      } else {
+        toast.error(e.error?.response?.data?.message || e.error?.message);
       }
     } else {
       setLoader("none");

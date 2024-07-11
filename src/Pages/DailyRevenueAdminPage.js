@@ -88,12 +88,23 @@ const DailyRevenueAdminPage = () => {
       gettingServices(countryName);
     } catch (error) {
       setLoader("none");
-      toast.error(
-        error?.data?.message || error?.message || error?.data?.data?.message
-      );
-
       if (error?.response?.status == 403) {
-        throw new Error("Token Expired , Please Login!");
+        toast.error(
+          error?.response?.data?.message ||
+            error?.data?.message ||
+            error?.message ||
+            error
+        );
+        setTimeout(() => {
+          window.location.href = "/";
+        }, 1500);
+      } else {
+        toast.error(
+          error?.response?.data?.message ||
+            error?.data?.message ||
+            error?.message ||
+            error
+        );
       }
     }
   }
@@ -200,8 +211,14 @@ const DailyRevenueAdminPage = () => {
   const handleDataResponse = (e) => {
     if (e.response === "error") {
       setLoader("none");
-      toast.error(e.error?.response?.data?.message || e.error?.message);
-      throw new Error("Token Expired , Please Login!");
+      if (e?.error?.response?.status == 403) {
+        toast.error(e.error?.response?.data?.message || e.error?.message);
+        setTimeout(() => {
+          window.location.href = "/";
+        }, 1500);
+      } else {
+        toast.error(e.error?.response?.data?.message || e.error?.message);
+      }
     } else {
       setLoader("none");
       const dataFromBackend = e.data;
@@ -380,7 +397,7 @@ const DailyRevenueAdminPage = () => {
               sidebarHide && classes.short
             }`}
           >
-             <img
+            <img
               src="/assets/images/logo1.png"
               alt="Revenue portal"
               className={classes.sidebar_logo}

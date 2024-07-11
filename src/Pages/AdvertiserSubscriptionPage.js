@@ -66,11 +66,15 @@ const AdvertiserSubscriptionPage = () => {
       setLoading("none");
     } catch (error) {
       setLoading("none");
-      toast.error(
-        error?.response?.data?.message || error?.message || error?.data?.message
-      );
       if (error?.response?.status == 403) {
-        throw new Error("Token Expired , Please Login!");
+        return;
+      } else {
+        toast.error(
+          error?.response?.data?.message ||
+            error?.data?.message ||
+            error?.message ||
+            error
+        );
       }
     }
   };
@@ -88,9 +92,24 @@ const AdvertiserSubscriptionPage = () => {
       setServices(res?.data?.result);
       setService(res?.data?.result[0]?.serviceName);
     } catch (error) {
-      toast.error(
-        error?.response?.data?.message || error?.message || error?.data?.message
-      );
+      if (error?.response?.status == 403) {
+        toast.error(
+          error?.response?.data?.message ||
+            error?.data?.message ||
+            error?.message ||
+            error
+        );
+        setTimeout(() => {
+          window.location.href = "/";
+        }, 1500);
+      } else {
+        toast.error(
+          error?.response?.data?.message ||
+            error?.data?.message ||
+            error?.message ||
+            error
+        );
+      }
     }
   };
 
@@ -114,9 +133,24 @@ const AdvertiserSubscriptionPage = () => {
       setLoading("none");
     } catch (error) {
       setLoading("none");
-      toast.error(
-        error?.response?.data?.message || error?.message || error?.data?.message
-      );
+      if (error?.response?.status == 403) {
+        toast.error(
+          error?.response?.data?.message ||
+            error?.data?.message ||
+            error?.message ||
+            error
+        );
+        setTimeout(() => {
+          window.location.href = "/";
+        }, 1500);
+      } else {
+        toast.error(
+          error?.response?.data?.message ||
+            error?.data?.message ||
+            error?.message ||
+            error
+        );
+      }
     }
   };
 

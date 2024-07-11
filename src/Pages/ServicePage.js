@@ -63,9 +63,14 @@ const ServicePage = () => {
       setPublisherData(response.data.data);
       setLoader("none");
     } catch (error) {
-      toast.error(error);
       if (error?.response?.status == 403) {
-        throw new Error("Token Expired , Please Login!");
+        throw new Error("Token Expired , Please Login Again!");
+      } else {
+        toast.error(
+          error?.response?.data?.message ||
+            error?.message ||
+            error?.data?.message
+        );
       }
     }
   };
@@ -83,7 +88,18 @@ const ServicePage = () => {
         toast.success("Publisher deleted successfully");
         fetchDataFromBackend();
       } catch (err) {
-        toast.error(err?.data?.message || err.error);
+        if (err?.response?.status == 403) {
+          toast.error(
+            err?.response?.data?.message || err?.message || err?.data?.message
+          );
+          setTimeout(() => {
+            window.location.href = "/";
+          }, 1500);
+        } else {
+          toast.error(
+            err?.response?.data?.message || err?.message || err?.data?.message
+          );
+        }
       }
     }
   };
@@ -100,9 +116,22 @@ const ServicePage = () => {
       // setLoader("none");
       fetchDataFromBackend();
     } catch (error) {
-      toast.error(
-        error || error?.data?.message || error?.message || error?.status
-      );
+      if (error?.response?.status == 403) {
+        toast.error(
+          error?.response?.data?.message ||
+            error?.message ||
+            error?.data?.message
+        );
+        setTimeout(() => {
+          window.location.href = "/";
+        }, 1500);
+      } else {
+        toast.error(
+          error?.response?.data?.message ||
+            error?.message ||
+            error?.data?.message
+        );
+      }
     }
   };
 

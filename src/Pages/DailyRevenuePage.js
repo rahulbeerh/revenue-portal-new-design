@@ -21,7 +21,6 @@ import VerticalBarGraph from "../NewComponents/Graphs/VerticalBarGraph";
 
 // DAILY REVENUE PAGE....
 const DailyRevenuePage = () => {
-  
   // FIRST GET THE SERVICES FROM LOCAL-STORAGE...
   useEffect(() => {
     gettingServices();
@@ -95,14 +94,15 @@ const DailyRevenuePage = () => {
       setSubService(() => response?.data?.data?.dataArray[0]?.subServiceName);
       return response?.data?.data?.dataArray[0]?.subServiceName;
     } catch (error) {
-      toast.error(
-        error?.response?.data?.message ||
-          error?.data?.message ||
-          error?.message ||
-          error
-      );
       if (error?.response?.status == 403) {
-        throw new Error("Token Expired , Please Login!");
+        return;
+      } else {
+        toast.error(
+          error?.response?.data?.message ||
+            error?.data?.message ||
+            error?.message ||
+            error
+        );
       }
     }
   };
@@ -116,8 +116,7 @@ const DailyRevenuePage = () => {
     );
 
     if (serviceid.length > 0) {
-
-      // GET THE 1'ST SUB-SERVICE OF THAT SERVICE THROUGH THIS API... 
+      // GET THE 1'ST SUB-SERVICE OF THAT SERVICE THROUGH THIS API...
       const subServiceValue = await fetchSubServices(serviceid[0]?.id);
       let data = {
         from: dates.from,
@@ -150,7 +149,9 @@ const DailyRevenuePage = () => {
       .then((e) => {
         handleDataResponse(e);
       })
-      .catch((err) => toast.error(err?.data?.message || err?.message || err));
+      .catch((err) => {
+        toast.error(err?.data?.message || err?.message || err);
+      });
   };
 
   const [data, setData] = useState([]);
@@ -159,9 +160,13 @@ const DailyRevenuePage = () => {
   const handleDataResponse = (e) => {
     if (e.response === "error") {
       setLoader("none");
-      toast.error(e.error?.response?.data?.message || e.error?.message);
       if (e?.error?.response?.status == 403) {
-        throw new Error("Token Expired , Please Login!");
+        toast.error(e.error?.response?.data?.message || e.error?.message);
+        setTimeout(() => {
+          window.location.href = "/";
+        }, 1500);
+      } else {
+        toast.error(e.error?.response?.data?.message || e.error?.message);
       }
     } else {
       setLoader("none");
