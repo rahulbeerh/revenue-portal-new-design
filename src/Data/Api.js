@@ -1,5 +1,6 @@
-// const pre=`https://reports.visiontrek.in/`;
-const pre=`/`;
+const pre=`https://reports.visiontrek.in/`;
+// const pre="http://192.168.1.11:4041/"
+// const pre=`/`;
 
 const loginApi = `${pre}open/login`;
 export { loginApi };
